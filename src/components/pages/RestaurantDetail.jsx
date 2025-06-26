@@ -79,15 +79,21 @@ const RestaurantDetail = () => {
 
     const getBenefitLabel = (benefitKey) => {
         const benefitLabels = {
-            healthInsurance: 'Health Insurance',
-            dentalInsurance: 'Dental Insurance',
-            visionInsurance: 'Vision Insurance',
-            paidTimeOff: 'Paid Time Off',
-            sickLeave: 'Sick Leave',
-            flexibleHours: 'Flexible Hours',
-            employeeDiscounts: 'Employee Discounts',
-            trainingPrograms: 'Training Programs',
-            careerGrowth: 'Career Growth'
+            health_insurance: 'Health Insurance',
+            dental_insurance: 'Dental Insurance',
+            vision_insurance: 'Vision Insurance',
+            life_insurance: 'Life Insurance',
+            retirement_plan: 'Retirement Plan',
+            living_wage_no_tipping: 'Living Wage (No Tipping)',
+            paid_time_off: 'Paid Time Off',
+            sick_leave: 'Sick Leave',
+            parental_leave: 'Parental Leave',
+            flexible_schedule: 'Flexible Schedule',
+            employee_discount: 'Employee Discount',
+            meal_allowance: 'Meal Allowance',
+            transportation_benefit: 'Transportation Benefit',
+            education_assistance: 'Education Assistance',
+            gym_membership: 'Gym Membership'
         };
         return benefitLabels[benefitKey] || benefitKey;
     };

@@ -31,7 +31,7 @@ const NavigationBar = () => {
       onToggle={() => setExpanded(!expanded)}
     >
       <Container>
-        <Navbar.Brand as={Link} to="/" className="navbar-brand">
+        <Navbar.Brand as={Link} to="/" className="navbar-brand d-flex align-items-center">
           <span style={{ fontSize: '2.2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <img src={forkKnifeLogo} alt="BeniBites logo" style={{ width: '2.2rem', height: '2.2rem', verticalAlign: 'middle', display: 'inline-block' }} />
             <span style={{ fontWeight: 800, fontSize: '2.2rem', letterSpacing: '1px', color: '#ff6b35' }}>BeniBites</span>
@@ -40,26 +40,26 @@ const NavigationBar = () => {
         
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to="/search" onClick={handleNavClick}>
+          <Nav className="me-auto d-flex align-items-center">
+            <Nav.Link as={Link} to="/search" onClick={handleNavClick} className="d-flex align-items-center">
               Find Restaurants
             </Nav.Link>
             {isBusiness && (
-              <Nav.Link as={Link} to="/business-dashboard" onClick={handleNavClick}>
+              <Nav.Link as={Link} to="/business-dashboard" onClick={handleNavClick} className="d-flex align-items-center">
                 Dashboard
               </Nav.Link>
             )}
             {isAuthenticated && !isBusiness && (
-              <Nav.Link as={Link} to="/dashboard" onClick={handleNavClick}>
+              <Nav.Link as={Link} to="/dashboard" onClick={handleNavClick} className="d-flex align-items-center">
                 Dashboard
               </Nav.Link>
             )}
           </Nav>
           
-          <Nav>
+          <Nav className="d-flex align-items-center">
             {isAuthenticated ? (
               <Dropdown align="end">
-                <Dropdown.Toggle variant="link" className="nav-link dropdown-toggle">
+                <Dropdown.Toggle variant="link" className="nav-link dropdown-toggle d-flex align-items-center">
                   {user?.name || 'Account'}
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="dropdown-menu-dark">
@@ -82,13 +82,13 @@ const NavigationBar = () => {
               </Dropdown>
             ) : (
               <>
-                <Nav.Link as={Link} to="/login" onClick={handleNavClick}>
+                <Nav.Link as={Link} to="/login" onClick={handleNavClick} className="d-flex align-items-center">
                   Login
                 </Nav.Link>
                 <Button 
                   as={Link} 
                   to="/register" 
-                  className="btn-signup"
+                  className="btn-signup d-flex align-items-center"
                   onClick={handleNavClick}
                 >
                   Sign Up

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Card, Row, Col, Form, Button, Badge, Spinner, Alert } from 'react-bootstrap';
+import { Card, Row, Col, Form, Button, Badge, Spinner, Alert, Dropdown } from 'react-bootstrap';
 import { 
     selectSearchResults, 
     selectSearchLoading, 
@@ -27,17 +27,21 @@ const SearchResults = () => {
     const error = useSelector(selectSearchError);
 
     const benefits = [
-        { key: 'healthInsurance', label: 'Health Insurance', icon: '🏥' },
-        { key: 'dentalInsurance', label: 'Dental Insurance', icon: '🦷' },
-        { key: 'visionInsurance', label: 'Vision Insurance', icon: '👓' },
-        { key: 'paidTimeOff', label: 'Paid Time Off', icon: '🏖️' },
-        { key: 'sickLeave', label: 'Sick Leave', icon: '🤒' },
-        { key: 'retirementPlans', label: 'Retirement Plans', icon: '💼' },
-        { key: 'livingWage', label: 'Living Wage, No Tipping', icon: '💵' },
-        { key: 'flexibleHours', label: 'Flexible Hours', icon: '⏰' },
-        { key: 'employeeDiscounts', label: 'Employee Discounts', icon: '💰' },
-        { key: 'trainingPrograms', label: 'Training Programs', icon: '📚' },
-        { key: 'careerGrowth', label: 'Career Growth', icon: '📈' }
+        { key: 'health_insurance', label: 'Health Insurance', icon: '🏥' },
+        { key: 'dental_insurance', label: 'Dental Insurance', icon: '🦷' },
+        { key: 'vision_insurance', label: 'Vision Insurance', icon: '👁️' },
+        { key: 'life_insurance', label: 'Life Insurance', icon: '🛡️' },
+        { key: 'retirement_plan', label: 'Retirement Plan', icon: '💰' },
+        { key: 'living_wage_no_tipping', label: 'Living Wage (No Tipping)', icon: '💵' },
+        { key: 'paid_time_off', label: 'Paid Time Off', icon: '🏖️' },
+        { key: 'sick_leave', label: 'Sick Leave', icon: '🤒' },
+        { key: 'parental_leave', label: 'Parental Leave', icon: '👶' },
+        { key: 'flexible_schedule', label: 'Flexible Schedule', icon: '⏰' },
+        { key: 'employee_discount', label: 'Employee Discount', icon: '🎫' },
+        { key: 'meal_allowance', label: 'Meal Allowance', icon: '🍽️' },
+        { key: 'transportation_benefit', label: 'Transportation Benefit', icon: '🚗' },
+        { key: 'education_assistance', label: 'Education Assistance', icon: '📚' },
+        { key: 'gym_membership', label: 'Gym Membership', icon: '💪' }
     ];
 
     const cuisines = [
@@ -45,6 +49,8 @@ const SearchResults = () => {
         'Indian', 'French', 'Mediterranean', 'Greek', 'Spanish', 'Korean',
         'Vietnamese', 'Middle Eastern', 'Caribbean', 'African', 'Fusion'
     ];
+
+    const [showCuisineDropdown, setShowCuisineDropdown] = useState(false);
 
     useEffect(() => {
         const searchData = {};
@@ -132,12 +138,239 @@ const SearchResults = () => {
 
     if (loading) {
         return (
-            <div className="main-content">
+            <div
+              className="main-content"
+              style={{
+                background: 'linear-gradient(rgba(20,20,20,0.85), rgba(20,20,20,0.85))',
+                minHeight: '100vh',
+                width: '100vw',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <div style={{ maxWidth: '1000px', width: '100%' }}>
                 <div className="container mt-4">
-                    <div className="loading-spinner">
-                        <Spinner animation="border" role="status" variant="warning">
-                            <span className="visually-hidden">Loading...</span>
-                        </Spinner>
+                  <div className="row">
+                    {/* Filters Sidebar */}
+                    <div className="col-lg-3">
+                      <div className="filters-section">
+                        <h5 className="mb-3">Filters</h5>
+                        
+                        {/* Search Query */}
+                        <div className="filter-group">
+                          <Form.Label className="filter-label">Search</Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="Restaurant name..."
+                            value={filters.query}
+                            onChange={(e) => handleFilterChange('query', e.target.value)}
+                          />
+                        </div>
+
+                        {/* Location */}
+                        <div className="filter-group">
+                          <Form.Label className="filter-label">Location</Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="City, State..."
+                            value={filters.location}
+                            onChange={(e) => handleFilterChange('location', e.target.value)}
+                          />
+                        </div>
+
+                        {/* Cuisine (Multi-select checkboxes) */}
+                        <div className="filter-group sidebar-centered">
+                          <Form.Label className="filter-label">Cuisine</Form.Label>
+                          <Dropdown
+                            show={showCuisineDropdown}
+                            onToggle={() => setShowCuisineDropdown(!showCuisineDropdown)}
+                            className="w-100 custom-cuisine-dropdown"
+                            autoClose={false}
+                          >
+                            <Dropdown.Toggle variant="outline-secondary" className="w-100 text-start">
+                              {filters.cuisines.length > 0 ? `${filters.cuisines.length} selected` : 'Select cuisines'}
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu style={{ maxHeight: '300px', overflowY: 'auto', width: '100%' }}>
+                              {cuisines.map(cuisine => (
+                                <Dropdown.Item
+                                  key={cuisine}
+                                  as="div"
+                                  className="px-2 py-1"
+                                  onClick={e => e.stopPropagation()} // Prevent close on item click
+                                >
+                                  <Form.Check
+                                    type="checkbox"
+                                    id={`cuisine-${cuisine}`}
+                                    label={cuisine}
+                                    checked={filters.cuisines.includes(cuisine)}
+                                    onChange={() => handleCuisineToggle(cuisine)}
+                                  />
+                                </Dropdown.Item>
+                              ))}
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        </div>
+
+                        {/* Rating Filter */}
+                        <div className="filter-group">
+                          <Form.Label className="filter-label">Minimum Rating</Form.Label>
+                          <Form.Select
+                            value={filters.rating}
+                            onChange={(e) => handleFilterChange('rating', e.target.value)}
+                          >
+                            <option value="">Any Rating</option>
+                            <option value="4">4+ Stars</option>
+                            <option value="3">3+ Stars</option>
+                            <option value="2">2+ Stars</option>
+                          </Form.Select>
+                        </div>
+
+                        {/* Sort By */}
+                        <div className="filter-group">
+                          <Form.Label className="filter-label">Sort By</Form.Label>
+                          <Form.Select
+                            value={filters.sortBy}
+                            onChange={(e) => handleFilterChange('sortBy', e.target.value)}
+                          >
+                            <option value="rating">Highest Rated</option>
+                            <option value="name">Name A-Z</option>
+                            <option value="reviews">Most Reviews</option>
+                          </Form.Select>
+                        </div>
+
+                        {/* Benefits */}
+                        <div className="filter-group">
+                          <Form.Label className="filter-label">Benefits</Form.Label>
+                          <div className="benefits-grid">
+                            {benefits.map(benefit => (
+                              <div
+                                key={benefit.key}
+                                className={`benefit-item ${filters.benefits.includes(benefit.key) ? 'selected' : ''}`}
+                                onClick={() => handleBenefitToggle(benefit.key)}
+                              >
+                                <div className="benefit-icon">{benefit.icon}</div>
+                                <div style={{ fontSize: '0.8rem' }}>{benefit.label}</div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Clear Filters */}
+                        <Button 
+                          variant="outline-secondary" 
+                          onClick={clearFilters}
+                          className="w-100"
+                        >
+                          Clear Filters
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Results */}
+                    <div className="col-lg-9">
+                      <div className="d-flex justify-content-between align-items-center mb-4">
+                        <h4>
+                          {searchResults.length > 0 
+                            ? `${searchResults.length} restaurants found`
+                            : 'No restaurants found'
+                          }
+                        </h4>
+                      </div>
+
+                      {error && (
+                        <Alert variant="danger" className="mb-4">
+                          {error}
+                        </Alert>
+                      )}
+
+                      {searchResults.length === 0 && !loading && !error && (
+                        <div className="text-center py-5">
+                          <h5>No restaurants match your criteria</h5>
+                          <p>Try adjusting your filters or search terms</p>
+                        </div>
+                      )}
+
+                      <Row>
+                        {searchResults.map(restaurant => (
+                          <Col key={restaurant._id} lg={4} md={6} className="mb-4">
+                            <Card className="restaurant-card hover-lift">
+                              <div className="restaurant-image">
+                                {restaurant.images && restaurant.images.length > 0 ? (
+                                  <img 
+                                    src={restaurant.images[0]} 
+                                    alt={restaurant.name}
+                                    className="w-100 h-100"
+                                    style={{ objectFit: 'cover' }}
+                                  />
+                                ) : (
+                                  <div className="w-100 h-100 d-flex align-items-center justify-content-center" 
+                                       style={{ background: 'var(--primary-color)' }}>
+                                        <span style={{ fontSize: '3rem', opacity: 0.3 }}>🍽️</span>
+                                    </div>
+                                )}
+                              </div>
+                              <Card.Body className="restaurant-content">
+                                <Card.Title className="restaurant-title">
+                                  {restaurant.name}
+                                </Card.Title>
+                                
+                                {restaurant.cuisine && restaurant.cuisine.length > 0 && (
+                                  <div className="restaurant-cuisine">
+                                    {restaurant.cuisine.join(', ')}
+                                  </div>
+                                )}
+                                
+                                {restaurant.address && (
+                                  <div className="restaurant-location">
+                                      📍 {restaurant.address.city}, {restaurant.address.state}
+                                  </div>
+                                )}
+                                
+                                <div className="restaurant-rating">
+                                  <div className="stars">
+                                    {renderStars(restaurant.averageBenefitsRating || 0)}
+                                  </div>
+                                  <span className="rating-text">
+                                    {restaurant.averageBenefitsRating?.toFixed(1) || '0.0'} 
+                                    ({restaurant.totalReviews || 0} reviews)
+                                  </span>
+                                </div>
+                                
+                                <div className="restaurant-benefits">
+                                  {getRestaurantBenefits(restaurant).slice(0, 3).map(benefit => {
+                                    const benefitInfo = benefits.find(b => b.key === benefit);
+                                    return benefitInfo ? (
+                                      <Badge 
+                                        key={benefit} 
+                                        bg="warning" 
+                                        text="dark"
+                                        className="benefit-tag"
+                                      >
+                                        {benefitInfo.icon} {benefitInfo.label}
+                                      </Badge>
+                                    ) : null;
+                                  })}
+                                  {getRestaurantBenefits(restaurant).length > 3 && (
+                                    <Badge bg="secondary" className="benefit-tag">
+                                      +{getRestaurantBenefits(restaurant).length - 3} more
+                                    </Badge>
+                                  )}
+                                </div>
+                                
+                                <Link 
+                                  to={`/restaurant/${restaurant._id}`}
+                                  className="btn btn-primary w-100 mt-3"
+                                >
+                                  View Details
+                                </Link>
+                              </Card.Body>
+                            </Card>
+                          </Col>
+                        ))}
+                      </Row>
+                    </div>
+                  </div>
                     </div>
                 </div>
             </div>
@@ -145,7 +378,18 @@ const SearchResults = () => {
     }
 
     return (
-        <div className="main-content">
+        <div
+          className="main-content"
+          style={{
+            background: 'linear-gradient(rgba(20,20,20,0.85), rgba(20,20,20,0.85))',
+            minHeight: '100vh',
+            width: '100vw',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <div style={{ maxWidth: '1000px', width: '100%' }}>
             <div className="container mt-4">
                 <div className="row">
                     {/* Filters Sidebar */}
@@ -176,20 +420,36 @@ const SearchResults = () => {
                             </div>
 
                             {/* Cuisine (Multi-select checkboxes) */}
-                            <div className="filter-group">
+                    <div className="filter-group sidebar-centered">
                                 <Form.Label className="filter-label">Cuisine</Form.Label>
-                                <div className="d-flex flex-wrap gap-2">
+                      <Dropdown
+                        show={showCuisineDropdown}
+                        onToggle={() => setShowCuisineDropdown(!showCuisineDropdown)}
+                        className="w-100 custom-cuisine-dropdown"
+                        autoClose={false}
+                      >
+                        <Dropdown.Toggle variant="outline-secondary" className="w-100 text-start">
+                          {filters.cuisines.length > 0 ? `${filters.cuisines.length} selected` : 'Select cuisines'}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu style={{ maxHeight: '300px', overflowY: 'auto', width: '100%' }}>
                                     {cuisines.map(cuisine => (
+                            <Dropdown.Item
+                              key={cuisine}
+                              as="div"
+                              className="px-2 py-1"
+                              onClick={e => e.stopPropagation()} // Prevent close on item click
+                            >
                                         <Form.Check
-                                            key={cuisine}
                                             type="checkbox"
                                             id={`cuisine-${cuisine}`}
                                             label={cuisine}
                                             checked={filters.cuisines.includes(cuisine)}
                                             onChange={() => handleCuisineToggle(cuisine)}
                                         />
+                            </Dropdown.Item>
                                     ))}
-                                </div>
+                        </Dropdown.Menu>
+                      </Dropdown>
                             </div>
 
                             {/* Rating Filter */}
@@ -349,6 +609,7 @@ const SearchResults = () => {
                                 </Col>
                             ))}
                         </Row>
+                </div>
                     </div>
                 </div>
             </div>

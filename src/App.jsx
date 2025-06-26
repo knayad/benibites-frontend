@@ -5,6 +5,7 @@ import { store } from './store/store';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Home from './components/pages/Home';
+import HomeGenZ from './components/pages/HomeGenZ';
 import SearchResults from './components/pages/SearchResults';
 import RestaurantDetail from './components/pages/RestaurantDetail';
 import Login from './components/auth/Login';
@@ -22,7 +23,7 @@ function App() {
           <Navbar />
           <main className="main-content">
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<HomeGenZ />} />
               <Route path="/search" element={<SearchResults />} />
               <Route path="/restaurant/:id" element={<RestaurantDetail />} />
               <Route path="/login" element={<Login />} />

@@ -5,18 +5,21 @@ const BusinessBenefits = () => {
   const [selectedBenefits, setSelectedBenefits] = useState([]);
   
   const availableBenefits = [
-    { id: 'health-insurance', name: 'Health Insurance', icon: '🏥' },
-    { id: 'dental-insurance', name: 'Dental Insurance', icon: '🦷' },
-    { id: 'vision-insurance', name: 'Vision Insurance', icon: '👁️' },
-    { id: 'paid-time-off', name: 'Paid Time Off', icon: '🏖️' },
-    { id: 'sick-leave', name: 'Sick Leave', icon: '🤒' },
-    { id: '401k', name: '401(k) Retirement', icon: '💰' },
-    { id: 'flexible-schedule', name: 'Flexible Schedule', icon: '⏰' },
-    { id: 'employee-discount', name: 'Employee Discount', icon: '🎫' },
-    { id: 'free-meals', name: 'Free Meals', icon: '🍽️' },
-    { id: 'professional-development', name: 'Professional Development', icon: '📚' },
-    { id: 'tuition-reimbursement', name: 'Tuition Reimbursement', icon: '🎓' },
-    { id: 'gym-membership', name: 'Gym Membership', icon: '💪' }
+    { id: 'health_insurance', name: 'Health Insurance', icon: '🏥' },
+    { id: 'dental_insurance', name: 'Dental Insurance', icon: '🦷' },
+    { id: 'vision_insurance', name: 'Vision Insurance', icon: '👁️' },
+    { id: 'life_insurance', name: 'Life Insurance', icon: '🛡️' },
+    { id: 'retirement_plan', name: 'Retirement Plan', icon: '💰' },
+    { id: 'living_wage_no_tipping', name: 'Living Wage (No Tipping)', icon: '💵' },
+    { id: 'paid_time_off', name: 'Paid Time Off', icon: '🏖️' },
+    { id: 'sick_leave', name: 'Sick Leave', icon: '🤒' },
+    { id: 'parental_leave', name: 'Parental Leave', icon: '👶' },
+    { id: 'flexible_schedule', name: 'Flexible Schedule', icon: '⏰' },
+    { id: 'employee_discount', name: 'Employee Discount', icon: '🎫' },
+    { id: 'meal_allowance', name: 'Meal Allowance', icon: '🍽️' },
+    { id: 'transportation_benefit', name: 'Transportation Benefit', icon: '🚗' },
+    { id: 'education_assistance', name: 'Education Assistance', icon: '📚' },
+    { id: 'gym_membership', name: 'Gym Membership', icon: '💪' }
   ];
 
   const toggleBenefit = (benefitId) => {

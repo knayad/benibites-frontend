@@ -211,55 +211,6 @@ const Home = () => {
                         </Row>
                     </Container>
                 </section>
-
-                {/* CTA Section */}
-                <section style={{ 
-                    padding: '80px 0', 
-                    background: 'var(--gradient-dark)',
-                    position: 'relative',
-                    overflow: 'hidden'
-                }}>
-                    <div style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        background: 'radial-gradient(circle at 30% 70%, rgba(255, 107, 53, 0.1) 0%, transparent 50%)',
-                        pointerEvents: 'none'
-                    }}></div>
-                    
-                    <Container>
-                        <Row className="justify-content-center text-center">
-                            <Col lg={8}>
-                                <h2 className="fade-in-up" style={{ marginBottom: '1.5rem' }}>
-                                    Ready to Discover Great Restaurants?
-                                </h2>
-                                <p className="fade-in-up" style={{ animationDelay: '0.2s', marginBottom: '2rem' }}>
-                                    Start your search and find restaurants that value their employees as much as their customers.
-                                </p>
-                                <div className="fade-in-up" style={{ animationDelay: '0.4s' }}>
-                                    <Button 
-                                        variant="primary" 
-                                        size="lg" 
-                                        onClick={() => navigate('/search')}
-                                        className="me-3"
-                                    >
-                                        Start Searching
-                                    </Button>
-                                    <Button 
-                                        variant="outline-light"
-                                        size="lg"
-                                        onClick={() => navigate('/register')}
-                                        style={{ border: '2px solid #fff', color: '#fff', background: 'transparent', fontWeight: 700 }}
-                                    >
-                                        Join Our Community
-                                    </Button>
-                                </div>
-                            </Col>
-                        </Row>
-                    </Container>
-                </section>
             </div>
         </div>
     );

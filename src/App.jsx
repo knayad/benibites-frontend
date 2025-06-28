@@ -2,16 +2,15 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/Footer';
-import Home from './components/pages/Home';
+import Navbar from './components/layout/NavbarGenZ';
+import Footer from './components/layout/FooterGenZ';
 import HomeGenZ from './components/pages/HomeGenZ';
-import SearchResults from './components/pages/SearchResults';
-import RestaurantDetail from './components/pages/RestaurantDetail';
-import Login from './components/auth/Login';
-import Register from './components/auth/Register';
-import BusinessRegister from './components/auth/BusinessRegister';
-import Dashboard from './components/dashboard/Dashboard';
+import SearchResultsGenZ from './components/pages/SearchResultsGenZ';
+import RestaurantDetailGenZ from './components/pages/RestaurantDetailGenZ';
+import LoginGenZ from './components/auth/LoginGenZ';
+import RegisterGenZ from './components/auth/RegisterGenZ';
+import BusinessRegisterGenZ from './components/auth/BusinessRegisterGenZ';
+import DashboardGenZ from './components/dashboard/DashboardGenZ';
 import BusinessDashboard from './components/dashboard/BusinessDashboard';
 import './App.css';
 
@@ -24,12 +23,12 @@ function App() {
           <main className="main-content">
             <Routes>
               <Route path="/" element={<HomeGenZ />} />
-              <Route path="/search" element={<SearchResults />} />
-              <Route path="/restaurant/:id" element={<RestaurantDetail />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/register-business" element={<BusinessRegister />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/search" element={<SearchResultsGenZ />} />
+              <Route path="/restaurant/:id" element={<RestaurantDetailGenZ />} />
+              <Route path="/login" element={<LoginGenZ />} />
+              <Route path="/register" element={<RegisterGenZ />} />
+              <Route path="/register-business" element={<BusinessRegisterGenZ />} />
+              <Route path="/dashboard" element={<DashboardGenZ />} />
               <Route path="/business-dashboard" element={<BusinessDashboard />} />
             </Routes>
           </main>

@@ -35,6 +35,20 @@ export const register = createAsyncThunk(
     }
 );
 
+export const registerBusiness = createAsyncThunk(
+    'auth/registerBusiness',
+    async (businessData, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(`${API_BASE_URL}/auth/register-business`, businessData);
+            const { token, user } = response.data;
+            setAuthToken(token);
+            return { token, user };
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.error || 'Business registration failed');
+        }
+    }
+);
+
 export const login = createAsyncThunk(
     'auth/login',
     async (credentials, { rejectWithValue }) => {
@@ -148,6 +162,22 @@ const authSlice = createSlice({
                 state.user = action.payload.user;
             })
             .addCase(register.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+            
+            // Register Business
+            .addCase(registerBusiness.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(registerBusiness.fulfilled, (state, action) => {
+                state.loading = false;
+                state.isAuthenticated = true;
+                state.token = action.payload.token;
+                state.user = action.payload.user;
+            })
+            .addCase(registerBusiness.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })

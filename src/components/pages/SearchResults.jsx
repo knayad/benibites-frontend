@@ -41,7 +41,8 @@ const SearchResults = () => {
         { key: 'meal_allowance', label: 'Meal Allowance', icon: '🍽️' },
         { key: 'transportation_benefit', label: 'Transportation Benefit', icon: '🚗' },
         { key: 'education_assistance', label: 'Education Assistance', icon: '📚' },
-        { key: 'gym_membership', label: 'Gym Membership', icon: '💪' }
+        { key: 'gym_membership', label: 'Gym Membership', icon: '💪' },
+        { key: 'other', label: 'Other awesome perks', icon: '🅿️' },
     ];
 
     const cuisines = [

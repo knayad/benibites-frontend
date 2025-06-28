@@ -16,6 +16,24 @@ export const fetchReviews = createAsyncThunk(
     }
 );
 
+export const fetchUserReviews = createAsyncThunk(
+    'reviews/fetchUserReviews',
+    async (_, { rejectWithValue, getState }) => {
+        try {
+            const { auth } = getState();
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${auth.token}`
+                }
+            };
+            const response = await axios.get(`${API_BASE_URL}/reviews/user`, config);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.error || 'Failed to fetch user reviews');
+        }
+    }
+);
+
 export const createReview = createAsyncThunk(
     'reviews/createReview',
     async (reviewData, { rejectWithValue, getState }) => {
@@ -158,6 +176,11 @@ const reviewsSlice = createSlice({
             .addCase(fetchReviews.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+            
+            // Fetch user reviews
+            .addCase(fetchUserReviews.fulfilled, (state, action) => {
+                state.userReviews = action.payload;
             })
             
             // Create review

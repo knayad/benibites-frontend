@@ -1,34 +1,20 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { logout, selectUser, selectIsAuthenticated, selectIsBusiness } from '../../store/slices/authSlice';
-import { Navbar, Nav, Container, Button, Dropdown } from 'react-bootstrap';
+import { Navbar, Nav, Container, Dropdown, Button } from 'react-bootstrap';
 import forkKnifeLogo from '../../assets/fork-and-knife-cutlery-circle-interface-symbol-for-restaurant-svgrepo-com.svg';
-import { genzColors, genzGradients, genzFont, PlayfulStroke1 } from '../../genzTheme.jsx';
+import { genzColors, genzGradients, genzFont } from '../../genzTheme.jsx';
 
 const NavbarGenZ = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const user = useSelector(selectUser);
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-  const isBusiness = useSelector(selectIsBusiness);
   const [expanded, setExpanded] = useState(false);
-
-  const handleLogout = async () => {
-    await dispatch(logout());
-    navigate('/');
-    setExpanded(false);
-  };
-
-  const handleNavClick = () => {
-    setExpanded(false);
-  };
+  const navigate = useNavigate();
 
   return (
-    <Navbar 
-      expand="lg" 
+    <Navbar
+      expand="lg"
+      expanded={expanded}
+      onToggle={() => setExpanded(!expanded)}
       style={{
-        background: genzGradients.hero,
+        background: 'linear-gradient(90deg, #fff 60%, #feca57 100%)',
         boxShadow: '0 6px 24px rgba(102,126,234,0.10)',
         borderBottom: `3px solid ${genzColors.accent1}`,
         fontFamily: genzFont,
@@ -37,139 +23,52 @@ const NavbarGenZ = () => {
         width: '100vw',
         left: 0,
         right: 0,
-        minHeight: 72,
-        display: 'flex',
-        alignItems: 'center',
+        minHeight: 64,
         padding: '0 0.5rem',
         margin: 0,
         maxWidth: 'none',
       }}
-      className="navbar-genz-no-sticky"
-      expanded={expanded}
-      onToggle={() => setExpanded(!expanded)}
     >
-      {/* Logo always visible, fixed left */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        minWidth: 180,
-        zIndex: 20,
-        position: 'relative',
-        flexShrink: 0
-      }}>
+      <Container fluid style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: window.innerWidth >= 992 ? '0 2.5rem' : 0 }}>
         <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <img src={forkKnifeLogo} alt="BeniBites logo" style={{ width: '2.2rem', height: '2.2rem', verticalAlign: 'middle', display: 'inline-block', filter: 'drop-shadow(0 2px 8px #764ba2)' }} />
           <span style={{ fontWeight: 900, fontSize: '2.2rem', letterSpacing: '-1px', background: genzGradients.button, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' }}>BeniBites</span>
         </Link>
-      </div>
-      {/* Playful stroke accent at the top left */}
-      <div style={{ position: 'absolute', left: 0, top: -18, zIndex: 1 }}>
-        <PlayfulStroke1 style={{ width: 80, height: 24 }} />
-      </div>
-      <Container style={{ display: 'flex', alignItems: 'center', flex: 1, justifyContent: 'flex-end' }}>
-        <Nav className="me-auto d-flex align-items-center" style={{ gap: 18 }}>
-          <Link
-            to="/search"
-            onClick={handleNavClick}
-            style={{
-              color: '#fff',
+        <Navbar.Toggle aria-controls="navbar-genz-collapse" style={{ border: 'none', background: 'transparent', marginLeft: 8 }} />
+        <Navbar.Collapse id="navbar-genz-collapse" style={{ background: 'transparent', width: '100vw', left: 0, right: 0, borderRadius: 18, marginTop: 8, boxShadow: '0 8px 32px rgba(102,126,234,0.10)' }}>
+          <Nav className="w-100 d-flex flex-column flex-lg-row align-items-lg-center justify-content-lg-end" style={{ gap: 12 }}>
+            <Link to="/search" className="nav-link" style={{
+              color: genzColors.accent1,
               fontWeight: 700,
               fontFamily: genzFont,
               fontSize: '1.1rem',
-              background: 'rgba(255,255,255,0.18)',
+              background: 'none',
               borderRadius: 18,
               padding: '8px 22px',
-              marginRight: 8,
-              border: '2px solid #fff',
+              border: `2px solid ${genzColors.accent1}`,
               boxShadow: '0 2px 8px rgba(102,126,234,0.10)',
               textDecoration: 'none',
               transition: 'background 0.2s, color 0.2s',
               display: 'inline-block',
-            }}
-          >
-            Find Restaurants
-          </Link>
-          {isBusiness && (
-            <Link to="/business-dashboard" onClick={handleNavClick} style={{ color: '#fff', fontWeight: 700, fontFamily: genzFont, fontSize: '1.1rem', textDecoration: 'none', padding: '8px 18px', borderRadius: 14 }}>
-              Dashboard
-            </Link>
-          )}
-          {isAuthenticated && !isBusiness && (
-            <Link to="/dashboard" onClick={handleNavClick} style={{ color: '#fff', fontWeight: 700, fontFamily: genzFont, fontSize: '1.1rem', textDecoration: 'none', padding: '8px 18px', borderRadius: 14 }}>
-              Dashboard
-            </Link>
-          )}
-        </Nav>
-        <Nav className="d-flex align-items-center" style={{ gap: 18 }}>
-          {isAuthenticated ? (
-            <Dropdown align="end">
-              <Dropdown.Toggle variant="link" className="nav-link dropdown-toggle d-flex align-items-center" style={{ color: '#fff', fontWeight: 700, fontFamily: genzFont, fontSize: '1.1rem', padding: '8px 18px', borderRadius: 14 }}>
-                {user?.name || 'Account'}
-              </Dropdown.Toggle>
-              <Dropdown.Menu className="dropdown-menu-dark">
-                <Dropdown.Item as={Link} to="/dashboard" onClick={handleNavClick}>
-                  Profile
-                </Dropdown.Item>
-                <Dropdown.Item as={Link} to="/dashboard/reviews" onClick={handleNavClick}>
-                  My Reviews
-                </Dropdown.Item>
-                {isBusiness && (
-                  <Dropdown.Item as={Link} to="/business-dashboard" onClick={handleNavClick}>
-                    Business Dashboard
-                  </Dropdown.Item>
-                )}
-                <Dropdown.Divider />
-                <Dropdown.Item onClick={handleLogout}>
-                  Logout
-                </Dropdown.Item>
+              marginLeft: window.innerWidth >= 992 ? 16 : 0,
+              marginRight: window.innerWidth >= 992 ? 16 : 0
+            }}>Find Restaurants</Link>
+            <Dropdown as="span" className="d-inline-block">
+              <Dropdown.Toggle as={Button} variant="outline-primary" style={{ fontWeight: 700, fontFamily: genzFont, fontSize: '1.1rem', borderRadius: 18, padding: '8px 22px', border: `2px solid ${genzColors.accent1}`, color: genzColors.accent1, background: 'none', marginLeft: 8 }}>Login</Dropdown.Toggle>
+              <Dropdown.Menu align="end">
+                <Dropdown.Item as={Link} to="/login">User Login</Dropdown.Item>
+                <Dropdown.Item as={Link} to="/business-login">Business Login</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
-          ) : (
-            <>
-              <Link
-                to="/login"
-                onClick={handleNavClick}
-                style={{
-                  color: genzColors.accent1,
-                  fontWeight: 800,
-                  fontFamily: genzFont,
-                  fontSize: '1.1rem',
-                  background: '#fff',
-                  borderRadius: 18,
-                  padding: '8px 22px',
-                  marginLeft: 8,
-                  border: '2px solid #feca57',
-                  boxShadow: '0 2px 8px rgba(102,126,234,0.10)',
-                  textDecoration: 'none',
-                  transition: 'background 0.2s, color 0.2s',
-                  display: 'inline-block',
-                }}
-              >
-                Login
-              </Link>
-              <Button
-                as={Link}
-                to="/register"
-                style={{
-                  background: genzGradients.button,
-                  color: genzColors.black,
-                  fontWeight: 800,
-                  border: 'none',
-                  borderRadius: 18,
-                  padding: '10px 24px',
-                  fontFamily: genzFont,
-                  letterSpacing: '1px',
-                  boxShadow: '0 6px 16px rgba(102,126,234,0.18)',
-                  marginLeft: 8,
-                  textTransform: 'uppercase',
-                }}
-                onClick={handleNavClick}
-              >
-                Sign Up
-              </Button>
-            </>
-          )}
-        </Nav>
+            <Dropdown as="span" className="d-inline-block">
+              <Dropdown.Toggle as={Button} style={{ fontWeight: 700, fontFamily: genzFont, fontSize: '1.1rem', borderRadius: 18, padding: '8px 22px', background: genzGradients.button, color: '#fff', border: `2px solid ${genzColors.accent1}`, marginLeft: 8, textTransform: 'uppercase', marginBottom: window.innerWidth < 992 ? 24 : 0, boxShadow: '0 2px 8px rgba(102,126,234,0.10)' }}>Sign Up</Dropdown.Toggle>
+              <Dropdown.Menu align="end">
+                <Dropdown.Item as={Link} to="/register">User Sign Up</Dropdown.Item>
+                <Dropdown.Item as={Link} to="/register-business">Business Sign Up</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </Nav>
+        </Navbar.Collapse>
       </Container>
     </Navbar>
   );

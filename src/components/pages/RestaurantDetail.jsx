@@ -100,7 +100,7 @@ const RestaurantDetail = () => {
 
     if (loading) {
         return (
-            <div className="main-content">
+            <div>
                 <Container className="py-5">
                     <div className="loading-spinner">
                         <Spinner animation="border" role="status" variant="warning">
@@ -114,7 +114,7 @@ const RestaurantDetail = () => {
 
     if (error) {
         return (
-            <div className="main-content">
+            <div>
                 <Container className="py-5">
                     <Alert variant="danger">
                         Error: {error}
@@ -126,7 +126,7 @@ const RestaurantDetail = () => {
 
     if (!currentRestaurant) {
         return (
-            <div className="main-content">
+            <div>
                 <Container className="py-5">
                     <Alert variant="info">
                         Restaurant not found.
@@ -139,7 +139,7 @@ const RestaurantDetail = () => {
     const benefits = getRestaurantBenefits(currentRestaurant);
 
     return (
-        <div className="main-content">
+        <div>
             <Container className="py-5">
                 <Row className="mb-5">
                     <Col>

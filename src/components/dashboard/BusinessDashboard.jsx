@@ -19,7 +19,7 @@ const BusinessDashboard = () => {
 
   if (!isAuthenticated || !isBusiness) {
     return (
-      <div className="main-content">
+      <div>
         <Container className="py-5">
           <div className="text-center">
             <h2 style={{ color: 'var(--text-primary)' }}>Access Denied</h2>
@@ -34,7 +34,7 @@ const BusinessDashboard = () => {
   }
 
   return (
-    <div className="main-content">
+    <div>
       <Container className="py-5">
         <Row className="mb-4">
           <Col>

@@ -68,7 +68,7 @@ const Register = () => {
   };
 
   return (
-    <div className="main-content" style={{ background: 'linear-gradient(rgba(20,20,20,0.85), rgba(20,20,20,0.85))', minHeight: '100vh', width: '100vw', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ background: 'linear-gradient(rgba(20,20,20,0.85), rgba(20,20,20,0.85))', minHeight: '100vh', width: '100vw', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ maxWidth: '600px', width: '100%' }}>
         <Card className="search-form">
           <Card.Body>

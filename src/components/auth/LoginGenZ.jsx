@@ -36,7 +36,7 @@ const LoginGenZ = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '2rem',
+      padding: 'calc(2rem + 64px) 2rem 2rem 2rem',
       fontFamily: genzFont,
       position: 'relative',
       overflow: 'hidden'
@@ -72,9 +72,8 @@ const LoginGenZ = () => {
             WebkitTextFillColor: 'transparent',
             marginBottom: '0.5rem'
           }}>
-            👋 Welcome Back!
+            Welcome Back!
           </h1>
-          <span style={{ fontSize: '2rem', display: 'block', marginBottom: '0.5rem' }}>👋</span>
           <p style={{
             color: '#fff',
             fontSize: '1.1rem',

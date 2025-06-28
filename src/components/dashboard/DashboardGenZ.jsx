@@ -38,9 +38,9 @@ const DashboardGenZ = () => {
       minHeight: '100vh',
       background: genzGradients.hero,
       fontFamily: genzFont,
-      padding: '2rem 0',
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      paddingTop: '64px'
     }}>
       {/* Playful stroke accents */}
       <div style={{ position: 'absolute', top: '8%', left: '10%', transform: 'rotate(25deg)', zIndex: 1 }}>
@@ -50,14 +50,14 @@ const DashboardGenZ = () => {
         <PlayfulStroke1 style={{ width: 60, height: 18 }} />
       </div>
 
-      <div className="container">
+      <div className="container" style={{ padding: window.innerWidth < 768 ? '1rem' : '2rem' }}>
         {/* Welcome Header */}
         <div style={{
           background: 'rgba(255, 255, 255, 0.1)',
           backdropFilter: 'blur(20px)',
-          borderRadius: 32,
-          padding: '3rem',
-          marginBottom: '3rem',
+          borderRadius: window.innerWidth < 768 ? 24 : 32,
+          padding: window.innerWidth < 768 ? '2rem' : '3rem',
+          marginBottom: window.innerWidth < 768 ? '2rem' : '3rem',
           border: '2px solid rgba(255, 255, 255, 0.2)',
           boxShadow: '0 20px 40px rgba(102, 126, 234, 0.15)',
           position: 'relative',
@@ -66,37 +66,52 @@ const DashboardGenZ = () => {
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '2rem',
-            marginBottom: '2rem'
+            gap: window.innerWidth < 768 ? '1rem' : '2rem',
+            marginBottom: window.innerWidth < 768 ? '1.5rem' : '2rem',
+            flexDirection: window.innerWidth < 768 ? 'column' : 'row',
+            textAlign: window.innerWidth < 768 ? 'center' : 'left'
           }}>
             <div style={{
-              width: 100,
-              height: 100,
+              width: window.innerWidth < 768 ? 80 : 100,
+              height: window.innerWidth < 768 ? 80 : 100,
               borderRadius: '50%',
               background: genzGradients.button,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '3rem',
+              fontSize: window.innerWidth < 768 ? '2.5rem' : '3rem',
               boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
             }}>
               👤
             </div>
             <div style={{ flex: 1 }}>
-              <h1 style={{
-                fontWeight: 900,
-                fontSize: '2.5rem',
-                letterSpacing: '-2px',
-                background: genzGradients.button,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                marginBottom: '0.5rem'
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                flexWrap: 'wrap',
+                justifyContent: window.innerWidth < 768 ? 'center' : 'flex-start'
               }}>
-                Welcome back, {user?.name}! 👋
-              </h1>
+                <span style={{ 
+                  fontSize: window.innerWidth < 768 ? '1.8rem' : '2.2rem',
+                  marginBottom: '0.5rem'
+                }}>👋</span>
+                <h1 style={{
+                  fontWeight: 900,
+                  fontSize: window.innerWidth < 768 ? '2rem' : '2.5rem',
+                  letterSpacing: '-2px',
+                  background: genzGradients.button,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  marginBottom: '0.5rem',
+                  marginRight: '0.5rem'
+                }}>
+                  Welcome back, {user?.name}!
+                </h1>
+              </div>
               <p style={{
                 color: '#fff',
-                fontSize: '1.1rem',
+                fontSize: window.innerWidth < 768 ? '1rem' : '1.1rem',
                 fontWeight: 500,
                 opacity: 0.9
               }}>
@@ -108,47 +123,47 @@ const DashboardGenZ = () => {
           {/* Quick Stats */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '1.5rem'
+            gridTemplateColumns: window.innerWidth < 768 ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: window.innerWidth < 768 ? '1rem' : '1.5rem'
           }}>
             <div style={{
               background: 'rgba(255, 255, 255, 0.1)',
               borderRadius: 20,
-              padding: '1.5rem',
+              padding: window.innerWidth < 768 ? '1rem' : '1.5rem',
               textAlign: 'center',
               border: '2px solid rgba(255, 255, 255, 0.2)'
             }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>⭐</div>
-              <h3 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem' }}>
+              <div style={{ fontSize: window.innerWidth < 768 ? '2rem' : '2.5rem', marginBottom: '0.5rem' }}>⭐</div>
+              <h3 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem', fontSize: window.innerWidth < 768 ? '1.5rem' : '1.8rem' }}>
                 {userReviews.length}
               </h3>
-              <p style={{ color: '#fff', opacity: 0.8 }}>Reviews Written</p>
+              <p style={{ color: '#fff', opacity: 0.8, fontSize: window.innerWidth < 768 ? '0.9rem' : '1rem' }}>Reviews Written</p>
             </div>
             <div style={{
               background: 'rgba(255, 255, 255, 0.1)',
               borderRadius: 20,
-              padding: '1.5rem',
+              padding: window.innerWidth < 768 ? '1rem' : '1.5rem',
               textAlign: 'center',
               border: '2px solid rgba(255, 255, 255, 0.2)'
             }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🍕</div>
-              <h3 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem' }}>
+              <div style={{ fontSize: window.innerWidth < 768 ? '2rem' : '2.5rem', marginBottom: '0.5rem' }}>🍕</div>
+              <h3 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem', fontSize: window.innerWidth < 768 ? '1.5rem' : '1.8rem' }}>
                 {userReviews.length * 2}
               </h3>
-              <p style={{ color: '#fff', opacity: 0.8 }}>Restaurants Visited</p>
+              <p style={{ color: '#fff', opacity: 0.8, fontSize: window.innerWidth < 768 ? '0.9rem' : '1rem' }}>Restaurants Visited</p>
             </div>
             <div style={{
               background: 'rgba(255, 255, 255, 0.1)',
               borderRadius: 20,
-              padding: '1.5rem',
+              padding: window.innerWidth < 768 ? '1rem' : '1.5rem',
               textAlign: 'center',
               border: '2px solid rgba(255, 255, 255, 0.2)'
             }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🎁</div>
-              <h3 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem' }}>
+              <div style={{ fontSize: window.innerWidth < 768 ? '2rem' : '2.5rem', marginBottom: '0.5rem' }}>🎁</div>
+              <h3 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem', fontSize: window.innerWidth < 768 ? '1.5rem' : '1.8rem' }}>
                 {userReviews.length * 3}
               </h3>
-              <p style={{ color: '#fff', opacity: 0.8 }}>Perks Discovered</p>
+              <p style={{ color: '#fff', opacity: 0.8, fontSize: window.innerWidth < 768 ? '0.9rem' : '1rem' }}>Perks Discovered</p>
             </div>
           </div>
         </div>
@@ -157,8 +172,8 @@ const DashboardGenZ = () => {
         <div style={{
           background: 'rgba(255, 255, 255, 0.1)',
           backdropFilter: 'blur(20px)',
-          borderRadius: 32,
-          padding: '3rem',
+          borderRadius: window.innerWidth < 768 ? 24 : 32,
+          padding: window.innerWidth < 768 ? '2rem' : '3rem',
           border: '2px solid rgba(255, 255, 255, 0.2)',
           boxShadow: '0 20px 40px rgba(102, 126, 234, 0.15)',
           position: 'relative',
@@ -167,11 +182,12 @@ const DashboardGenZ = () => {
           {/* Tab Navigation */}
           <div style={{
             display: 'flex',
-            gap: '1rem',
+            gap: window.innerWidth < 768 ? '0.5rem' : '1rem',
             marginBottom: '2rem',
             borderBottom: '2px solid rgba(255, 255, 255, 0.2)',
             paddingBottom: '1rem',
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
+            justifyContent: window.innerWidth < 768 ? 'center' : 'flex-start'
           }}>
             {['overview', 'reviews', 'favorites', 'settings'].map((tab) => (
               <button
@@ -182,13 +198,14 @@ const DashboardGenZ = () => {
                   color: activeTab === tab ? genzColors.black : '#fff',
                   border: 'none',
                   borderRadius: 16,
-                  padding: '0.8rem 1.5rem',
+                  padding: window.innerWidth < 768 ? '0.6rem 1rem' : '0.8rem 1.5rem',
                   fontFamily: genzFont,
                   fontWeight: 700,
-                  fontSize: '1rem',
+                  fontSize: window.innerWidth < 768 ? '0.9rem' : '1rem',
                   cursor: 'pointer',
                   transition: 'all 0.3s ease',
-                  textTransform: 'capitalize'
+                  textTransform: 'capitalize',
+                  whiteSpace: 'nowrap'
                 }}
               >
                 {tab === 'overview' && '📊 Overview'}
@@ -300,7 +317,7 @@ const DashboardGenZ = () => {
                     }}>
                       🔍 Find Restaurants
                     </Link>
-                    <Link to="/dashboard/reviews" style={{
+                    <Link to="/my-reviews" style={{
                       background: 'rgba(255, 255, 255, 0.2)',
                       color: '#fff',
                       border: '2px solid rgba(255, 255, 255, 0.3)',
@@ -313,7 +330,7 @@ const DashboardGenZ = () => {
                       textAlign: 'center',
                       display: 'block'
                     }}>
-                      ✍️ Write Review
+                      ✍️ My Reviews
                     </Link>
                     <Link to="/profile" style={{
                       background: 'rgba(255, 255, 255, 0.2)',

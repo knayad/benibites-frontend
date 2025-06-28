@@ -18,7 +18,7 @@ const Dashboard = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="main-content">
+      <div>
         <Container className="py-5">
           <div className="text-center">
             <h2 style={{ color: 'var(--text-primary)' }}>Please sign in to access your dashboard</h2>
@@ -32,7 +32,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="main-content">
+    <div>
       <Container className="py-5">
         <Row className="mb-4">
           <Col>

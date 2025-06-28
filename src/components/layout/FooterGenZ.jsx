@@ -169,7 +169,7 @@ const FooterGenZ = () => {
                 </Link>
               </li>
               <li style={{ marginBottom: '0.8rem' }}>
-                <Link to="/business-dashboard" style={{
+                <Link to="/business-login" style={{
                   color: '#fff',
                   textDecoration: 'none',
                   fontWeight: 600,
@@ -178,7 +178,7 @@ const FooterGenZ = () => {
                   display: 'inline-block',
                   padding: '4px 0'
                 }}>
-                  Business Dashboard
+                  Business Sign In
                 </Link>
               </li>
             </ul>

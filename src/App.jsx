@@ -11,7 +11,12 @@ import LoginGenZ from './components/auth/LoginGenZ';
 import RegisterGenZ from './components/auth/RegisterGenZ';
 import BusinessRegisterGenZ from './components/auth/BusinessRegisterGenZ';
 import DashboardGenZ from './components/dashboard/DashboardGenZ';
-import BusinessDashboard from './components/dashboard/BusinessDashboard';
+import BusinessDashboardGenZ from './components/dashboard/BusinessDashboardGenZ';
+import BusinessLoginGenZ from './components/auth/BusinessLoginGenZ';
+import WriteReviewGenZ from './components/pages/WriteReviewGenZ';
+import WriteEmployeeReviewGenZ from './components/pages/WriteEmployeeReviewGenZ';
+import ProfileGenZ from './components/dashboard/ProfileGenZ';
+import MyReviewsGenZ from './components/dashboard/MyReviewsGenZ';
 import './App.css';
 
 function App() {
@@ -20,7 +25,7 @@ function App() {
       <Router>
         <div className="App">
           <Navbar />
-          <main className="main-content">
+          <main>
             <Routes>
               <Route path="/" element={<HomeGenZ />} />
               <Route path="/search" element={<SearchResultsGenZ />} />
@@ -29,7 +34,12 @@ function App() {
               <Route path="/register" element={<RegisterGenZ />} />
               <Route path="/register-business" element={<BusinessRegisterGenZ />} />
               <Route path="/dashboard" element={<DashboardGenZ />} />
-              <Route path="/business-dashboard" element={<BusinessDashboard />} />
+              <Route path="/business-dashboard" element={<BusinessDashboardGenZ />} />
+              <Route path="/business-login" element={<BusinessLoginGenZ />} />
+              <Route path="/write-review/:id" element={<WriteReviewGenZ />} />
+              <Route path="/write-employee-review/:id" element={<WriteEmployeeReviewGenZ />} />
+              <Route path="/profile" element={<ProfileGenZ />} />
+              <Route path="/my-reviews" element={<MyReviewsGenZ />} />
             </Routes>
           </main>
           <Footer />

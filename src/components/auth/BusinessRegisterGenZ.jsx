@@ -40,6 +40,9 @@ const BusinessRegisterGenZ = () => {
     }
   };
 
+  // Add a mobile check
+  const isMobile = window.innerWidth < 600;
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -47,10 +50,11 @@ const BusinessRegisterGenZ = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '2rem',
+      padding: isMobile ? 'calc(0.5rem + 64px) 0.5rem 0.5rem 0.5rem' : 'calc(2rem + 64px) 2rem 2rem 2rem',
       fontFamily: genzFont,
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      width: isMobile ? '100vw' : '100%',
     }}>
       {/* Playful stroke accents */}
       <div style={{ position: 'absolute', top: '8%', left: '8%', transform: 'rotate(15deg)', zIndex: 1 }}>
@@ -65,8 +69,8 @@ const BusinessRegisterGenZ = () => {
         backdropFilter: 'blur(20px)',
         borderRadius: 32,
         padding: '3rem',
-        width: '100%',
-        maxWidth: 600,
+        width: isMobile ? '100vw' : '100%',
+        maxWidth: isMobile ? '100vw' : 600,
         border: '2px solid rgba(255, 255, 255, 0.2)',
         boxShadow: '0 20px 40px rgba(102, 126, 234, 0.15)',
         position: 'relative',
@@ -83,7 +87,7 @@ const BusinessRegisterGenZ = () => {
             WebkitTextFillColor: 'transparent',
             marginBottom: '0.5rem'
           }}>
-            Register Your Restaurant! 🏪
+            Register Your Restaurant!
           </h1>
           <p style={{
             color: '#fff',
@@ -111,8 +115,8 @@ const BusinessRegisterGenZ = () => {
         )}
 
         {/* Business Register Form */}
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '0.8rem' : '1.5rem' }}>
+          <div style={{ display: isMobile ? 'block' : 'grid', gridTemplateColumns: isMobile ? undefined : '1fr 1fr', gap: isMobile ? '0.5rem' : '1rem' }}>
             <div>
               <label style={{
                 display: 'block',
@@ -209,7 +213,7 @@ const BusinessRegisterGenZ = () => {
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div style={{ display: isMobile ? 'block' : 'grid', gridTemplateColumns: isMobile ? undefined : '1fr 1fr', gap: isMobile ? '0.5rem' : '1rem' }}>
             <div>
               <label style={{
                 display: 'block',
@@ -270,15 +274,23 @@ const BusinessRegisterGenZ = () => {
                 }}
               >
                 <option value="">Select cuisine type</option>
+                <option value="american">American 🍔</option>
                 <option value="italian">Italian 🍝</option>
                 <option value="mexican">Mexican 🌮</option>
                 <option value="chinese">Chinese 🥢</option>
                 <option value="japanese">Japanese 🍣</option>
-                <option value="indian">Indian 🍛</option>
-                <option value="american">American 🍔</option>
-                <option value="mediterranean">Mediterranean 🥙</option>
                 <option value="thai">Thai 🍜</option>
-                <option value="other">Other 🍽️</option>
+                <option value="indian">Indian 🍛</option>
+                <option value="french">French 🥖</option>
+                <option value="mediterranean">Mediterranean 🥙</option>
+                <option value="greek">Greek 🥗</option>
+                <option value="spanish">Spanish 🥘</option>
+                <option value="korean">Korean 🍲</option>
+                <option value="vietnamese">Vietnamese 🍜</option>
+                <option value="middle_eastern">Middle Eastern 🍢</option>
+                <option value="caribbean">Caribbean 🍤</option>
+                <option value="african">African 🍲</option>
+                <option value="fusion">Fusion 🍽️</option>
               </select>
             </div>
           </div>
@@ -315,7 +327,7 @@ const BusinessRegisterGenZ = () => {
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div style={{ display: isMobile ? 'block' : 'grid', gridTemplateColumns: isMobile ? undefined : '1fr 1fr', gap: isMobile ? '0.5rem' : '1rem' }}>
             <div>
               <label style={{
                 display: 'block',
@@ -346,7 +358,7 @@ const BusinessRegisterGenZ = () => {
                     outline: 'none',
                     transition: 'all 0.3s ease'
                   }}
-                  placeholder="Create a strong password"
+                  placeholder="Create password"
                 />
                 <button
                   type="button"
@@ -397,7 +409,7 @@ const BusinessRegisterGenZ = () => {
                     outline: 'none',
                     transition: 'all 0.3s ease'
                   }}
-                  placeholder="Confirm your password"
+                  placeholder="Confirm password"
                 />
                 <button
                   type="button"
@@ -428,13 +440,13 @@ const BusinessRegisterGenZ = () => {
               color: genzColors.black,
               border: 'none',
               borderRadius: 20,
-              padding: '1rem 2rem',
+              padding: isMobile ? '0.7rem 1.2rem' : '1rem 2rem',
               fontFamily: genzFont,
               fontWeight: 800,
-              fontSize: '1.1rem',
+              fontSize: isMobile ? '1rem' : '1.1rem',
               cursor: loading ? 'not-allowed' : 'pointer',
               transition: 'all 0.3s ease',
-              marginTop: '1rem',
+              marginTop: isMobile ? '0.5rem' : '1rem',
               opacity: loading ? 0.7 : 1
             }}
           >
@@ -456,11 +468,7 @@ const BusinessRegisterGenZ = () => {
             opacity: 0.9
           }}>
             Already have a business account?{' '}
-            <Link to="/business-login" style={{
-              color: genzColors.accent1,
-              fontWeight: 700,
-              textDecoration: 'none'
-            }}>
+            <Link to="/business-login" style={{ color: genzColors.accent1, fontWeight: 700, textDecoration: 'none' }}>
               Sign in here! 🔑
             </Link>
           </p>
@@ -475,7 +483,7 @@ const BusinessRegisterGenZ = () => {
           border: '2px solid rgba(254, 202, 87, 0.3)'
         }}>
           <h4 style={{
-            color: genzColors.accent1,
+            color: '#145c63',
             fontWeight: 800,
             fontSize: '1.1rem',
             marginBottom: '1rem',

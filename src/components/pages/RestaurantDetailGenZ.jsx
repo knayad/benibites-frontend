@@ -10,12 +10,19 @@ const RestaurantDetailGenZ = () => {
   const { currentRestaurant, loading, error } = useSelector((state) => state.restaurants);
   const { isAuthenticated } = useSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState('overview');
+  const [isHiring, setIsHiring] = useState(false);
 
   useEffect(() => {
     if (id) {
       dispatch(fetchRestaurantById(id));
     }
   }, [dispatch, id]);
+
+  useEffect(() => {
+    if (currentRestaurant && typeof currentRestaurant.isHiring === 'boolean') {
+      setIsHiring(currentRestaurant.isHiring);
+    }
+  }, [currentRestaurant]);
 
   const getCuisineEmoji = (cuisine) => {
     const emojiMap = {
@@ -64,8 +71,10 @@ const RestaurantDetailGenZ = () => {
         justifyContent: 'center',
         fontFamily: genzFont,
         color: '#ff6b6b',
-        fontSize: '1.2rem',
-        fontWeight: 600
+        fontSize: '1.3rem',
+        fontWeight: 600,
+        textShadow: '0 0 4px rgba(255,255,255,0.4), 0 0 8px rgba(255,255,255,0.2)',
+        WebkitTextStroke: '0.5px white'
       }}>
         ❌ Restaurant not found or error loading details
       </div>
@@ -88,7 +97,7 @@ const RestaurantDetailGenZ = () => {
         <PlayfulStroke1 style={{ width: 60, height: 18 }} />
       </div>
 
-      <div className="container" style={{ padding: '2rem 0' }}>
+      <div className="container" style={{ padding: 'calc(2rem + 64px) 0 2rem 0' }}>
         {/* Restaurant Header */}
         <div style={{
           background: 'rgba(255, 255, 255, 0.1)',
@@ -181,20 +190,44 @@ const RestaurantDetailGenZ = () => {
               📞 Contact Restaurant
             </button>
             {isAuthenticated && (
-              <button style={{
-                background: 'rgba(255, 255, 255, 0.2)',
-                color: '#fff',
-                border: '2px solid rgba(255, 255, 255, 0.3)',
-                borderRadius: 20,
-                padding: '1rem 2rem',
-                fontFamily: genzFont,
-                fontWeight: 700,
-                fontSize: '1rem',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease'
+              <div style={{
+                display: 'flex',
+                gap: '0.5rem',
+                flexWrap: 'wrap'
               }}>
-                ✍️ Write Review
-              </button>
+                <Link to={`/write-review/${currentRestaurant.id}`} style={{
+                  background: 'rgba(255, 255, 255, 0.2)',
+                  color: '#fff',
+                  border: '2px solid rgba(255, 255, 255, 0.3)',
+                  borderRadius: 20,
+                  padding: '1rem 2rem',
+                  fontFamily: genzFont,
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  textDecoration: 'none',
+                  display: 'inline-block'
+                }}>
+                  ✍️ Write Review
+                </Link>
+                <Link to={`/write-employee-review/${currentRestaurant.id}`} style={{
+                  background: 'rgba(254, 202, 87, 0.2)',
+                  color: genzColors.accent1,
+                  border: `2px solid ${genzColors.accent1}`,
+                  borderRadius: 20,
+                  padding: '1rem 2rem',
+                  fontFamily: genzFont,
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  textDecoration: 'none',
+                  display: 'inline-block'
+                }}>
+                  👨‍🍳 Employee Review
+                </Link>
+              </div>
             )}
             <Link to="/search" style={{
               background: 'rgba(255, 255, 255, 0.1)',
@@ -213,6 +246,29 @@ const RestaurantDetailGenZ = () => {
               🔍 Back to Search
             </Link>
           </div>
+
+          {isHiring && (
+            <div style={{
+              position: 'absolute',
+              top: 18,
+              right: 18,
+              background: 'linear-gradient(90deg, #feca57 0%, #ff6b6b 100%)',
+              color: '#222',
+              fontWeight: 900,
+              fontSize: '1.15rem',
+              borderRadius: 18,
+              padding: '0.7rem 1.5rem',
+              boxShadow: '0 2px 12px rgba(255,107,107,0.18)',
+              zIndex: 10,
+              animation: 'pulse 1.2s infinite alternate',
+              letterSpacing: '1px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10
+            }}>
+              <span role="img" aria-label="megaphone">📢</span> Now Hiring!
+            </div>
+          )}
         </div>
 
         {/* Tabs */}

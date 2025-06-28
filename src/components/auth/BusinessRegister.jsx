@@ -88,7 +88,6 @@ const BusinessRegister = () => {
 
   return (
     <div
-      className="main-content"
       style={{
         background: 'linear-gradient(rgba(20,20,20,0.85), rgba(20,20,20,0.85))',
         minHeight: '100vh',

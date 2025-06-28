@@ -1,6 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { genzCardStyle } from '../../genzTheme.jsx';
+
+const CUISINE_OPTIONS = [
+  { value: 'american', label: 'American', emoji: '🍔' },
+  { value: 'italian', label: 'Italian', emoji: '🍝' },
+  { value: 'mexican', label: 'Mexican', emoji: '🌮' },
+  { value: 'chinese', label: 'Chinese', emoji: '🥢' },
+  { value: 'japanese', label: 'Japanese', emoji: '🍣' },
+  { value: 'thai', label: 'Thai', emoji: '🍜' },
+  { value: 'indian', label: 'Indian', emoji: '🍛' },
+  { value: 'french', label: 'French', emoji: '🥖' },
+  { value: 'mediterranean', label: 'Mediterranean', emoji: '🥙' },
+  { value: 'greek', label: 'Greek', emoji: '🥗' },
+  { value: 'spanish', label: 'Spanish', emoji: '🥘' },
+  { value: 'korean', label: 'Korean', emoji: '🍲' },
+  { value: 'vietnamese', label: 'Vietnamese', emoji: '🍜' },
+  { value: 'middle_eastern', label: 'Middle Eastern', emoji: '🍢' },
+  { value: 'caribbean', label: 'Caribbean', emoji: '🍤' },
+  { value: 'african', label: 'African', emoji: '🍲' },
+  { value: 'fusion', label: 'Fusion', emoji: '🍽️' },
+];
 
 const HomeGenZ = () => {
     const navigate = useNavigate();
@@ -9,6 +30,10 @@ const HomeGenZ = () => {
         location: '',
         benefits: []
     });
+    const [showCuisineDropdown, setShowCuisineDropdown] = useState(false);
+    const [selectedCuisines, setSelectedCuisines] = useState([]);
+    const cuisineDropdownRef = useRef(null);
+    const [showFloatingButton, setShowFloatingButton] = useState(true);
 
     const benefits = [
         { key: 'health_insurance', label: 'Health Insurance', icon: '🏥', description: 'Medical coverage' },
@@ -50,11 +75,31 @@ const HomeGenZ = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    // Handle outside click for cuisine dropdown
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (cuisineDropdownRef.current && !cuisineDropdownRef.current.contains(event.target)) {
+                setShowCuisineDropdown(false);
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleCuisineChange = (value) => {
+        setSelectedCuisines((prev) =>
+            prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
+        );
+    };
+
     const handleSearch = (e) => {
         e.preventDefault();
         const params = new URLSearchParams();
-        if (searchData.query) params.set('query', searchData.query);
+        if (searchData.query) params.set('q', searchData.query);
         if (searchData.location) params.set('location', searchData.location);
+        if (selectedCuisines.length > 0) {
+            selectedCuisines.forEach(cuisine => params.append('cuisines', cuisine));
+        }
         if (searchData.benefits.length > 0) {
             searchData.benefits.forEach(benefit => params.append('benefits', benefit));
         }
@@ -70,17 +115,29 @@ const HomeGenZ = () => {
         }));
     };
 
+    useEffect(() => {
+        const handleScroll = () => {
+            const perksSection = document.getElementById('benefits-section');
+            if (perksSection) {
+                const rect = perksSection.getBoundingClientRect();
+                setShowFloatingButton(rect.top < window.innerHeight * 0.2);
+            }
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
         <div style={{
             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%)',
             minHeight: '100vh',
             width: '100vw',
             position: 'relative',
-            overflow: 'visible',
+            overflow: isMobile ? 'auto' : 'visible',
             paddingBottom: '2rem'
         }}>
             <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', position: 'relative', zIndex: 2 }}>
-                <section style={{ paddingTop: '64px', paddingBottom: '40px', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', flexWrap: 'wrap', gap: '32px' }}>
+                <section style={{ paddingTop: 'calc(64px + 64px)', paddingBottom: '40px', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', flexWrap: 'wrap', gap: '32px' }}>
                     {/* Light colored shape accent for hero */}
                     <div style={{
                         position: 'absolute',
@@ -157,14 +214,14 @@ const HomeGenZ = () => {
                                 color: '#222',
                                 border: 'none',
                                 borderRadius: '18px',
-                                padding: isMobile ? '10px 18px' : '15px 44px',
-                                fontSize: isMobile ? '0.98rem' : '1.13rem',
+                                padding: isMobile ? '12px 18px' : '15px 44px',
+                                fontSize: isMobile ? '1.05rem' : '1.13rem',
                                 fontWeight: '800',
                                 textTransform: 'uppercase',
                                 letterSpacing: '1px',
                                 boxShadow: '0 6px 16px rgba(102,126,234,0.18)',
-                                marginBottom: '0',
-                                marginTop: '0',
+                                marginBottom: isMobile ? '18px' : '0',
+                                marginTop: isMobile ? '8px' : '0',
                                 transition: 'background 0.2s',
                                 width: isMobile ? '100%' : 'auto',
                                 display: isMobile ? 'block' : 'inline-block'
@@ -191,7 +248,7 @@ const HomeGenZ = () => {
                             minWidth: '320px',
                             width: '100%',
                             margin: '0 auto',
-                            padding: '28px 18px',
+                            padding: isMobile ? '18px 8px' : '28px 18px',
                             display: 'flex',
                             alignItems: 'center',
                             gap: '12px',
@@ -221,6 +278,60 @@ const HomeGenZ = () => {
                                         />
                                     </Col>
                                     <Col xs={12} md={6} style={{ marginBottom: '10px' }}>
+                                        <div style={{ position: 'relative' }} ref={cuisineDropdownRef}>
+                                            <div
+                                                style={{
+                                                    borderRadius: '16px',
+                                                    border: '2px solid #e0e0e0',
+                                                    fontSize: '1.08rem',
+                                                    padding: '16px 20px',
+                                                    background: 'rgba(255,255,255,0.93)',
+                                                    color: '#222',
+                                                    boxShadow: '0 2px 8px rgba(102,126,234,0.06)',
+                                                    cursor: 'pointer',
+                                                    userSelect: 'none',
+                                                    minHeight: '60px',
+                                                    display: 'flex',
+                                                    alignItems: 'center'
+                                                }}
+                                                onClick={() => setShowCuisineDropdown((v) => !v)}
+                                            >
+                                                {selectedCuisines.length === 0 ? 'All cuisines' :
+                                                    CUISINE_OPTIONS.filter(opt => selectedCuisines.includes(opt.value)).map(opt => `${opt.label} ${opt.emoji}`).join(', ')
+                                                }
+                                            </div>
+                                            {showCuisineDropdown && (
+                                                <div style={{
+                                                    position: 'absolute',
+                                                    top: '110%',
+                                                    left: 0,
+                                                    zIndex: 10,
+                                                    background: 'rgba(255,255,255,0.98)',
+                                                    border: '2px solid #e0e0e0',
+                                                    borderRadius: 16,
+                                                    boxShadow: '0 8px 32px rgba(102,126,234,0.18)',
+                                                    padding: '1rem',
+                                                    minWidth: 220,
+                                                    color: '#222',
+                                                    maxHeight: '200px',
+                                                    overflowY: 'auto'
+                                                }}>
+                                                    {CUISINE_OPTIONS.map(opt => (
+                                                        <label key={opt.value} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, cursor: 'pointer' }}>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={selectedCuisines.includes(opt.value)}
+                                                                onChange={() => handleCuisineChange(opt.value)}
+                                                                style={{ accentColor: '#764ba2', marginRight: 6 }}
+                                                            />
+                                                            <span>{opt.label} {opt.emoji}</span>
+                                                        </label>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </Col>
+                                    <Col xs={12} style={{ marginBottom: '10px' }}>
                                         <Form.Control
                                             type="text"
                                             placeholder="Location (City, State)"
@@ -247,18 +358,18 @@ const HomeGenZ = () => {
                                                 background: 'linear-gradient(120deg, #ff6b6b 0%, #feca57 60%, #4ecdc4 100%)',
                                                 color: '#222',
                                                 fontWeight: 800,
-                                                border: 'none',
+                                                border: '2px solid #222',
                                                 borderRadius: '16px',
-                                                minWidth: '100%',
-                                                fontSize: '1.13rem',
-                                                padding: '16px 0',
+                                                minWidth: isMobile ? '100%' : 320,
+                                                fontSize: isMobile ? '1.08rem' : '1.13rem',
+                                                padding: isMobile ? '16px 0' : '16px 0',
                                                 textTransform: 'uppercase',
                                                 letterSpacing: '1px',
                                                 boxShadow: '0 6px 16px rgba(255,107,107,0.18)'
                                             }}
-                                            aria-label="Search restaurants"
+                                            aria-label={`Search with ${searchData.benefits.length} benefits`}
                                         >
-                                            <span role="img" aria-label="search">🔍</span> Search
+                                            <span role="img" aria-label="search">🔍</span> Search with {searchData.benefits.length} benefit{searchData.benefits.length > 1 ? 's' : ''}
                                         </Button>
                                     </Col>
                                 </Row>
@@ -347,113 +458,94 @@ const HomeGenZ = () => {
                                             <div
                                                 key={benefit.key}
                                                 onClick={() => toggleBenefit(benefit.key)}
-                                                style={{ 
-                                                    background: isSelected 
-                                                        ? 'linear-gradient(120deg, #ff6b6b 0%, #feca57 60%, #4ecdc4 100%)' 
-                                                        : 'rgba(255,255,255,0.96)',
-                                                    borderRadius: index % 2 === 0 ? '36px 18px 32px 24px' : '24px 36px 18px 32px',
-                                                    padding: isMobile ? '18px 8px 18px 8px' : '32px 18px 28px 18px',
+                                                style={{
+                                                    background: isSelected ? 'linear-gradient(120deg, #ffecd2 0%, #fcb69f 100%)' : 'rgba(255,255,255,0.96)',
+                                                    borderRadius: '28px',
+                                                    boxShadow: isSelected ? '0 12px 32px rgba(255,107,107,0.18), 0 2px 12px rgba(102,126,234,0.10)' : '0 2px 12px rgba(102,126,234,0.10)',
+                                                    border: isSelected ? '2.5px solid #222' : '2px solid #e0e0e0',
+                                                    width: isMobile ? 140 : 200,
+                                                    height: isMobile ? 140 : 200,
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
                                                     textAlign: 'center',
                                                     cursor: 'pointer',
                                                     transition: 'all 0.25s cubic-bezier(.68,-0.55,.27,1.55)',
                                                     willChange: 'transform',
-                                                    transform: isSelected
-                                                        ? `scale(1.04) translateY(-6px) rotate(${index % 2 === 0 ? '-10deg' : '10deg'})`
-                                                        : undefined,
-                                                    boxShadow: isSelected
-                                                        ? '0 12px 32px rgba(255,107,107,0.18), 0 2px 12px rgba(102,126,234,0.10)'
-                                                        : '0 4px 16px rgba(102,126,234,0.08)',
-                                                    outline: isSelected ? '2.5px solid #4ecdc4' : 'none',
-                                                    position: 'relative',
-                                                    overflow: 'visible',
-                                                    minHeight: isMobile ? 90 : 140
+                                                    transform: isSelected ? `scale(1.04) rotate(${index % 2 === 0 ? '-8deg' : '8deg'})` : 'scale(1) rotate(0deg)',
+                                                    outline: isSelected ? '2.5px solid #222' : 'none',
+                                                    margin: '0 auto',
+                                                    userSelect: 'none',
                                                 }}
                                                 aria-pressed={isSelected}
                                                 tabIndex={0}
                                                 role="button"
                                                 onKeyPress={e => (e.key === 'Enter' || e.key === ' ') && toggleBenefit(benefit.key)}
                                                 onMouseEnter={e => {
-                                                    e.currentTarget.style.transform = `scale(1.03) rotate(${index % 2 === 0 ? '-6deg' : '6deg'})`;
+                                                    e.currentTarget.style.transform = isSelected ? `scale(1.07) rotate(${index % 2 === 0 ? '-12deg' : '12deg'})` : `scale(1.03) rotate(${index % 2 === 0 ? '-6deg' : '6deg'})`;
                                                 }}
                                                 onMouseLeave={e => {
-                                                    e.currentTarget.style.transform = isSelected
-                                                        ? `scale(1.04) translateY(-6px) rotate(${index % 2 === 0 ? '-10deg' : '10deg'})`
-                                                        : 'scale(1) rotate(0deg)';
+                                                    e.currentTarget.style.transform = isSelected ? `scale(1.04) rotate(${index % 2 === 0 ? '-8deg' : '8deg'})` : 'scale(1) rotate(0deg)';
                                                 }}
                                                 onMouseDown={e => {
-                                                    e.currentTarget.style.transform = `scale(0.98) rotate(${index % 2 === 0 ? '-16deg' : '16deg'})`;
+                                                    e.currentTarget.style.transform = isSelected ? `scale(0.98) rotate(${index % 2 === 0 ? '-16deg' : '16deg'})` : `scale(0.98) rotate(${index % 2 === 0 ? '-8deg' : '8deg'})`;
                                                 }}
                                                 onMouseUp={e => {
-                                                    e.currentTarget.style.transform = isSelected
-                                                        ? `scale(1.04) translateY(-6px) rotate(${index % 2 === 0 ? '-10deg' : '10deg'})`
-                                                        : `scale(1.03) rotate(${index % 2 === 0 ? '-6deg' : '6deg'})`;
+                                                    e.currentTarget.style.transform = isSelected ? `scale(1.04) rotate(${index % 2 === 0 ? '-8deg' : '8deg'})` : 'scale(1) rotate(0deg)';
                                                 }}
                                             >
-                                                {/* Fun floating shape accent */}
-                                                <svg width="48" height="24" viewBox="0 0 48 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: 'absolute', top: '-18px', left: 'calc(50% - 24px)', zIndex: 0, opacity: 0.18 }} aria-hidden="true"><ellipse cx="24" cy="12" rx="24" ry="12" fill="#feca57"/></svg>
-                                                <div style={{ 
-                                                    fontSize: isMobile ? '1.5rem' : '2.5rem', 
-                                                    marginBottom: isMobile ? '8px' : '15px',
-                                                    zIndex: 1,
-                                                    position: 'relative',
-                                                    filter: isSelected ? 'drop-shadow(0 2px 8px #764ba2)' : 'none'
-                                                }}>
-                                                    <span role="img" aria-label={benefit.label}>{benefit.icon}</span>
+                                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                                                    <span style={{ fontSize: isMobile ? '2.2rem' : '2.7rem', marginBottom: '8px', lineHeight: 1 }}>{benefit.icon}</span>
+                                                    <span style={{ fontSize: isMobile ? '.9rem' : '1.13rem', fontWeight: 800, color: '#222', marginBottom: 2 }}>{benefit.label}</span>
+                                                    <span style={{ fontSize: isMobile ? '.8rem' : '0.98rem', color: '#444', fontWeight: 500 }}>{benefit.description}</span>
                                                 </div>
-                                                <h6 style={{ 
-                                                    marginBottom: '8px', 
-                                                    color: isSelected ? '#222' : '#333',
-                                                    fontWeight: '800',
-                                                    fontSize: isMobile ? '0.98rem' : '1.08rem',
-                                                    fontFamily: 'Poppins, Inter, sans-serif',
-                                                    letterSpacing: '-0.5px',
-                                                    zIndex: 1,
-                                                    position: 'relative'
-                                                }}>
-                                                    {benefit.label}
-                                                </h6>
-                                                <small style={{ 
-                                                    color: isSelected ? '#333' : '#666',
-                                                    fontWeight: '500',
-                                                    zIndex: 1,
-                                                    position: 'relative'
-                                                }}>
-                                                    {benefit.description}
-                                                </small>
                                             </div>
                                         );
                                     })}
                                 </div>
-                                {/* Search button below grid (desktop and mobile) */}
-                                {searchData.benefits.length > 0 && (
-                                    <div className="text-center mt-3">
-                                        <Button 
-                                            onClick={handleSearch}
-                                            size="lg"
-                                            style={{
-                                                background: 'linear-gradient(45deg, #667eea, #764ba2)',
-                                                color: 'white',
-                                                border: 'none',
-                                                borderRadius: '15px',
-                                                padding: '15px 40px',
-                                                fontSize: '1.1rem',
-                                                fontWeight: '700',
-                                                textTransform: 'uppercase',
-                                                letterSpacing: '1px',
-                                                boxShadow: '0 10px 20px rgba(102,126,234,0.3)'
-                                            }}
-                                        >
-                                            🚀 Search with {searchData.benefits.length} benefit{searchData.benefits.length !== 1 ? 's' : ''}
-                                        </Button>
-                                    </div>
-                                )}
                             </Col>
                         </Row>
                     </Container>
                 </section>
             </div>
+            {searchData.benefits.length > 0 && showFloatingButton && (
+                <div style={{
+                    position: 'fixed',
+                    left: 0,
+                    right: 0,
+                    bottom: isMobile ? 0 : 24,
+                    zIndex: 100,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    padding: isMobile ? '12px 10px' : '0',
+                    background: isMobile ? 'rgba(255,255,255,0.98)' : 'none',
+                    boxShadow: isMobile ? '0 -2px 16px rgba(102,126,234,0.10)' : 'none',
+                }}>
+                    <Button
+                        size="lg"
+                        style={{
+                            background: 'linear-gradient(120deg, #ff6b6b 0%, #feca57 60%, #4ecdc4 100%)',
+                            color: '#222',
+                            fontWeight: 800,
+                            border: '2px solid #222',
+                            borderRadius: '16px',
+                            minWidth: isMobile ? '100%' : 320,
+                            fontSize: isMobile ? '1.08rem' : '1.13rem',
+                            padding: isMobile ? '16px 0' : '16px 0',
+                            textTransform: 'uppercase',
+                            letterSpacing: '1px',
+                            boxShadow: '0 6px 16px rgba(255,107,107,0.18)'
+                        }}
+                        onClick={handleSearch}
+                        aria-label={`Search with ${searchData.benefits.length} benefits`}
+                    >
+                        <span role="img" aria-label="search">🔍</span> Search with {searchData.benefits.length} benefit{searchData.benefits.length > 1 ? 's' : ''}
+                    </Button>
+                </div>
+            )}
         </div>
     );
 };
 
-export default HomeGenZ; 
+export default HomeGenZ;

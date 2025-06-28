@@ -43,7 +43,7 @@ const RegisterGenZ = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '2rem',
+      padding: 'calc(2rem + 64px) 2rem 2rem 2rem',
       fontFamily: genzFont,
       position: 'relative',
       overflow: 'hidden'
@@ -79,9 +79,8 @@ const RegisterGenZ = () => {
             WebkitTextFillColor: 'transparent',
             marginBottom: '0.5rem'
           }}>
-            Join the Party! 🎉
+            Join the Party!
           </h1>
-          <span style={{ fontSize: '2rem', display: 'block', marginBottom: '0.5rem' }}>🎉</span>
           <p style={{
             color: '#fff',
             fontSize: '1.1rem',
@@ -203,7 +202,7 @@ const RegisterGenZ = () => {
                   outline: 'none',
                   transition: 'all 0.3s ease'
                 }}
-                placeholder="Create a strong password"
+                placeholder="Create password"
               />
               <button
                 type="button"
@@ -255,7 +254,7 @@ const RegisterGenZ = () => {
                   outline: 'none',
                   transition: 'all 0.3s ease'
                 }}
-                placeholder="Confirm your password"
+                placeholder="Confirm password"
               />
               <button
                 type="button"
@@ -340,7 +339,7 @@ const RegisterGenZ = () => {
           }}>
             Are you a restaurant owner? 🏪
           </p>
-          <Link to="/business-register" style={{
+          <Link to="/register-business" style={{
             color: genzColors.accent1,
             fontWeight: 700,
             textDecoration: 'none',
@@ -359,7 +358,7 @@ const RegisterGenZ = () => {
           border: '2px solid rgba(255, 255, 255, 0.1)'
         }}>
           <h4 style={{
-            color: genzColors.accent1,
+            color: '#145c63',
             fontWeight: 800,
             fontSize: '1.1rem',
             marginBottom: '1rem',
@@ -369,7 +368,7 @@ const RegisterGenZ = () => {
           </h4>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gridTemplateColumns: window.innerWidth < 600 ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))',
             gap: '1rem'
           }}>
             <div style={{

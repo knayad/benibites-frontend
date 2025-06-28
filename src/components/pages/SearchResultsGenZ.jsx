@@ -3,6 +3,7 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { searchRestaurants } from '../../store/slices/restaurantsSlice';
 import { genzColors, genzGradients, genzFont, PlayfulStroke1 } from '../../genzTheme.jsx';
+import burgerSize from '../../assets/burgerSize.jpg';
 
 const CUISINE_OPTIONS = [
   { value: 'american', label: 'American', emoji: '🍔' },
@@ -53,29 +54,34 @@ const SearchResultsGenZ = () => {
   const [searchParams] = useSearchParams();
   const dispatch = useDispatch();
   const { searchResults, searchLoading, searchError } = useSelector((state) => state.restaurants);
-  const [filters, setFilters] = useState({
-    cuisine: '',
-    rating: '',
-    benefits: ''
-  });
 
-  const query = searchParams.get('q') || '';
+  const initialQuery = searchParams.get('q') || '';
+  const cuisinesParam = searchParams.get('cuisines') || '';
+  const benefitsParam = searchParams.get('benefits') || '';
 
+  const [query, setQuery] = useState(initialQuery);
   const [showCuisineDropdown, setShowCuisineDropdown] = useState(false);
   const [showBenefitsDropdown, setShowBenefitsDropdown] = useState(false);
+  const [showDistanceDropdown, setShowDistanceDropdown] = useState(false);
   const cuisineDropdownRef = useRef(null);
   const benefitsDropdownRef = useRef(null);
   const distanceDropdownRef = useRef(null);
-  const [selectedCuisines, setSelectedCuisines] = useState([]);
-  const [selectedBenefits, setSelectedBenefits] = useState([]);
+  const [selectedCuisines, setSelectedCuisines] = useState(cuisinesParam ? cuisinesParam.split(',') : []);
+  const [selectedBenefits, setSelectedBenefits] = useState(benefitsParam ? benefitsParam.split(',') : []);
   const [location, setLocation] = useState('');
   const [distance, setDistance] = useState(10);
+  const [showBurgerMeme, setShowBurgerMeme] = useState(false);
 
   useEffect(() => {
-    if (query) {
-      dispatch(searchRestaurants({ query, filters }));
-    }
-  }, [dispatch, query, filters]);
+    const searchParams = {
+      query,
+      filters: {
+        cuisine: selectedCuisines.join(','),
+        benefits: selectedBenefits.join(',')
+      }
+    };
+    dispatch(searchRestaurants(searchParams));
+  }, [dispatch, query, selectedCuisines, selectedBenefits]);
 
   // Handle outside click for dropdowns
   useEffect(() => {
@@ -107,15 +113,23 @@ const SearchResultsGenZ = () => {
 
   const getCuisineEmoji = (cuisine) => {
     const emojiMap = {
+      american: '🍔',
       italian: '🍝',
       mexican: '🌮',
       chinese: '🥢',
       japanese: '🍣',
-      indian: '🍛',
-      american: '🍔',
-      mediterranean: '🥙',
       thai: '🍜',
-      other: '🍽️'
+      indian: '🍛',
+      french: '🥖',
+      mediterranean: '🥙',
+      greek: '🥗',
+      spanish: '🥘',
+      korean: '🍲',
+      vietnamese: '🍜',
+      middle_eastern: '🍢',
+      caribbean: '🍤',
+      african: '🍲',
+      fusion: '🍽️'
     };
     return emojiMap[cuisine] || '🍽️';
   };
@@ -124,13 +138,16 @@ const SearchResultsGenZ = () => {
     return '⭐'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
   };
 
+  // Responsive padding for mobile
+  const isMobile = window.innerWidth < 768;
+
   return (
     <div style={{
       minHeight: '100vh',
       width: '100vw',
       background: genzGradients.hero,
       fontFamily: genzFont,
-      padding: '2rem 0',
+      padding: isMobile ? 'calc(1rem + 64px) 0 0.5rem 0' : 'calc(2rem + 64px) 0 2rem 0',
       position: 'relative',
       overflow: 'hidden',
       margin: 0,
@@ -144,7 +161,7 @@ const SearchResultsGenZ = () => {
         <PlayfulStroke1 style={{ width: 60, height: 18 }} />
       </div>
 
-      <div className="container">
+      <div className="container" style={{ paddingTop: isMobile ? 0 : undefined }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '3rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -177,30 +194,34 @@ const SearchResultsGenZ = () => {
           background: 'rgba(255, 255, 255, 0.1)',
           backdropFilter: 'blur(20px)',
           borderRadius: 24,
-          padding: '2rem',
-          marginBottom: '3rem',
+          padding: isMobile ? '1rem' : '2rem',
+          marginBottom: isMobile ? '1.5rem' : '3rem',
           border: '2px solid rgba(255, 255, 255, 0.2)',
           boxShadow: '0 10px 30px rgba(102, 126, 234, 0.1)'
         }}>
-          <h3 style={{
-            color: genzColors.accent1,
-            fontWeight: 900,
-            fontSize: '1.5rem',
-            marginBottom: '1.5rem',
-            textAlign: 'center',
-            letterSpacing: '1px',
-            textShadow: '0 2px 12px rgba(0,0,0,0.25), 0 1px 0 #fff',
-            background: 'rgba(255,255,255,0.10)',
-            borderRadius: 12,
-            padding: '0.5rem 1.5rem',
-            display: 'inline-block',
-          }}>
-            Filter Your Search <span role="img" aria-label="sparkles">✨</span>
-          </h3>
+          <div style={{ marginBottom: isMobile ? '1rem' : '1.5rem', width: '100%' }}>
+            <input
+              type="text"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="What are you craving?"
+              style={{
+                width: '100%',
+                padding: isMobile ? '0.8rem 1rem' : '1.1rem 1.2rem',
+                borderRadius: 18,
+                border: '2px solid #e0e0e0',
+                fontSize: isMobile ? '0.98rem' : '1.08rem',
+                background: 'rgba(255,255,255,0.93)',
+                color: '#222',
+                boxShadow: '0 2px 8px rgba(102,126,234,0.06)'
+              }}
+              aria-label="Search for food or restaurant"
+            />
+          </div>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-            gap: '1.5rem',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: isMobile ? '1rem' : '1.5rem',
           }}>
             {/* Cuisine Dropdown */}
             <div style={{ position: 'relative' }} ref={cuisineDropdownRef}>
@@ -209,15 +230,19 @@ const SearchResultsGenZ = () => {
               </label>
               <div
                 style={{
-                  background: 'rgba(255,255,255,0.12)',
-                  border: '2px solid rgba(255,255,255,0.3)',
                   borderRadius: 16,
-                  padding: '0.8rem 1rem',
+                  border: '2px solid #fff',
+                  fontSize: '1.08rem',
+                  padding: '16px 20px',
+                  background: 'rgba(30,30,40,0.98)',
                   color: '#fff',
-                  fontFamily: genzFont,
-                  fontSize: '0.95rem',
+                  boxShadow: '0 2px 8px rgba(102,126,234,0.06)',
                   cursor: 'pointer',
                   userSelect: 'none',
+                  minHeight: 60,
+                  display: 'flex',
+                  alignItems: 'center',
+                  position: 'relative',
                 }}
                 onClick={() => setShowCuisineDropdown((v) => !v)}
               >
@@ -230,13 +255,15 @@ const SearchResultsGenZ = () => {
                   position: 'absolute',
                   top: '110%',
                   left: 0,
-                  zIndex: 10,
+                  zIndex: 1000,
                   background: 'rgba(30,30,40,0.98)',
                   border: '2px solid #fff',
                   borderRadius: 16,
                   boxShadow: '0 8px 32px rgba(102,126,234,0.18)',
                   padding: '1rem',
                   minWidth: 220,
+                  maxHeight: '60vh',
+                  overflowY: 'auto',
                   color: '#fff',
                 }}>
                   {CUISINE_OPTIONS.map(opt => (
@@ -253,7 +280,6 @@ const SearchResultsGenZ = () => {
                 </div>
               )}
             </div>
-
             {/* Benefits Dropdown */}
             <div style={{ position: 'relative' }} ref={benefitsDropdownRef}>
               <label style={{ display: 'block', color: '#fff', fontWeight: 700, marginBottom: '0.5rem', fontSize: '1rem' }}>
@@ -261,15 +287,19 @@ const SearchResultsGenZ = () => {
               </label>
               <div
                 style={{
-                  background: 'rgba(255,255,255,0.12)',
-                  border: '2px solid rgba(255,255,255,0.3)',
                   borderRadius: 16,
-                  padding: '0.8rem 1rem',
+                  border: '2px solid #fff',
+                  fontSize: '1.08rem',
+                  padding: '16px 20px',
+                  background: 'rgba(30,30,40,0.98)',
                   color: '#fff',
-                  fontFamily: genzFont,
-                  fontSize: '0.95rem',
+                  boxShadow: '0 2px 8px rgba(102,126,234,0.06)',
                   cursor: 'pointer',
                   userSelect: 'none',
+                  minHeight: 60,
+                  display: 'flex',
+                  alignItems: 'center',
+                  position: 'relative',
                 }}
                 onClick={() => setShowBenefitsDropdown((v) => !v)}
               >
@@ -282,30 +312,44 @@ const SearchResultsGenZ = () => {
                   position: 'absolute',
                   top: '110%',
                   left: 0,
-                  zIndex: 10,
+                  zIndex: 1000,
                   background: 'rgba(30,30,40,0.98)',
                   border: '2px solid #fff',
                   borderRadius: 16,
                   boxShadow: '0 8px 32px rgba(102,126,234,0.18)',
                   padding: '1rem',
-                  minWidth: 220,
+                  minWidth: isMobile ? 220 : 282,
+                  maxHeight: '60vh',
+                  overflowY: 'auto',
                   color: '#fff',
                 }}>
                   {BENEFIT_OPTIONS.map(opt => (
-                    <label key={opt.value} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, cursor: 'pointer' }}>
+                    <label key={opt.value} style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: 8, 
+                      marginBottom: 8, 
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}>
                       <input
                         type="checkbox"
                         checked={selectedBenefits.includes(opt.value)}
                         onChange={() => handleBenefitsChange(opt.value)}
-                        style={{ accentColor: genzColors.accent1, marginRight: 6 }}
+                        style={{ accentColor: genzColors.accent1, marginRight: 6, flexShrink: 0 }}
                       />
-                      <span>{opt.label}</span>
+                      <span style={{ 
+                        overflow: 'hidden', 
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
+                      }}>{opt.label}</span>
                     </label>
                   ))}
                 </div>
               )}
             </div>
-
             {/* Location Input */}
             <div>
               <label style={{ display: 'block', color: '#fff', fontWeight: 700, marginBottom: '0.5rem', fontSize: '1rem' }}>
@@ -329,7 +373,6 @@ const SearchResultsGenZ = () => {
                 }}
               />
             </div>
-
             {/* Distance Dropdown */}
             <div style={{ position: 'relative' }} ref={distanceDropdownRef}>
               <label style={{ display: 'block', color: '#fff', fontWeight: 700, marginBottom: '0.5rem', fontSize: '1rem' }}>
@@ -337,15 +380,19 @@ const SearchResultsGenZ = () => {
               </label>
               <div
                 style={{
-                  background: 'rgba(255,255,255,0.12)',
-                  border: '2px solid rgba(255,255,255,0.3)',
                   borderRadius: 16,
-                  padding: '0.8rem 1rem',
+                  border: '2px solid #fff',
+                  fontSize: '1.08rem',
+                  padding: '16px 20px',
+                  background: 'rgba(30,30,40,0.98)',
                   color: '#fff',
-                  fontFamily: genzFont,
-                  fontSize: '0.95rem',
+                  boxShadow: '0 2px 8px rgba(102,126,234,0.06)',
                   cursor: 'pointer',
                   userSelect: 'none',
+                  minHeight: 60,
+                  display: 'flex',
+                  alignItems: 'center',
+                  position: 'relative',
                 }}
                 onClick={() => setShowDistanceDropdown((v) => !v)}
               >
@@ -356,13 +403,15 @@ const SearchResultsGenZ = () => {
                   position: 'absolute',
                   top: '110%',
                   left: 0,
-                  zIndex: 10,
+                  zIndex: 1000,
                   background: 'rgba(30,30,40,0.98)',
                   border: '2px solid #fff',
                   borderRadius: 16,
                   boxShadow: '0 8px 32px rgba(102,126,234,0.18)',
                   padding: '1rem',
                   minWidth: 180,
+                  maxHeight: '60vh',
+                  overflowY: 'auto',
                   color: '#fff',
                 }}>
                   {DISTANCE_OPTIONS.map(opt => (
@@ -398,8 +447,10 @@ const SearchResultsGenZ = () => {
             textAlign: 'center',
             padding: '3rem',
             color: '#ff6b6b',
-            fontSize: '1.1rem',
-            fontWeight: 600
+            fontSize: '1.3rem',
+            fontWeight: 600,
+            textShadow: '0 0 4px rgba(255,255,255,0.4), 0 0 8px rgba(255,255,255,0.2)',
+            WebkitTextStroke: '0.5px white'
           }}>
             ❌ {searchError}
           </div>
@@ -513,8 +564,14 @@ const SearchResultsGenZ = () => {
                           color: genzColors.accent1,
                           padding: '0.3rem 0.8rem',
                           borderRadius: 12,
-                          fontSize: '0.8rem',
-                          fontWeight: 600
+                          fontSize: isMobile ? '0.8rem' : '0.92rem',
+                          fontWeight: 600,
+                          whiteSpace: isMobile ? 'normal' : 'nowrap',
+                          overflow: isMobile ? 'visible' : 'hidden',
+                          textOverflow: isMobile ? 'clip' : 'ellipsis',
+                          maxWidth: isMobile ? '100%' : 160,
+                          display: 'inline-block',
+                          verticalAlign: 'middle',
                         }}
                       >
                         {benefit}
@@ -562,12 +619,90 @@ const SearchResultsGenZ = () => {
                       View Details →
                     </span>
                   </div>
+
+                  {restaurant.isHiring && (
+                    <div style={{
+                      position: 'absolute',
+                      top: 12,
+                      right: 12,
+                      background: 'linear-gradient(90deg, #feca57 0%, #ff6b6b 100%)',
+                      color: '#222',
+                      fontWeight: 900,
+                      fontSize: '1.05rem',
+                      borderRadius: 16,
+                      padding: '0.5rem 1.2rem',
+                      boxShadow: '0 2px 12px rgba(255,107,107,0.18)',
+                      zIndex: 10,
+                      animation: 'pulse 1.2s infinite alternate',
+                      letterSpacing: '1px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8
+                    }}>
+                      <span role="img" aria-label="megaphone">📢</span> Now Hiring!
+                    </div>
+                  )}
                 </div>
               </Link>
             ))}
           </div>
         )}
+
+        {/* Hamburger easter egg - embedded below search results */}
+        <div style={{
+          textAlign: 'center',
+          marginTop: '3rem',
+          padding: '2rem',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          cursor: 'pointer',
+          userSelect: 'none',
+          position: 'relative',
+          zIndex: 1
+        }}
+          onClick={() => setShowBurgerMeme(v => !v)}
+          title={showBurgerMeme ? 'Hide burger meme' : 'Show burger meme'}
+        >
+          <span style={{
+            fontSize: isMobile ? '3.2rem' : '4.2rem',
+            filter: showBurgerMeme ? 'drop-shadow(0 2px 12px #feca57)' : 'drop-shadow(0 2px 8px #764ba2)',
+            transition: 'filter 0.2s',
+            animation: showBurgerMeme ? 'bounceBurger 0.7s' : 'none',
+          }} role="img" aria-label="burger">🍔</span>
+          {showBurgerMeme && (
+            <img
+              src={burgerSize}
+              alt="Burgers should be wider not taller"
+              title="Burgers should be wider not taller"
+              style={{
+                marginTop: 16,
+                maxWidth: isMobile ? 180 : 260,
+                width: '100%',
+                borderRadius: 18,
+                boxShadow: '0 8px 32px rgba(254,202,87,0.18)',
+                userSelect: 'none',
+                pointerEvents: 'none',
+                filter: 'saturate(1.2) drop-shadow(0 2px 8px #feca57)',
+                animation: 'popBurger 0.5s',
+              }}
+            />
+          )}
+        </div>
       </div>
+      <style>{`
+        @keyframes popBurger {
+          0% { transform: scale(0.7) translateY(40px); opacity: 0; }
+          60% { transform: scale(1.1) translateY(-10px); opacity: 1; }
+          100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        @keyframes bounceBurger {
+          0% { transform: scale(1) translateY(0); }
+          30% { transform: scale(1.2) translateY(-10px); }
+          60% { transform: scale(0.95) translateY(4px); }
+          100% { transform: scale(1) translateY(0); }
+        }
+      `}</style>
     </div>
   );
 };

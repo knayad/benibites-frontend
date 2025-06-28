@@ -99,18 +99,26 @@ const MyReviewsGenZ = () => {
               ⭐
             </div>
             <div style={{ flex: 1 }}>
-              <h1 style={{
-                fontWeight: 900,
-                fontSize: isMobile ? '2rem' : '2.5rem',
-                letterSpacing: '-2px',
-                background: genzGradients.button,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                marginBottom: '0.5rem'
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                marginBottom: '0.5rem',
+                flexWrap: 'nowrap'
               }}>
-                My Reviews
-              </h1>
-              <div style={{ fontSize: isMobile ? '2rem' : '2.5rem', marginBottom: '0.5rem' }}>🌟</div>
+                <h1 style={{
+                  fontWeight: 900,
+                  fontSize: isMobile ? '2rem' : '2.5rem',
+                  letterSpacing: '-2px',
+                  background: genzGradients.button,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  margin: 0
+                }}>
+                  My Reviews
+                </h1>
+                <div style={{ fontSize: isMobile ? '2rem' : '2.5rem' }}>🌟</div>
+              </div>
               <p style={{
                 color: '#fff',
                 fontSize: isMobile ? '1rem' : '1.1rem',

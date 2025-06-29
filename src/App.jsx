@@ -17,6 +17,9 @@ import WriteReviewGenZ from './components/pages/WriteReviewGenZ';
 import WriteEmployeeReviewGenZ from './components/pages/WriteEmployeeReviewGenZ';
 import ProfileGenZ from './components/dashboard/ProfileGenZ';
 import MyReviewsGenZ from './components/dashboard/MyReviewsGenZ';
+import ForgotPasswordGenZ from './components/auth/ForgotPasswordGenZ';
+import BusinessForgotPasswordGenZ from './components/auth/BusinessForgotPasswordGenZ';
+import NotFoundGenZ from './components/pages/NotFoundGenZ';
 import './App.css';
 
 function App() {
@@ -40,6 +43,9 @@ function App() {
               <Route path="/write-employee-review/:id" element={<WriteEmployeeReviewGenZ />} />
               <Route path="/profile" element={<ProfileGenZ />} />
               <Route path="/my-reviews" element={<MyReviewsGenZ />} />
+              <Route path="/forgot-password-genz" element={<ForgotPasswordGenZ />} />
+              <Route path="/business-forgot-password-genz" element={<BusinessForgotPasswordGenZ />} />
+              <Route path="*" element={<NotFoundGenZ />} />
             </Routes>
           </main>
           <Footer />

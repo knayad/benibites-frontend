@@ -24,26 +24,39 @@ const BusinessDashboardGenZ = () => {
     return (
       <div style={{
         minHeight: '100vh',
+        width: '100vw',
         background: genzGradients.hero,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         fontFamily: genzFont,
-        paddingTop: '64px'
+        padding: '2rem',
+        paddingTop: 'calc(2rem + 64px)',
+        position: 'relative',
+        overflow: 'hidden'
       }}>
+        {/* Playful stroke accents */}
+        <div style={{ position: 'absolute', top: '15%', left: '10%', transform: 'rotate(25deg)', zIndex: 1 }}>
+          <PlayfulStroke1 style={{ width: 80, height: 24 }} />
+        </div>
+        <div style={{ position: 'absolute', bottom: '20%', right: '15%', transform: 'rotate(-15deg)', zIndex: 1 }}>
+          <PlayfulStroke1 style={{ width: 60, height: 18 }} />
+        </div>
+        
         <div style={{
-          background: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(255,255,255,0.98)',
           borderRadius: 32,
-          padding: '3rem',
-          border: '2px solid rgba(255, 255, 255, 0.2)',
-          boxShadow: '0 20px 40px rgba(102, 126, 234, 0.15)',
+          padding: '2.5rem',
+          border: `2px solid ${genzColors.accent1}`,
+          boxShadow: '0 8px 32px rgba(102,126,234,0.18)',
           textAlign: 'center',
-          maxWidth: 500
+          maxWidth: 500,
+          position: 'relative',
+          zIndex: 2
         }}>
           <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🚫</div>
           <h2 style={{
-            color: '#fff',
+            color: genzColors.primary,
             fontWeight: 800,
             fontSize: '2rem',
             marginBottom: '1rem'
@@ -51,9 +64,9 @@ const BusinessDashboardGenZ = () => {
             Access Denied
           </h2>
           <p style={{
-            color: '#fff',
+            color: genzColors.primary,
             fontSize: '1.1rem',
-            opacity: 0.9,
+            opacity: 0.8,
             marginBottom: '2rem'
           }}>
             This dashboard is only available for business accounts.
@@ -80,30 +93,34 @@ const BusinessDashboardGenZ = () => {
   return (
     <div style={{
       minHeight: '100vh',
+      width: '100vw',
       background: genzGradients.hero,
       fontFamily: genzFont,
       position: 'relative',
       overflow: 'hidden',
-      paddingTop: '64px'
+      padding: '2rem',
+      paddingTop: 'calc(2rem + 64px)'
     }}>
       {/* Playful stroke accents */}
-      <div style={{ position: 'absolute', top: '8%', left: '10%', transform: 'rotate(25deg)', zIndex: 1 }}>
+      <div style={{ position: 'absolute', top: '15%', left: '10%', transform: 'rotate(25deg)', zIndex: 1 }}>
         <PlayfulStroke1 style={{ width: 80, height: 24 }} />
       </div>
-      <div style={{ position: 'absolute', bottom: '15%', right: '12%', transform: 'rotate(-20deg)', zIndex: 1 }}>
+      <div style={{ position: 'absolute', bottom: '20%', right: '15%', transform: 'rotate(-15deg)', zIndex: 1 }}>
         <PlayfulStroke1 style={{ width: 60, height: 18 }} />
       </div>
+      <div style={{ position: 'absolute', top: '60%', left: '5%', transform: 'rotate(-10deg)', zIndex: 1 }}>
+        <PlayfulStroke1 style={{ width: 40, height: 12 }} />
+      </div>
 
-      <div className="container">
+      <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
         {/* Welcome Header */}
         <div style={{
-          background: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(255,255,255,0.98)',
           borderRadius: 32,
-          padding: '3rem',
-          marginBottom: '3rem',
-          border: '2px solid rgba(255, 255, 255, 0.2)',
-          boxShadow: '0 20px 40px rgba(102, 126, 234, 0.15)',
+          padding: '2.5rem',
+          marginBottom: '2rem',
+          border: `2px solid ${genzColors.accent1}`,
+          boxShadow: '0 8px 32px rgba(102,126,234,0.18)',
           position: 'relative',
           zIndex: 2
         }}>
@@ -111,7 +128,8 @@ const BusinessDashboardGenZ = () => {
             display: 'flex',
             alignItems: 'center',
             gap: '2rem',
-            marginBottom: '2rem'
+            marginBottom: '2rem',
+            flexWrap: 'wrap'
           }}>
             <div style={{
               width: 100,
@@ -130,7 +148,6 @@ const BusinessDashboardGenZ = () => {
               <h1 style={{
                 fontWeight: 900,
                 fontSize: '2.5rem',
-                letterSpacing: '-2px',
                 background: genzGradients.button,
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -139,10 +156,10 @@ const BusinessDashboardGenZ = () => {
                 Welcome back, {user?.businessName || 'Restaurant Owner'}! 👋
               </h1>
               <p style={{
-                color: '#fff',
+                color: genzColors.primary,
                 fontSize: '1.1rem',
                 fontWeight: 500,
-                opacity: 0.9
+                opacity: 0.8
               }}>
                 Manage your restaurant profile, benefits, and reviews! 🍕✨
               </p>
@@ -156,55 +173,54 @@ const BusinessDashboardGenZ = () => {
             gap: '1.5rem'
           }}>
             <div style={{
-              background: 'rgba(255, 255, 255, 0.1)',
+              background: 'rgba(102, 126, 234, 0.05)',
               borderRadius: 20,
               padding: '1.5rem',
               textAlign: 'center',
-              border: '2px solid rgba(255, 255, 255, 0.2)'
+              border: `2px solid ${genzColors.accent1}`
             }}>
               <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>⭐</div>
-              <h3 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem' }}>
+              <h3 style={{ color: genzColors.primary, fontWeight: 700, marginBottom: '0.5rem' }}>
                 4.8
               </h3>
-              <p style={{ color: '#fff', opacity: 0.8 }}>Average Rating</p>
+              <p style={{ color: genzColors.primary, opacity: 0.8 }}>Average Rating</p>
             </div>
             <div style={{
-              background: 'rgba(255, 255, 255, 0.1)',
+              background: 'rgba(102, 126, 234, 0.05)',
               borderRadius: 20,
               padding: '1.5rem',
               textAlign: 'center',
-              border: '2px solid rgba(255, 255, 255, 0.2)'
+              border: `2px solid ${genzColors.accent1}`
             }}>
               <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>👥</div>
-              <h3 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem' }}>
+              <h3 style={{ color: genzColors.primary, fontWeight: 700, marginBottom: '0.5rem' }}>
                 24
               </h3>
-              <p style={{ color: '#fff', opacity: 0.8 }}>Total Reviews</p>
+              <p style={{ color: genzColors.primary, opacity: 0.8 }}>Total Reviews</p>
             </div>
             <div style={{
-              background: 'rgba(255, 255, 255, 0.1)',
+              background: 'rgba(102, 126, 234, 0.05)',
               borderRadius: 20,
               padding: '1.5rem',
               textAlign: 'center',
-              border: '2px solid rgba(255, 255, 255, 0.2)'
+              border: `2px solid ${genzColors.accent1}`
             }}>
               <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🎁</div>
-              <h3 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem' }}>
+              <h3 style={{ color: genzColors.primary, fontWeight: 700, marginBottom: '0.5rem' }}>
                 8
               </h3>
-              <p style={{ color: '#fff', opacity: 0.8 }}>Active Benefits</p>
+              <p style={{ color: genzColors.primary, opacity: 0.8 }}>Active Benefits</p>
             </div>
           </div>
         </div>
 
         {/* Main Content */}
         <div style={{
-          background: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(255,255,255,0.98)',
           borderRadius: 32,
-          padding: '3rem',
-          border: '2px solid rgba(255, 255, 255, 0.2)',
-          boxShadow: '0 20px 40px rgba(102, 126, 234, 0.15)',
+          padding: '2.5rem',
+          border: `2px solid ${genzColors.accent1}`,
+          boxShadow: '0 8px 32px rgba(102,126,234,0.18)',
           position: 'relative',
           zIndex: 2
         }}>
@@ -213,17 +229,17 @@ const BusinessDashboardGenZ = () => {
             display: 'flex',
             gap: '1rem',
             marginBottom: '2rem',
-            borderBottom: '2px solid rgba(255, 255, 255, 0.2)',
+            borderBottom: `2px solid ${genzColors.accent1}`,
             paddingBottom: '1rem',
             flexWrap: 'wrap'
           }}>
-            {['overview', 'profile', 'benefits', 'reviews'].map((tab) => (
+            {['overview', 'profile', 'reviews', 'benefits'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 style={{
                   background: activeTab === tab ? genzGradients.button : 'transparent',
-                  color: activeTab === tab ? genzColors.black : '#fff',
+                  color: activeTab === tab ? genzColors.black : genzColors.primary,
                   border: 'none',
                   borderRadius: 16,
                   padding: '0.8rem 1.5rem',
@@ -235,182 +251,129 @@ const BusinessDashboardGenZ = () => {
                   textTransform: 'capitalize'
                 }}
               >
-                {tab === 'overview' && '📊 Overview'}
-                {tab === 'profile' && '🏪 Business Profile'}
-                {tab === 'benefits' && '🎁 Benefits'}
-                {tab === 'reviews' && '⭐ Reviews'}
+                {tab}
               </button>
             ))}
           </div>
 
           {/* Tab Content */}
-          <div>
-            {activeTab === 'overview' && (
-              <div>
-                <h3 style={{
-                  color: genzColors.accent1,
-                  fontWeight: 800,
-                  fontSize: '1.5rem',
-                  marginBottom: '1.5rem'
+          {activeTab === 'overview' && (
+            <div>
+              <h2 style={{
+                color: genzColors.primary,
+                fontWeight: 800,
+                fontSize: '1.8rem',
+                marginBottom: '1.5rem'
+              }}>
+                Business Overview 📊
+              </h2>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                gap: '1.5rem'
+              }}>
+                <div style={{
+                  background: 'rgba(102, 126, 234, 0.05)',
+                  borderRadius: 20,
+                  padding: '1.5rem',
+                  border: `2px solid ${genzColors.accent1}`
                 }}>
-                  Business Overview 📊
-                </h3>
-                
-                {/* Quick Actions */}
-                <div style={{ marginBottom: '2rem' }}>
-                  <h4 style={{
-                    color: '#fff',
+                  <h3 style={{
+                    color: genzColors.primary,
                     fontWeight: 700,
-                    fontSize: '1.2rem',
-                    marginBottom: '1rem'
-                  }}>
-                    Quick Actions
-                  </h4>
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                    gap: '1rem'
-                  }}>
-                    <button style={{
-                      background: genzGradients.button,
-                      color: genzColors.black,
-                      border: 'none',
-                      borderRadius: 16,
-                      padding: '1rem 1.5rem',
-                      fontFamily: genzFont,
-                      fontWeight: 700,
-                      fontSize: '1rem',
-                      cursor: 'pointer'
-                    }}>
-                      ✏️ Edit Profile
-                    </button>
-                    <button style={{
-                      background: 'rgba(255, 255, 255, 0.2)',
-                      color: '#fff',
-                      border: '2px solid rgba(255, 255, 255, 0.3)',
-                      borderRadius: 16,
-                      padding: '1rem 1.5rem',
-                      fontFamily: genzFont,
-                      fontWeight: 700,
-                      fontSize: '1rem',
-                      cursor: 'pointer'
-                    }}>
-                      🎁 Manage Benefits
-                    </button>
-                    <button style={{
-                      background: 'rgba(255, 255, 255, 0.2)',
-                      color: '#fff',
-                      border: '2px solid rgba(255, 255, 255, 0.3)',
-                      borderRadius: 16,
-                      padding: '1rem 1.5rem',
-                      fontFamily: genzFont,
-                      fontWeight: 700,
-                      fontSize: '1rem',
-                      cursor: 'pointer'
-                    }}>
-                      📢 View Reviews
-                    </button>
-                  </div>
-                </div>
-
-                {/* Recent Activity */}
-                <div>
-                  <h4 style={{
-                    color: '#fff',
-                    fontWeight: 700,
-                    fontSize: '1.2rem',
                     marginBottom: '1rem'
                   }}>
                     Recent Activity
-                  </h4>
+                  </h3>
+                  <p style={{
+                    color: genzColors.primary,
+                    opacity: 0.8,
+                    marginBottom: '1rem'
+                  }}>
+                    You received 3 new reviews this week! 📝
+                  </p>
+                  <p style={{
+                    color: genzColors.primary,
+                    opacity: 0.8
+                  }}>
+                    Your restaurant profile has been viewed 156 times this month 👀
+                  </p>
+                </div>
+                <div style={{
+                  background: 'rgba(102, 126, 234, 0.05)',
+                  borderRadius: 20,
+                  padding: '1.5rem',
+                  border: `2px solid ${genzColors.accent1}`
+                }}>
+                  <h3 style={{
+                    color: genzColors.primary,
+                    fontWeight: 700,
+                    marginBottom: '1rem'
+                  }}>
+                    Quick Actions
+                  </h3>
                   <div style={{
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '1rem'
+                    gap: '0.8rem'
                   }}>
-                    <div style={{
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      borderRadius: 16,
-                      padding: '1rem',
-                      border: '2px solid rgba(255, 255, 255, 0.2)'
-                    }}>
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '1rem'
-                      }}>
-                        <div style={{ fontSize: '1.5rem' }}>⭐</div>
-                        <div style={{ flex: 1 }}>
-                          <h5 style={{
-                            color: '#fff',
-                            fontWeight: 700,
-                            marginBottom: '0.3rem'
-                          }}>
-                            New 5-star review received
-                          </h5>
-                          <p style={{
-                            color: '#fff',
-                            opacity: 0.8,
-                            fontSize: '0.9rem'
-                          }}>
-                            "Amazing food and great employee benefits!"
-                          </p>
-                        </div>
-                        <span style={{
-                          color: '#fff',
-                          opacity: 0.7,
-                          fontSize: '0.9rem'
-                        }}>
-                          2 hours ago
-                        </span>
-                      </div>
-                    </div>
-                    <div style={{
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      borderRadius: 16,
-                      padding: '1rem',
-                      border: '2px solid rgba(255, 255, 255, 0.2)'
-                    }}>
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '1rem'
-                      }}>
-                        <div style={{ fontSize: '1.5rem' }}>🎁</div>
-                        <div style={{ flex: 1 }}>
-                          <h5 style={{
-                            color: '#fff',
-                            fontWeight: 700,
-                            marginBottom: '0.3rem'
-                          }}>
-                            Health insurance benefit added
-                          </h5>
-                          <p style={{
-                            color: '#fff',
-                            opacity: 0.8,
-                            fontSize: '0.9rem'
-                          }}>
-                            New benefit now available for employees
-                          </p>
-                        </div>
-                        <span style={{
-                          color: '#fff',
-                          opacity: 0.7,
-                          fontSize: '0.9rem'
-                        }}>
-                          1 day ago
-                        </span>
-                      </div>
-                    </div>
+                    <button
+                      onClick={() => setActiveTab('profile')}
+                      style={{
+                        background: genzGradients.button,
+                        color: genzColors.black,
+                        border: 'none',
+                        borderRadius: 12,
+                        padding: '0.8rem 1rem',
+                        fontFamily: genzFont,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        textAlign: 'left'
+                      }}
+                    >
+                      📝 Update Profile
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('benefits')}
+                      style={{
+                        background: 'rgba(102, 126, 234, 0.1)',
+                        color: genzColors.primary,
+                        border: `2px solid ${genzColors.accent1}`,
+                        borderRadius: 12,
+                        padding: '0.8rem 1rem',
+                        fontFamily: genzFont,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        textAlign: 'left'
+                      }}
+                    >
+                      🎁 Manage Benefits
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('reviews')}
+                      style={{
+                        background: 'rgba(102, 126, 234, 0.1)',
+                        color: genzColors.primary,
+                        border: `2px solid ${genzColors.accent1}`,
+                        borderRadius: 12,
+                        padding: '0.8rem 1rem',
+                        fontFamily: genzFont,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        textAlign: 'left'
+                      }}
+                    >
+                      ⭐ View Reviews
+                    </button>
                   </div>
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
-            {activeTab === 'profile' && <BusinessProfileGenZ />}
-            {activeTab === 'benefits' && <BusinessBenefitsGenZ />}
-            {activeTab === 'reviews' && <BusinessReviewsGenZ />}
-          </div>
+          {activeTab === 'profile' && <BusinessProfileGenZ />}
+          {activeTab === 'reviews' && <BusinessReviewsGenZ />}
+          {activeTab === 'benefits' && <BusinessBenefitsGenZ />}
         </div>
       </div>
     </div>

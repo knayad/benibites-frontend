@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../../store/slices/authSlice';
-import { genzColors, genzGradients, genzFont } from '../../genzTheme.jsx';
+import { genzColors, genzGradients, genzFont, PlayfulStroke1 } from '../../genzTheme.jsx';
 
 const BusinessLoginGenZ = () => {
   const dispatch = useDispatch();
@@ -31,8 +31,21 @@ const BusinessLoginGenZ = () => {
       alignItems: 'center',
       justifyContent: 'center',
       fontFamily: genzFont,
-      paddingTop: 'calc(2rem + 64px)'
+      padding: '2rem',
+      position: 'relative',
+      overflow: 'hidden'
     }}>
+      {/* Playful stroke accents */}
+      <div style={{ position: 'absolute', top: '15%', left: '10%', transform: 'rotate(25deg)', zIndex: 1 }}>
+        <PlayfulStroke1 style={{ width: 80, height: 24 }} />
+      </div>
+      <div style={{ position: 'absolute', bottom: '20%', right: '15%', transform: 'rotate(-15deg)', zIndex: 1 }}>
+        <PlayfulStroke1 style={{ width: 60, height: 18 }} />
+      </div>
+      <div style={{ position: 'absolute', top: '60%', left: '5%', transform: 'rotate(-10deg)', zIndex: 1 }}>
+        <PlayfulStroke1 style={{ width: 40, height: 12 }} />
+      </div>
+      
       <div style={{
         background: 'rgba(255,255,255,0.98)',
         borderRadius: 32,
@@ -40,7 +53,9 @@ const BusinessLoginGenZ = () => {
         padding: '2.5rem 2rem',
         maxWidth: 400,
         width: '100%',
-        border: `2px solid ${genzColors.accent1}`
+        border: `2px solid ${genzColors.accent1}`,
+        position: 'relative',
+        zIndex: 2
       }}>
         <h2 style={{
           fontWeight: 900,
@@ -131,6 +146,11 @@ const BusinessLoginGenZ = () => {
             Don't have a business account?{' '}
             <Link to="/register-business" style={{ color: genzColors.accent1, fontWeight: 700, textDecoration: 'none' }}>
               Register here
+            </Link>
+          </p>
+          <p style={{ color: genzColors.primary, marginBottom: '0.7rem' }}>
+            <Link to="/business-forgot-password-genz" style={{ color: genzColors.accent2, fontWeight: 700, textDecoration: 'none' }}>
+              Forgot your password? 🔑
             </Link>
           </p>
           <p style={{ color: genzColors.primary }}>

@@ -9,9 +9,14 @@ const DashboardGenZ = () => {
   const { user } = useSelector((state) => state.auth);
   const { userReviews, loading } = useSelector((state) => state.reviews);
   const [activeTab, setActiveTab] = useState('overview');
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
     dispatch(fetchUserReviews());
+    
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [dispatch]);
 
   const getRatingStars = (rating) => {
@@ -36,84 +41,83 @@ const DashboardGenZ = () => {
   return (
     <div style={{
       minHeight: '100vh',
+      width: '100vw',
       background: genzGradients.hero,
       fontFamily: genzFont,
       position: 'relative',
       overflow: 'hidden',
-      paddingTop: '64px'
+      padding: isMobile ? '1rem' : '2rem',
+      paddingTop: isMobile ? '1rem' : '2rem'
     }}>
       {/* Playful stroke accents */}
-      <div style={{ position: 'absolute', top: '8%', left: '10%', transform: 'rotate(25deg)', zIndex: 1 }}>
-        <PlayfulStroke1 style={{ width: 80, height: 24 }} />
+      <div style={{ position: 'absolute', top: '15%', left: '10%', transform: 'rotate(25deg)', zIndex: 1 }}>
+        <PlayfulStroke1 style={{ width: isMobile ? 60 : 80, height: isMobile ? 18 : 24 }} />
       </div>
-      <div style={{ position: 'absolute', bottom: '15%', right: '12%', transform: 'rotate(-20deg)', zIndex: 1 }}>
-        <PlayfulStroke1 style={{ width: 60, height: 18 }} />
+      <div style={{ position: 'absolute', bottom: '20%', right: '15%', transform: 'rotate(-15deg)', zIndex: 1 }}>
+        <PlayfulStroke1 style={{ width: isMobile ? 40 : 60, height: isMobile ? 12 : 18 }} />
+      </div>
+      <div style={{ position: 'absolute', top: '60%', left: '5%', transform: 'rotate(-10deg)', zIndex: 1 }}>
+        <PlayfulStroke1 style={{ width: isMobile ? 30 : 40, height: isMobile ? 9 : 12 }} />
       </div>
 
-      <div className="container" style={{ padding: window.innerWidth < 768 ? '1rem' : '2rem' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
         {/* Welcome Header */}
         <div style={{
-          background: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(20px)',
-          borderRadius: window.innerWidth < 768 ? 24 : 32,
-          padding: window.innerWidth < 768 ? '2rem' : '3rem',
-          marginBottom: window.innerWidth < 768 ? '2rem' : '3rem',
-          border: '2px solid rgba(255, 255, 255, 0.2)',
-          boxShadow: '0 20px 40px rgba(102, 126, 234, 0.15)',
+          background: 'rgba(255,255,255,0.98)',
+          borderRadius: isMobile ? 24 : 32,
+          padding: isMobile ? '1.5rem' : '2.5rem',
+          marginBottom: isMobile ? '1.5rem' : '2rem',
+          border: `2px solid ${genzColors.accent1}`,
+          boxShadow: '0 8px 32px rgba(102,126,234,0.18)',
           position: 'relative',
           zIndex: 2
         }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: window.innerWidth < 768 ? '1rem' : '2rem',
-            marginBottom: window.innerWidth < 768 ? '1.5rem' : '2rem',
-            flexDirection: window.innerWidth < 768 ? 'column' : 'row',
-            textAlign: window.innerWidth < 768 ? 'center' : 'left'
+            gap: isMobile ? '1rem' : '2rem',
+            marginBottom: isMobile ? '1.5rem' : '2rem',
+            flexWrap: 'wrap'
           }}>
             <div style={{
-              width: window.innerWidth < 768 ? 80 : 100,
-              height: window.innerWidth < 768 ? 80 : 100,
+              width: isMobile ? 80 : 100,
+              height: isMobile ? 80 : 100,
               borderRadius: '50%',
               background: genzGradients.button,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: window.innerWidth < 768 ? '2.5rem' : '3rem',
+              fontSize: isMobile ? '2.5rem' : '3rem',
               boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
             }}>
               👤
             </div>
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: 1, minWidth: isMobile ? '200px' : 'auto' }}>
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.5rem',
-                flexWrap: 'wrap',
-                justifyContent: window.innerWidth < 768 ? 'center' : 'flex-start'
+                flexWrap: 'nowrap'
               }}>
-                <span style={{ 
-                  fontSize: window.innerWidth < 768 ? '1.8rem' : '2.2rem',
-                  marginBottom: '0.5rem'
-                }}>👋</span>
+                <span style={{ fontSize: isMobile ? '1.8rem' : '2.2rem', marginBottom: '0.5rem' }}>👋</span>
                 <h1 style={{
                   fontWeight: 900,
-                  fontSize: window.innerWidth < 768 ? '2rem' : '2.5rem',
-                  letterSpacing: '-2px',
+                  fontSize: isMobile ? '1.8rem' : '2.5rem',
                   background: genzGradients.button,
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   marginBottom: '0.5rem',
-                  marginRight: '0.5rem'
+                  marginRight: '0.5rem',
+                  whiteSpace: 'nowrap'
                 }}>
                   Welcome back, {user?.name}!
                 </h1>
               </div>
               <p style={{
-                color: '#fff',
-                fontSize: window.innerWidth < 768 ? '1rem' : '1.1rem',
+                color: genzColors.primary,
+                fontSize: isMobile ? '1rem' : '1.1rem',
                 fontWeight: 500,
-                opacity: 0.9
+                opacity: 0.8
               }}>
                 Ready to discover more amazing restaurant perks? 🍕✨
               </p>
@@ -123,71 +127,69 @@ const DashboardGenZ = () => {
           {/* Quick Stats */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: window.innerWidth < 768 ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: window.innerWidth < 768 ? '1rem' : '1.5rem'
+            gridTemplateColumns: isMobile ? 'repeat(auto-fit, minmax(150px, 1fr))' : 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: isMobile ? '1rem' : '1.5rem'
           }}>
             <div style={{
-              background: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: 20,
-              padding: window.innerWidth < 768 ? '1rem' : '1.5rem',
+              background: 'rgba(102, 126, 234, 0.05)',
+              borderRadius: isMobile ? 16 : 20,
+              padding: isMobile ? '1rem' : '1.5rem',
               textAlign: 'center',
-              border: '2px solid rgba(255, 255, 255, 0.2)'
+              border: `2px solid ${genzColors.accent1}`
             }}>
-              <div style={{ fontSize: window.innerWidth < 768 ? '2rem' : '2.5rem', marginBottom: '0.5rem' }}>⭐</div>
-              <h3 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem', fontSize: window.innerWidth < 768 ? '1.5rem' : '1.8rem' }}>
+              <div style={{ fontSize: isMobile ? '2rem' : '2.5rem', marginBottom: '0.5rem' }}>⭐</div>
+              <h3 style={{ color: genzColors.primary, fontWeight: 700, marginBottom: '0.5rem', fontSize: isMobile ? '1.5rem' : '1.8rem' }}>
                 {userReviews.length}
               </h3>
-              <p style={{ color: '#fff', opacity: 0.8, fontSize: window.innerWidth < 768 ? '0.9rem' : '1rem' }}>Reviews Written</p>
+              <p style={{ color: genzColors.primary, opacity: 0.8, fontSize: isMobile ? '0.9rem' : '1rem' }}>Reviews Written</p>
             </div>
             <div style={{
-              background: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: 20,
-              padding: window.innerWidth < 768 ? '1rem' : '1.5rem',
+              background: 'rgba(102, 126, 234, 0.05)',
+              borderRadius: isMobile ? 16 : 20,
+              padding: isMobile ? '1rem' : '1.5rem',
               textAlign: 'center',
-              border: '2px solid rgba(255, 255, 255, 0.2)'
+              border: `2px solid ${genzColors.accent1}`
             }}>
-              <div style={{ fontSize: window.innerWidth < 768 ? '2rem' : '2.5rem', marginBottom: '0.5rem' }}>🍕</div>
-              <h3 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem', fontSize: window.innerWidth < 768 ? '1.5rem' : '1.8rem' }}>
+              <div style={{ fontSize: isMobile ? '2rem' : '2.5rem', marginBottom: '0.5rem' }}>🍕</div>
+              <h3 style={{ color: genzColors.primary, fontWeight: 700, marginBottom: '0.5rem', fontSize: isMobile ? '1.5rem' : '1.8rem' }}>
                 {userReviews.length * 2}
               </h3>
-              <p style={{ color: '#fff', opacity: 0.8, fontSize: window.innerWidth < 768 ? '0.9rem' : '1rem' }}>Restaurants Visited</p>
+              <p style={{ color: genzColors.primary, opacity: 0.8, fontSize: isMobile ? '0.9rem' : '1rem' }}>Restaurants Visited</p>
             </div>
             <div style={{
-              background: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: 20,
-              padding: window.innerWidth < 768 ? '1rem' : '1.5rem',
+              background: 'rgba(102, 126, 234, 0.05)',
+              borderRadius: isMobile ? 16 : 20,
+              padding: isMobile ? '1rem' : '1.5rem',
               textAlign: 'center',
-              border: '2px solid rgba(255, 255, 255, 0.2)'
+              border: `2px solid ${genzColors.accent1}`
             }}>
-              <div style={{ fontSize: window.innerWidth < 768 ? '2rem' : '2.5rem', marginBottom: '0.5rem' }}>🎁</div>
-              <h3 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem', fontSize: window.innerWidth < 768 ? '1.5rem' : '1.8rem' }}>
+              <div style={{ fontSize: isMobile ? '2rem' : '2.5rem', marginBottom: '0.5rem' }}>🎁</div>
+              <h3 style={{ color: genzColors.primary, fontWeight: 700, marginBottom: '0.5rem', fontSize: isMobile ? '1.5rem' : '1.8rem' }}>
                 {userReviews.length * 3}
               </h3>
-              <p style={{ color: '#fff', opacity: 0.8, fontSize: window.innerWidth < 768 ? '0.9rem' : '1rem' }}>Perks Discovered</p>
+              <p style={{ color: genzColors.primary, opacity: 0.8, fontSize: isMobile ? '0.9rem' : '1rem' }}>Perks Discovered</p>
             </div>
           </div>
         </div>
 
         {/* Main Content */}
         <div style={{
-          background: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(20px)',
-          borderRadius: window.innerWidth < 768 ? 24 : 32,
-          padding: window.innerWidth < 768 ? '2rem' : '3rem',
-          border: '2px solid rgba(255, 255, 255, 0.2)',
-          boxShadow: '0 20px 40px rgba(102, 126, 234, 0.15)',
+          background: 'rgba(255,255,255,0.98)',
+          borderRadius: isMobile ? 24 : 32,
+          padding: isMobile ? '1.5rem' : '2.5rem',
+          border: `2px solid ${genzColors.accent1}`,
+          boxShadow: '0 8px 32px rgba(102,126,234,0.18)',
           position: 'relative',
           zIndex: 2
         }}>
           {/* Tab Navigation */}
           <div style={{
             display: 'flex',
-            gap: window.innerWidth < 768 ? '0.5rem' : '1rem',
-            marginBottom: '2rem',
-            borderBottom: '2px solid rgba(255, 255, 255, 0.2)',
-            paddingBottom: '1rem',
-            flexWrap: 'wrap',
-            justifyContent: window.innerWidth < 768 ? 'center' : 'flex-start'
+            gap: isMobile ? '0.5rem' : '1rem',
+            marginBottom: isMobile ? '1.5rem' : '2rem',
+            borderBottom: `2px solid ${genzColors.accent1}`,
+            paddingBottom: isMobile ? '0.8rem' : '1rem',
+            flexWrap: 'wrap'
           }}>
             {['overview', 'reviews', 'favorites', 'settings'].map((tab) => (
               <button
@@ -195,377 +197,231 @@ const DashboardGenZ = () => {
                 onClick={() => setActiveTab(tab)}
                 style={{
                   background: activeTab === tab ? genzGradients.button : 'transparent',
-                  color: activeTab === tab ? genzColors.black : '#fff',
+                  color: activeTab === tab ? genzColors.black : genzColors.primary,
                   border: 'none',
-                  borderRadius: 16,
-                  padding: window.innerWidth < 768 ? '0.6rem 1rem' : '0.8rem 1.5rem',
+                  borderRadius: isMobile ? 12 : 16,
+                  padding: isMobile ? '0.6rem 1rem' : '0.8rem 1.5rem',
                   fontFamily: genzFont,
                   fontWeight: 700,
-                  fontSize: window.innerWidth < 768 ? '0.9rem' : '1rem',
+                  fontSize: isMobile ? '0.9rem' : '1rem',
                   cursor: 'pointer',
                   transition: 'all 0.3s ease',
-                  textTransform: 'capitalize',
-                  whiteSpace: 'nowrap'
+                  textTransform: 'capitalize'
                 }}
               >
-                {tab === 'overview' && '📊 Overview'}
-                {tab === 'reviews' && '⭐ My Reviews'}
-                {tab === 'favorites' && '❤️ Favorites'}
-                {tab === 'settings' && '⚙️ Settings'}
+                {tab}
               </button>
             ))}
           </div>
 
           {/* Tab Content */}
-          <div>
-            {activeTab === 'overview' && (
-              <div>
-                <h3 style={{
-                  color: genzColors.accent1,
-                  fontWeight: 800,
-                  fontSize: '1.5rem',
-                  marginBottom: '1.5rem'
-                }}>
-                  Your Activity Overview 📊
-                </h3>
-                
-                {/* Recent Activity */}
-                <div style={{ marginBottom: '2rem' }}>
-                  <h4 style={{
-                    color: '#fff',
-                    fontWeight: 700,
-                    fontSize: '1.2rem',
-                    marginBottom: '1rem'
-                  }}>
-                    Recent Activity
-                  </h4>
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem'
-                  }}>
-                    {userReviews.slice(0, 3).map((review, index) => (
-                      <div
-                        key={index}
-                        style={{
-                          background: 'rgba(255, 255, 255, 0.1)',
-                          borderRadius: 16,
-                          padding: '1rem',
-                          border: '2px solid rgba(255, 255, 255, 0.2)'
-                        }}
-                      >
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '1rem'
-                        }}>
-                          <div style={{ fontSize: '1.5rem' }}>
-                            {getCuisineEmoji(review.restaurant?.cuisine)}
-                          </div>
-                          <div style={{ flex: 1 }}>
-                            <h5 style={{
-                              color: '#fff',
-                              fontWeight: 700,
-                              marginBottom: '0.3rem'
-                            }}>
-                              {review.restaurant?.name}
-                            </h5>
-                            <div style={{ color: '#fff', opacity: 0.8 }}>
-                              {getRatingStars(review.rating)}
-                            </div>
-                          </div>
-                          <span style={{
-                            color: '#fff',
-                            opacity: 0.7,
-                            fontSize: '0.9rem'
-                          }}>
-                            {new Date(review.date).toLocaleDateString()}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+          {activeTab === 'overview' && (
+            <div>
+              <h2 style={{
+                color: genzColors.primary,
+                fontWeight: 800,
+                fontSize: isMobile ? '1.5rem' : '1.8rem',
+                marginBottom: isMobile ? '1rem' : '1.5rem'
+              }}>
+                Recent Activity 📊
+              </h2>
+              {loading ? (
+                <div style={{ textAlign: 'center', padding: isMobile ? '1.5rem' : '2rem' }}>
+                  <p style={{ color: genzColors.primary }}>Loading your reviews... 🔄</p>
                 </div>
-
-                {/* Quick Actions */}
-                <div>
-                  <h4 style={{
-                    color: '#fff',
-                    fontWeight: 700,
-                    fontSize: '1.2rem',
-                    marginBottom: '1rem'
-                  }}>
-                    Quick Actions
-                  </h4>
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                    gap: '1rem'
-                  }}>
-                    <Link to="/search" style={{
-                      background: genzGradients.button,
-                      color: genzColors.black,
-                      border: 'none',
-                      borderRadius: 16,
-                      padding: '1rem 1.5rem',
-                      fontFamily: genzFont,
-                      fontWeight: 700,
-                      fontSize: '1rem',
-                      textDecoration: 'none',
-                      textAlign: 'center',
-                      display: 'block'
+              ) : userReviews.length > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '0.8rem' : '1rem' }}>
+                  {userReviews.slice(0, 3).map((review) => (
+                    <div key={review.id} style={{
+                      background: 'rgba(102, 126, 234, 0.05)',
+                      borderRadius: isMobile ? 12 : 16,
+                      padding: isMobile ? '1rem' : '1.5rem',
+                      border: `2px solid ${genzColors.accent1}`
                     }}>
-                      🔍 Find Restaurants
-                    </Link>
-                    <Link to="/my-reviews" style={{
-                      background: 'rgba(255, 255, 255, 0.2)',
-                      color: '#fff',
-                      border: '2px solid rgba(255, 255, 255, 0.3)',
-                      borderRadius: 16,
-                      padding: '1rem 1.5rem',
-                      fontFamily: genzFont,
-                      fontWeight: 700,
-                      fontSize: '1rem',
-                      textDecoration: 'none',
-                      textAlign: 'center',
-                      display: 'block'
-                    }}>
-                      ✍️ My Reviews
-                    </Link>
-                    <Link to="/profile" style={{
-                      background: 'rgba(255, 255, 255, 0.2)',
-                      color: '#fff',
-                      border: '2px solid rgba(255, 255, 255, 0.3)',
-                      borderRadius: 16,
-                      padding: '1rem 1.5rem',
-                      fontFamily: genzFont,
-                      fontWeight: 700,
-                      fontSize: '1rem',
-                      textDecoration: 'none',
-                      textAlign: 'center',
-                      display: 'block'
-                    }}>
-                      👤 Edit Profile
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'reviews' && (
-              <div>
-                <h3 style={{
-                  color: genzColors.accent1,
-                  fontWeight: 800,
-                  fontSize: '1.5rem',
-                  marginBottom: '1.5rem'
-                }}>
-                  My Reviews ⭐
-                </h3>
-                {loading ? (
-                  <div style={{
-                    textAlign: 'center',
-                    padding: '3rem',
-                    color: '#fff',
-                    fontSize: '1.1rem'
-                  }}>
-                    🔄 Loading your reviews...
-                  </div>
-                ) : userReviews.length === 0 ? (
-                  <div style={{
-                    textAlign: 'center',
-                    padding: '3rem',
-                    color: '#fff',
-                    fontSize: '1.1rem'
-                  }}>
-                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⭐</div>
-                    <p>You haven't written any reviews yet!</p>
-                    <Link to="/search" style={{
-                      background: genzGradients.button,
-                      color: genzColors.black,
-                      border: 'none',
-                      borderRadius: 16,
-                      padding: '1rem 2rem',
-                      fontFamily: genzFont,
-                      fontWeight: 700,
-                      fontSize: '1rem',
-                      textDecoration: 'none',
-                      display: 'inline-block',
-                      marginTop: '1rem'
-                    }}>
-                      Find restaurants to review! 🔍
-                    </Link>
-                  </div>
-                ) : (
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1.5rem'
-                  }}>
-                    {userReviews.map((review, index) => (
-                      <div
-                        key={index}
-                        style={{
-                          background: 'rgba(255, 255, 255, 0.1)',
-                          borderRadius: 20,
-                          padding: '1.5rem',
-                          border: '2px solid rgba(255, 255, 255, 0.2)'
-                        }}
-                      >
-                        <div style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'flex-start',
-                          marginBottom: '1rem'
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: isMobile ? '0.8rem' : '1rem',
+                        marginBottom: '0.5rem',
+                        flexWrap: 'wrap'
+                      }}>
+                        <span style={{ fontSize: isMobile ? '1.2rem' : '1.5rem' }}>{getCuisineEmoji(review.cuisine)}</span>
+                        <h3 style={{
+                          color: genzColors.primary,
+                          fontWeight: 700,
+                          fontSize: isMobile ? '1rem' : '1.2rem',
+                          margin: 0
                         }}>
-                          <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '1rem'
-                          }}>
-                            <div style={{ fontSize: '2rem' }}>
-                              {getCuisineEmoji(review.restaurant?.cuisine)}
-                            </div>
-                            <div>
-                              <h4 style={{
-                                color: '#fff',
-                                fontWeight: 700,
-                                fontSize: '1.2rem',
-                                marginBottom: '0.3rem'
-                              }}>
-                                {review.restaurant?.name}
-                              </h4>
-                              <div style={{ color: '#fff', fontWeight: 600 }}>
-                                {getRatingStars(review.rating)}
-                              </div>
-                            </div>
-                          </div>
-                          <span style={{
-                            color: '#fff',
-                            opacity: 0.7,
-                            fontSize: '0.9rem'
-                          }}>
-                            {new Date(review.date).toLocaleDateString()}
-                          </span>
-                        </div>
-                        <p style={{
-                          color: '#fff',
-                          opacity: 0.9,
-                          lineHeight: 1.5
-                        }}>
-                          {review.comment}
-                        </p>
+                          {review.restaurantName}
+                        </h3>
+                        <span style={{ color: genzColors.accent1, fontWeight: 600 }}>
+                          {getRatingStars(review.rating)}
+                        </span>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {activeTab === 'favorites' && (
-              <div>
-                <h3 style={{
-                  color: genzColors.accent1,
-                  fontWeight: 800,
-                  fontSize: '1.5rem',
-                  marginBottom: '1.5rem'
-                }}>
-                  My Favorites ❤️
-                </h3>
+                      <p style={{
+                        color: genzColors.primary,
+                        opacity: 0.8,
+                        margin: 0,
+                        fontSize: isMobile ? '0.9rem' : '0.95rem'
+                      }}>
+                        {review.comment}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
                 <div style={{
                   textAlign: 'center',
-                  padding: '3rem',
-                  color: '#fff',
-                  fontSize: '1.1rem'
+                  padding: isMobile ? '1.5rem' : '2rem',
+                  background: 'rgba(102, 126, 234, 0.05)',
+                  borderRadius: isMobile ? 16 : 20,
+                  border: `2px solid ${genzColors.accent1}`
                 }}>
-                  <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>❤️</div>
-                  <p>Favorite restaurants feature coming soon!</p>
+                  <p style={{ color: genzColors.primary, marginBottom: '1rem' }}>
+                    No reviews yet! Start exploring restaurants and share your experiences! 🍕
+                  </p>
+                  <Link to="/" style={{
+                    background: genzGradients.button,
+                    color: genzColors.black,
+                    padding: isMobile ? '0.6rem 1.2rem' : '0.8rem 1.5rem',
+                    borderRadius: isMobile ? 12 : 16,
+                    textDecoration: 'none',
+                    fontWeight: 700,
+                    display: 'inline-block',
+                    fontSize: isMobile ? '0.9rem' : '1rem'
+                  }}>
+                    Find Restaurants →
+                  </Link>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+          )}
 
-            {activeTab === 'settings' && (
-              <div>
-                <h3 style={{
-                  color: genzColors.accent1,
-                  fontWeight: 800,
-                  fontSize: '1.5rem',
-                  marginBottom: '1.5rem'
-                }}>
-                  Account Settings ⚙️
-                </h3>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                  gap: '1.5rem'
-                }}>
-                  <div style={{
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    borderRadius: 20,
-                    padding: '1.5rem',
-                    border: '2px solid rgba(255, 255, 255, 0.2)'
-                  }}>
-                    <h4 style={{
-                      color: '#fff',
-                      fontWeight: 700,
-                      marginBottom: '1rem'
+          {activeTab === 'reviews' && (
+            <div>
+              <h2 style={{
+                color: genzColors.primary,
+                fontWeight: 800,
+                fontSize: isMobile ? '1.5rem' : '1.8rem',
+                marginBottom: isMobile ? '1rem' : '1.5rem'
+              }}>
+                Your Reviews 📝
+              </h2>
+              {userReviews.length > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '0.8rem' : '1rem' }}>
+                  {userReviews.map((review) => (
+                    <div key={review.id} style={{
+                      background: 'rgba(102, 126, 234, 0.05)',
+                      borderRadius: isMobile ? 12 : 16,
+                      padding: isMobile ? '1rem' : '1.5rem',
+                      border: `2px solid ${genzColors.accent1}`
                     }}>
-                      Profile Information
-                    </h4>
-                    <p style={{
-                      color: '#fff',
-                      opacity: 0.8,
-                      marginBottom: '1rem'
-                    }}>
-                      Name: {user?.name}
-                    </p>
-                    <p style={{
-                      color: '#fff',
-                      opacity: 0.8,
-                      marginBottom: '1rem'
-                    }}>
-                      Email: {user?.email}
-                    </p>
-                    <Link to="/profile" style={{
-                      background: genzGradients.button,
-                      color: genzColors.black,
-                      border: 'none',
-                      borderRadius: 16,
-                      padding: '0.8rem 1.5rem',
-                      fontFamily: genzFont,
-                      fontWeight: 700,
-                      fontSize: '0.9rem',
-                      textDecoration: 'none',
-                      display: 'inline-block'
-                    }}>
-                      Edit Profile
-                    </Link>
-                  </div>
-                  <div style={{
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    borderRadius: 20,
-                    padding: '1.5rem',
-                    border: '2px solid rgba(255, 255, 255, 0.2)'
-                  }}>
-                    <h4 style={{
-                      color: '#fff',
-                      fontWeight: 700,
-                      marginBottom: '1rem'
-                    }}>
-                      Preferences
-                    </h4>
-                    <p style={{
-                      color: '#fff',
-                      opacity: 0.8,
-                      marginBottom: '1rem'
-                    }}>
-                      Notification settings and preferences coming soon!
-                    </p>
-                  </div>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: isMobile ? '0.8rem' : '1rem',
+                        marginBottom: '0.5rem',
+                        flexWrap: 'wrap'
+                      }}>
+                        <span style={{ fontSize: isMobile ? '1.2rem' : '1.5rem' }}>{getCuisineEmoji(review.cuisine)}</span>
+                        <h3 style={{
+                          color: genzColors.primary,
+                          fontWeight: 700,
+                          fontSize: isMobile ? '1rem' : '1.2rem',
+                          margin: 0
+                        }}>
+                          {review.restaurantName}
+                        </h3>
+                        <span style={{ color: genzColors.accent1, fontWeight: 600 }}>
+                          {getRatingStars(review.rating)}
+                        </span>
+                      </div>
+                      <p style={{
+                        color: genzColors.primary,
+                        opacity: 0.8,
+                        margin: 0,
+                        fontSize: isMobile ? '0.9rem' : '0.95rem'
+                      }}>
+                        {review.comment}
+                      </p>
+                    </div>
+                  ))}
                 </div>
+              ) : (
+                <div style={{
+                  textAlign: 'center',
+                  padding: isMobile ? '1.5rem' : '2rem',
+                  background: 'rgba(102, 126, 234, 0.05)',
+                  borderRadius: isMobile ? 16 : 20,
+                  border: `2px solid ${genzColors.accent1}`
+                }}>
+                  <p style={{ color: genzColors.primary }}>
+                    No reviews yet! Start exploring and share your experiences! 🍕
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'favorites' && (
+            <div>
+              <h2 style={{
+                color: genzColors.primary,
+                fontWeight: 800,
+                fontSize: isMobile ? '1.5rem' : '1.8rem',
+                marginBottom: isMobile ? '1rem' : '1.5rem'
+              }}>
+                Your Favorites ❤️
+              </h2>
+              <div style={{
+                textAlign: 'center',
+                padding: isMobile ? '1.5rem' : '2rem',
+                background: 'rgba(102, 126, 234, 0.05)',
+                borderRadius: isMobile ? 16 : 20,
+                border: `2px solid ${genzColors.accent1}`
+              }}>
+                <p style={{ color: genzColors.primary }}>
+                  Coming soon! Save your favorite restaurants here! 🚀
+                </p>
               </div>
-            )}
-          </div>
+            </div>
+          )}
+
+          {activeTab === 'settings' && (
+            <div>
+              <h2 style={{
+                color: genzColors.primary,
+                fontWeight: 800,
+                fontSize: isMobile ? '1.5rem' : '1.8rem',
+                marginBottom: isMobile ? '1rem' : '1.5rem'
+              }}>
+                Settings ⚙️
+              </h2>
+              <div style={{
+                textAlign: 'center',
+                padding: isMobile ? '1.5rem' : '2rem',
+                background: 'rgba(102, 126, 234, 0.05)',
+                borderRadius: isMobile ? 16 : 20,
+                border: `2px solid ${genzColors.accent1}`
+              }}>
+                <p style={{ color: genzColors.primary, marginBottom: '1rem' }}>
+                  Manage your profile and account settings! 🔧
+                </p>
+                <Link to="/profile" style={{
+                  background: genzGradients.button,
+                  color: genzColors.black,
+                  padding: isMobile ? '0.6rem 1.2rem' : '0.8rem 1.5rem',
+                  borderRadius: isMobile ? 12 : 16,
+                  textDecoration: 'none',
+                  fontWeight: 700,
+                  display: 'inline-block',
+                  fontSize: isMobile ? '0.9rem' : '1rem'
+                }}>
+                  Go to Profile Settings →
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

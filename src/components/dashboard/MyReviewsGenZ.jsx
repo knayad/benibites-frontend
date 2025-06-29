@@ -45,55 +45,56 @@ const MyReviewsGenZ = () => {
     return true;
   });
 
-  const isMobile = window.innerWidth < 768;
-
   return (
     <div style={{
       minHeight: '100vh',
+      width: '100vw',
       background: genzGradients.hero,
       fontFamily: genzFont,
       position: 'relative',
       overflow: 'hidden',
-      paddingTop: '64px'
+      padding: '2rem',
+      paddingTop: '2rem'
     }}>
       {/* Playful stroke accents */}
-      <div style={{ position: 'absolute', top: '10%', left: '8%', transform: 'rotate(25deg)', zIndex: 1 }}>
+      <div style={{ position: 'absolute', top: '15%', left: '10%', transform: 'rotate(25deg)', zIndex: 1 }}>
         <PlayfulStroke1 style={{ width: 80, height: 24 }} />
       </div>
-      <div style={{ position: 'absolute', bottom: '20%', right: '10%', transform: 'rotate(-15deg)', zIndex: 1 }}>
+      <div style={{ position: 'absolute', bottom: '20%', right: '15%', transform: 'rotate(-15deg)', zIndex: 1 }}>
         <PlayfulStroke1 style={{ width: 60, height: 18 }} />
       </div>
+      <div style={{ position: 'absolute', top: '60%', left: '5%', transform: 'rotate(-10deg)', zIndex: 1 }}>
+        <PlayfulStroke1 style={{ width: 40, height: 12 }} />
+      </div>
 
-      <div className="container" style={{ padding: isMobile ? '1rem' : '2rem' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
         {/* Header */}
         <div style={{
-          background: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(20px)',
-          borderRadius: isMobile ? 24 : 32,
-          padding: isMobile ? '2rem' : '3rem',
-          marginBottom: isMobile ? '2rem' : '3rem',
-          border: '2px solid rgba(255, 255, 255, 0.2)',
-          boxShadow: '0 20px 40px rgba(102, 126, 234, 0.15)',
+          background: 'rgba(255,255,255,0.98)',
+          borderRadius: 32,
+          padding: '2.5rem',
+          marginBottom: '2rem',
+          border: `2px solid ${genzColors.accent1}`,
+          boxShadow: '0 8px 32px rgba(102,126,234,0.18)',
           position: 'relative',
           zIndex: 2
         }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: isMobile ? '1rem' : '2rem',
-            marginBottom: isMobile ? '1.5rem' : '2rem',
-            flexDirection: isMobile ? 'column' : 'row',
-            textAlign: isMobile ? 'center' : 'left'
+            gap: '2rem',
+            marginBottom: '2rem',
+            flexWrap: 'wrap'
           }}>
             <div style={{
-              width: isMobile ? 80 : 100,
-              height: isMobile ? 80 : 100,
+              width: 100,
+              height: 100,
               borderRadius: '50%',
               background: genzGradients.button,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: isMobile ? '2.5rem' : '3rem',
+              fontSize: '3rem',
               boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
             }}>
               ⭐
@@ -108,22 +109,22 @@ const MyReviewsGenZ = () => {
               }}>
                 <h1 style={{
                   fontWeight: 900,
-                  fontSize: isMobile ? '2rem' : '2.5rem',
-                  letterSpacing: '-2px',
+                  fontSize: '2.5rem',
                   background: genzGradients.button,
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
-                  margin: 0
+                  margin: 0,
+                  whiteSpace: 'nowrap'
                 }}>
                   My Reviews
                 </h1>
-                <div style={{ fontSize: isMobile ? '2rem' : '2.5rem' }}>🌟</div>
+                <div style={{ fontSize: '2.5rem' }}>🌟</div>
               </div>
               <p style={{
-                color: '#fff',
-                fontSize: isMobile ? '1rem' : '1.1rem',
+                color: genzColors.primary,
+                fontSize: '1.1rem',
                 fontWeight: 500,
-                opacity: 0.9
+                opacity: 0.8
               }}>
                 Your restaurant adventures and honest feedback! 📝✨
               </p>
@@ -133,234 +134,174 @@ const MyReviewsGenZ = () => {
           {/* Stats */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: isMobile ? '1rem' : '1.5rem'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '1.5rem'
           }}>
             <div style={{
-              background: 'rgba(255, 255, 255, 0.1)',
+              background: 'rgba(102, 126, 234, 0.05)',
               borderRadius: 20,
-              padding: isMobile ? '1rem' : '1.5rem',
+              padding: '1.5rem',
               textAlign: 'center',
-              border: '2px solid rgba(255, 255, 255, 0.2)'
+              border: `2px solid ${genzColors.accent1}`
             }}>
-              <div style={{ fontSize: isMobile ? '2rem' : '2.5rem', marginBottom: '0.5rem' }}>📝</div>
-              <h3 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem', fontSize: isMobile ? '1.5rem' : '1.8rem' }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>📝</div>
+              <h3 style={{ color: genzColors.primary, fontWeight: 700, marginBottom: '0.5rem', fontSize: '1.8rem' }}>
                 {userReviews.length}
               </h3>
-              <p style={{ color: '#fff', opacity: 0.8, fontSize: isMobile ? '0.9rem' : '1rem' }}>Total Reviews</p>
+              <p style={{ color: genzColors.primary, opacity: 0.8, fontSize: '1rem' }}>Total Reviews</p>
             </div>
             <div style={{
-              background: 'rgba(255, 255, 255, 0.1)',
+              background: 'rgba(102, 126, 234, 0.05)',
               borderRadius: 20,
-              padding: isMobile ? '1rem' : '1.5rem',
+              padding: '1.5rem',
               textAlign: 'center',
-              border: '2px solid rgba(255, 255, 255, 0.2)'
+              border: `2px solid ${genzColors.accent1}`
             }}>
-              <div style={{ fontSize: isMobile ? '2rem' : '2.5rem', marginBottom: '0.5rem' }}>⭐</div>
-              <h3 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem', fontSize: isMobile ? '1.5rem' : '1.8rem' }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>⭐</div>
+              <h3 style={{ color: genzColors.primary, fontWeight: 700, marginBottom: '0.5rem', fontSize: '1.8rem' }}>
                 {userReviews.length > 0 ? (userReviews.reduce((sum, review) => sum + review.rating, 0) / userReviews.length).toFixed(1) : '0'}
               </h3>
-              <p style={{ color: '#fff', opacity: 0.8, fontSize: isMobile ? '0.9rem' : '1rem' }}>Average Rating</p>
+              <p style={{ color: genzColors.primary, opacity: 0.8, fontSize: '1rem' }}>Average Rating</p>
             </div>
             <div style={{
-              background: 'rgba(255, 255, 255, 0.1)',
+              background: 'rgba(102, 126, 234, 0.05)',
               borderRadius: 20,
-              padding: isMobile ? '1rem' : '1.5rem',
+              padding: '1.5rem',
               textAlign: 'center',
-              border: '2px solid rgba(255, 255, 255, 0.2)'
+              border: `2px solid ${genzColors.accent1}`
             }}>
-              <div style={{ fontSize: isMobile ? '2rem' : '2.5rem', marginBottom: '0.5rem' }}>🔥</div>
-              <h3 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem', fontSize: isMobile ? '1.5rem' : '1.8rem' }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🔥</div>
+              <h3 style={{ color: genzColors.primary, fontWeight: 700, marginBottom: '0.5rem', fontSize: '1.8rem' }}>
                 {userReviews.filter(review => review.rating >= 4).length}
               </h3>
-              <p style={{ color: '#fff', opacity: 0.8, fontSize: isMobile ? '0.9rem' : '1rem' }}>Top Reviews</p>
+              <p style={{ color: genzColors.primary, opacity: 0.8, fontSize: '1rem' }}>Top Reviews</p>
             </div>
           </div>
         </div>
 
         {/* Filters and Reviews */}
         <div style={{
-          background: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(20px)',
-          borderRadius: isMobile ? 24 : 32,
-          padding: isMobile ? '2rem' : '3rem',
-          border: '2px solid rgba(255, 255, 255, 0.2)',
-          boxShadow: '0 20px 40px rgba(102, 126, 234, 0.15)',
+          background: 'rgba(255,255,255,0.98)',
+          borderRadius: 32,
+          padding: '2.5rem',
+          border: `2px solid ${genzColors.accent1}`,
+          boxShadow: '0 8px 32px rgba(102,126,234,0.18)',
           position: 'relative',
           zIndex: 2
         }}>
           {/* Filter Buttons */}
           <div style={{
             display: 'flex',
-            gap: isMobile ? '0.5rem' : '1rem',
-            marginBottom: isMobile ? '1.5rem' : '2rem',
-            flexWrap: 'wrap',
-            justifyContent: isMobile ? 'center' : 'flex-start'
+            gap: '1rem',
+            marginBottom: '2rem',
+            flexWrap: 'wrap'
           }}>
             {[
-              { key: 'all', label: '📝 All Reviews', emoji: '📝' },
-              { key: 'recent', label: '🕒 Recent', emoji: '🕒' },
-              { key: 'top-rated', label: '⭐ Top Rated', emoji: '⭐' }
+              { key: 'all', label: 'All Reviews', icon: '📝' },
+              { key: 'recent', label: 'Recent', icon: '🕒' },
+              { key: 'top-rated', label: 'Top Rated', icon: '⭐' }
             ].map((filterOption) => (
               <button
                 key={filterOption.key}
                 onClick={() => setFilter(filterOption.key)}
                 style={{
                   background: filter === filterOption.key ? genzGradients.button : 'transparent',
-                  color: filter === filterOption.key ? genzColors.black : '#fff',
+                  color: filter === filterOption.key ? genzColors.black : genzColors.primary,
                   border: 'none',
                   borderRadius: 16,
-                  padding: isMobile ? '0.6rem 1rem' : '0.8rem 1.5rem',
+                  padding: '0.8rem 1.5rem',
                   fontFamily: genzFont,
                   fontWeight: 700,
-                  fontSize: isMobile ? '0.9rem' : '1rem',
+                  fontSize: '1rem',
                   cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  whiteSpace: 'nowrap'
+                  transition: 'all 0.3s ease'
                 }}
               >
-                {filterOption.label}
+                {filterOption.icon} {filterOption.label}
               </button>
             ))}
           </div>
 
           {/* Reviews List */}
           {loading ? (
-            <div style={{
-              textAlign: 'center',
-              padding: '3rem',
-              color: '#fff',
-              fontSize: '1.1rem'
-            }}>
-              🔄 Loading your reviews...
+            <div style={{ textAlign: 'center', padding: '2rem' }}>
+              <p style={{ color: genzColors.primary }}>Loading your reviews... 🔄</p>
             </div>
-          ) : filteredReviews.length === 0 ? (
-            <div style={{
-              textAlign: 'center',
-              padding: '3rem',
-              color: '#fff',
-              fontSize: '1.1rem'
-            }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⭐</div>
-              <p>No reviews found for this filter!</p>
-              <Link to="/search" style={{
-                background: genzGradients.button,
-                color: genzColors.black,
-                border: 'none',
-                borderRadius: 16,
-                padding: '1rem 2rem',
-                fontFamily: genzFont,
-                fontWeight: 700,
-                fontSize: '1rem',
-                textDecoration: 'none',
-                display: 'inline-block',
-                marginTop: '1rem'
-              }}>
-                Find restaurants to review! 🔍
-              </Link>
-            </div>
-          ) : (
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: isMobile ? '1rem' : '1.5rem'
-            }}>
-              {filteredReviews.map((review, index) => (
-                <div
-                  key={index}
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    borderRadius: isMobile ? 16 : 20,
-                    padding: isMobile ? '1rem' : '1.5rem',
-                    border: '2px solid rgba(255, 255, 255, 0.2)',
-                    transition: 'all 0.3s ease'
-                  }}
-                >
+          ) : filteredReviews.length > 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {filteredReviews.map((review) => (
+                <div key={review.id} style={{
+                  background: 'rgba(102, 126, 234, 0.05)',
+                  borderRadius: 16,
+                  padding: '1.5rem',
+                  border: `2px solid ${genzColors.accent1}`
+                }}>
                   <div style={{
                     display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                    marginBottom: '1rem',
-                    flexDirection: isMobile ? 'column' : 'row',
-                    gap: isMobile ? '0.5rem' : '0'
+                    alignItems: 'center',
+                    gap: '1rem',
+                    marginBottom: '0.5rem'
                   }}>
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '1rem'
+                    <span style={{ fontSize: '1.5rem' }}>{getCuisineEmoji(review.cuisine)}</span>
+                    <h3 style={{
+                      color: genzColors.primary,
+                      fontWeight: 700,
+                      fontSize: '1.2rem',
+                      margin: 0
                     }}>
-                      <div style={{ fontSize: isMobile ? '1.5rem' : '2rem' }}>
-                        {getCuisineEmoji(review.restaurant?.cuisine)}
-                      </div>
-                      <div>
-                        <h4 style={{
-                          color: '#fff',
-                          fontWeight: 700,
-                          fontSize: isMobile ? '1.1rem' : '1.2rem',
-                          marginBottom: '0.3rem'
-                        }}>
-                          {review.restaurant?.name}
-                        </h4>
-                        <div style={{ color: '#fff', fontWeight: 600 }}>
-                          {getRatingStars(review.rating)}
-                        </div>
-                      </div>
-                    </div>
-                    <span style={{
-                      color: '#fff',
-                      opacity: 0.7,
-                      fontSize: isMobile ? '0.8rem' : '0.9rem'
-                    }}>
-                      {new Date(review.date).toLocaleDateString()}
+                      {review.restaurantName}
+                    </h3>
+                    <span style={{ color: genzColors.accent1, fontWeight: 600 }}>
+                      {getRatingStars(review.rating)}
                     </span>
                   </div>
                   <p style={{
-                    color: '#fff',
-                    opacity: 0.9,
-                    lineHeight: 1.5,
-                    fontSize: isMobile ? '0.9rem' : '1rem'
+                    color: genzColors.primary,
+                    opacity: 0.8,
+                    margin: 0,
+                    fontSize: '0.95rem'
                   }}>
                     {review.comment}
                   </p>
-                  
-                  {/* Action Buttons */}
                   <div style={{
                     display: 'flex',
-                    gap: '0.5rem',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                     marginTop: '1rem',
-                    flexWrap: 'wrap'
+                    fontSize: '0.9rem',
+                    color: genzColors.primary,
+                    opacity: 0.7
                   }}>
-                    <button style={{
-                      background: 'rgba(255, 255, 255, 0.2)',
-                      color: '#fff',
-                      border: '2px solid rgba(255, 255, 255, 0.3)',
-                      borderRadius: 12,
-                      padding: isMobile ? '0.5rem 1rem' : '0.6rem 1.2rem',
-                      fontFamily: genzFont,
-                      fontWeight: 600,
-                      fontSize: isMobile ? '0.8rem' : '0.9rem',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease'
-                    }}>
-                      ✏️ Edit
-                    </button>
-                    <button style={{
-                      background: 'rgba(255, 107, 107, 0.2)',
-                      color: '#ff6b6b',
-                      border: '2px solid #ff6b6b',
-                      borderRadius: 12,
-                      padding: isMobile ? '0.5rem 1rem' : '0.6rem 1.2rem',
-                      fontFamily: genzFont,
-                      fontWeight: 600,
-                      fontSize: isMobile ? '0.8rem' : '0.9rem',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease'
-                    }}>
-                      🗑️ Delete
-                    </button>
+                    <span>📅 {new Date(review.date).toLocaleDateString()}</span>
+                    <span>📍 {review.location || 'Location not specified'}</span>
                   </div>
                 </div>
               ))}
+            </div>
+          ) : (
+            <div style={{
+              textAlign: 'center',
+              padding: '2rem',
+              background: 'rgba(102, 126, 234, 0.05)',
+              borderRadius: 20,
+              border: `2px solid ${genzColors.accent1}`
+            }}>
+              <p style={{ color: genzColors.primary, marginBottom: '1rem' }}>
+                {filter === 'all' ? 'No reviews yet!' : `No ${filter} reviews found!`}
+              </p>
+              {filter === 'all' && (
+                <Link to="/" style={{
+                  background: genzGradients.button,
+                  color: genzColors.black,
+                  padding: '0.8rem 1.5rem',
+                  borderRadius: 16,
+                  textDecoration: 'none',
+                  fontWeight: 700,
+                  display: 'inline-block'
+                }}>
+                  Start Reviewing Restaurants →
+                </Link>
+              )}
             </div>
           )}
         </div>

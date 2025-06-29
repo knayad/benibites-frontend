@@ -5,100 +5,85 @@ import { genzColors, genzGradients, genzFont, PlayfulStroke1 } from '../../genzT
 const FooterGenZ = () => {
   return (
     <footer style={{
-      background: genzGradients.hero,
+      background: 'linear-gradient(120deg, #764ba2 0%, #f093fb 50%, #f5576c 100%)',
       color: '#fff',
       fontFamily: genzFont,
-      padding: '3rem 0 2rem',
-      borderTop: `3px solid ${genzColors.accent1}`,
+      padding: '3rem 0 1.5rem',
+      borderTop: `2px solid #feca57`,
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      width: '100vw',
     }}>
       {/* Playful stroke accents */}
-      <div style={{ position: 'absolute', right: '10%', top: 20, transform: 'rotate(15deg)', zIndex: 1 }}>
+      <div style={{ position: 'absolute', right: '15%', top: '18%', transform: 'rotate(15deg)', zIndex: 1 }}>
         <PlayfulStroke1 style={{ width: 60, height: 18 }} />
       </div>
-      <div style={{ position: 'absolute', left: '15%', bottom: 40, transform: 'rotate(-25deg)', zIndex: 1 }}>
+      <div style={{ position: 'absolute', left: '10%', bottom: '30%', transform: 'rotate(-25deg)', zIndex: 1 }}>
         <PlayfulStroke1 style={{ width: 40, height: 12 }} />
       </div>
-      
-      <div className="container">
-        <div className="row">
-          <div className="col-lg-4 mb-4">
-            <div style={{ marginBottom: '1.5rem' }}>
-              <h3 style={{
-                fontWeight: 900,
-                fontSize: '2rem',
-                letterSpacing: '-1px',
-                background: genzGradients.button,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                marginBottom: '0.5rem'
-              }}>
-                BeniBites
-              </h3>
-              <p style={{
-                fontSize: '1.1rem',
-                lineHeight: 1.6,
-                opacity: 1,
-                fontWeight: 500,
-                color: '#fff'
-              }}>
-                Where restaurant workers discover amazing perks and benefits! 🍕✨
-              </p>
-            </div>
-            <div style={{
-              display: 'flex',
-              gap: '1rem',
-              marginTop: '1.5rem'
+      <div style={{ position: 'absolute', right: '5%', bottom: '20%', transform: 'rotate(10deg)', zIndex: 1 }}>
+        <PlayfulStroke1 style={{ width: 50, height: 15 }} />
+      </div>
+      <div style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: '0 2rem',
+        width: '100%',
+      }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: '2.5rem',
+          marginBottom: '2.5rem',
+        }}>
+          {/* Brand Section */}
+          <div>
+            <h3 style={{
+              fontWeight: 900,
+              fontSize: '2.1rem',
+              color: '#feca57',
+              marginBottom: '0.5rem',
+              letterSpacing: '-1px',
             }}>
-              <div style={{
-                width: 44,
-                height: 44,
-                borderRadius: '50%',
-                background: 'rgba(255,255,255,0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '2px solid rgba(255,255,255,0.3)',
-                transition: 'all 0.3s ease'
-              }}>
-                <span style={{ fontSize: '1.2rem' }}>📱</span>
-              </div>
-              <div style={{
-                width: 44,
-                height: 44,
-                borderRadius: '50%',
-                background: 'rgba(255,255,255,0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '2px solid rgba(255,255,255,0.3)',
-                transition: 'all 0.3s ease'
-              }}>
-                <span style={{ fontSize: '1.2rem' }}>📧</span>
-              </div>
-              <div style={{
-                width: 44,
-                height: 44,
-                borderRadius: '50%',
-                background: 'rgba(255,255,255,0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '2px solid rgba(255,255,255,0.3)',
-                transition: 'all 0.3s ease'
-              }}>
-                <span style={{ fontSize: '1.2rem' }}>📷</span>
-              </div>
+              BeniBites
+            </h3>
+            <p style={{
+              fontSize: '1.15rem',
+              lineHeight: 1.6,
+              opacity: 0.85,
+              fontWeight: 500,
+              color: '#b6e0fe',
+              marginBottom: '1.5rem',
+            }}>
+              Where restaurant workers discover amazing perks and benefits! <span role="img" aria-label="pizza">🍕</span> <span role="img" aria-label="sparkles">✨</span>
+            </p>
+            <div style={{ display: 'flex', gap: '1.2rem', marginTop: '1.5rem' }}>
+              {["📱", "📧", "📷"].map((icon, i) => (
+                <div key={i} style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: '50%',
+                  background: 'rgba(255,255,255,0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: '2px solid #feca57',
+                  transition: 'all 0.3s',
+                  cursor: 'pointer',
+                }}>
+                  <span style={{ fontSize: '1.5rem' }}>{icon}</span>
+                </div>
+              ))}
             </div>
           </div>
-          
-          <div className="col-lg-2 col-md-6 mb-4">
+          {/* Quick Links */}
+          <div>
             <h5 style={{
               fontWeight: 800,
-              fontSize: '1.2rem',
+              fontSize: '1.25rem',
               marginBottom: '1.2rem',
-              color: genzColors.accent1
+              color: '#feca57',
+              letterSpacing: '-0.5px',
             }}>
               Quick Links
             </h5>
@@ -107,50 +92,45 @@ const FooterGenZ = () => {
                 <Link to="/" style={{
                   color: '#fff',
                   textDecoration: 'none',
-                  fontWeight: 600,
-                  fontSize: '1rem',
-                  transition: 'color 0.3s ease',
+                  fontWeight: 700,
+                  fontSize: '1.08rem',
+                  transition: 'color 0.3s',
                   display: 'inline-block',
-                  padding: '4px 0'
-                }}>
-                  Home
-                </Link>
+                  padding: '4px 0',
+                }}>Home</Link>
               </li>
               <li style={{ marginBottom: '0.8rem' }}>
                 <Link to="/search" style={{
                   color: '#fff',
                   textDecoration: 'none',
-                  fontWeight: 600,
-                  fontSize: '1rem',
-                  transition: 'color 0.3s ease',
+                  fontWeight: 700,
+                  fontSize: '1.08rem',
+                  transition: 'color 0.3s',
                   display: 'inline-block',
-                  padding: '4px 0'
-                }}>
-                  Find Restaurants
-                </Link>
+                  padding: '4px 0',
+                }}>Find Restaurants</Link>
               </li>
               <li style={{ marginBottom: '0.8rem' }}>
                 <Link to="/register" style={{
                   color: '#fff',
                   textDecoration: 'none',
-                  fontWeight: 600,
-                  fontSize: '1rem',
-                  transition: 'color 0.3s ease',
+                  fontWeight: 700,
+                  fontSize: '1.08rem',
+                  transition: 'color 0.3s',
                   display: 'inline-block',
-                  padding: '4px 0'
-                }}>
-                  Sign Up
-                </Link>
+                  padding: '4px 0',
+                }}>Sign Up</Link>
               </li>
             </ul>
           </div>
-          
-          <div className="col-lg-2 col-md-6 mb-4">
+          {/* For Businesses */}
+          <div>
             <h5 style={{
               fontWeight: 800,
-              fontSize: '1.2rem',
+              fontSize: '1.25rem',
               marginBottom: '1.2rem',
-              color: genzColors.accent1
+              color: '#feca57',
+              letterSpacing: '-0.5px',
             }}>
               For Businesses
             </h5>
@@ -159,132 +139,103 @@ const FooterGenZ = () => {
                 <Link to="/register-business" style={{
                   color: '#fff',
                   textDecoration: 'none',
-                  fontWeight: 600,
-                  fontSize: '1rem',
-                  transition: 'color 0.3s ease',
+                  fontWeight: 700,
+                  fontSize: '1.08rem',
+                  transition: 'color 0.3s',
                   display: 'inline-block',
-                  padding: '4px 0'
-                }}>
-                  Register Business
-                </Link>
+                  padding: '4px 0',
+                }}>Register Business</Link>
               </li>
               <li style={{ marginBottom: '0.8rem' }}>
-                <Link to="/business-login" style={{
+                <Link to="/business-dashboard" style={{
                   color: '#fff',
                   textDecoration: 'none',
-                  fontWeight: 600,
-                  fontSize: '1rem',
-                  transition: 'color 0.3s ease',
+                  fontWeight: 700,
+                  fontSize: '1.08rem',
+                  transition: 'color 0.3s',
                   display: 'inline-block',
-                  padding: '4px 0'
-                }}>
-                  Business Sign In
-                </Link>
+                  padding: '4px 0',
+                }}>Business Dashboard</Link>
               </li>
             </ul>
           </div>
-          
-          <div className="col-lg-4 mb-4">
+          {/* Stay Updated */}
+          <div>
             <h5 style={{
               fontWeight: 800,
-              fontSize: '1.2rem',
+              fontSize: '1.25rem',
               marginBottom: '1.2rem',
-              color: genzColors.accent1
+              color: '#feca57',
+              letterSpacing: '-0.5px',
             }}>
               Stay Updated
             </h5>
             <p style={{
-              fontSize: '1rem',
+              fontSize: '1.08rem',
               lineHeight: 1.5,
-              opacity: 1,
+              opacity: 0.85,
               marginBottom: '1.5rem',
-              color: '#fff'
+              color: '#b6e0fe',
             }}>
-              Get the latest restaurant perks and exclusive offers delivered to your inbox! 🎉
+              Get the latest restaurant perks and exclusive offers delivered to your inbox! <span role="img" aria-label="tada">🎉</span>
             </p>
-            <div style={{
-              display: 'flex',
-              gap: '0.5rem',
-              marginBottom: '1rem'
-            }}>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
               <input
                 type="email"
                 placeholder="Your email address"
                 style={{
                   flex: 1,
-                  padding: '12px 16px',
-                  borderRadius: 20,
-                  border: '2px solid rgba(255,255,255,0.3)',
-                  background: 'rgba(255,255,255,0.1)',
+                  minWidth: '180px',
+                  padding: '1rem 1.2rem',
+                  borderRadius: 18,
+                  border: '2px solid #feca57',
+                  background: 'rgba(255,255,255,0.12)',
                   color: '#fff',
                   fontFamily: genzFont,
-                  fontSize: '0.95rem',
-                  outline: 'none'
+                  fontSize: '1.08rem',
+                  outline: 'none',
+                  marginRight: 0,
+                  marginBottom: '0.5rem',
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  display: 'block',
                 }}
               />
               <button style={{
-                padding: '12px 20px',
-                borderRadius: 20,
-                background: genzGradients.button,
-                color: genzColors.black,
+                background: 'linear-gradient(120deg, #feca57 0%, #4ecdc4 100%)',
+                color: '#222',
                 border: 'none',
-                fontWeight: 700,
+                borderRadius: 18,
+                padding: '1rem 2rem',
                 fontFamily: genzFont,
-                fontSize: '0.95rem',
+                fontWeight: 700,
+                fontSize: '1.08rem',
                 cursor: 'pointer',
-                transition: 'transform 0.2s ease'
+                transition: 'all 0.3s',
+                boxShadow: '0 2px 8px rgba(102,126,234,0.10)',
+                width: '100%',
+                minWidth: '180px',
+                display: 'block',
+                marginTop: '0.5rem',
               }}>
                 Subscribe
               </button>
             </div>
           </div>
         </div>
-        
-        <hr style={{
-          border: 'none',
-          height: '2px',
-          background: `linear-gradient(90deg, transparent, ${genzColors.accent1}, transparent)`,
-          margin: '2rem 0 1.5rem'
-        }} />
-        
+        {/* Bottom Section */}
         <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '1rem'
+          borderTop: '1.5px solid #feca57',
+          paddingTop: '1.5rem',
+          textAlign: 'center',
+          marginTop: '1.5rem',
+          fontSize: '1.05rem',
+          color: '#b6e0fe',
+          opacity: 0.95,
+          fontWeight: 500,
+          letterSpacing: '0.01em',
         }}>
-          <p style={{
-            margin: 0,
-            fontSize: '0.9rem',
-            opacity: 1,
-            fontWeight: 500,
-            color: '#fff'
-          }}>
-            © 2024 BeniBites. All rights reserved. Made with ❤️ for restaurant workers!
-          </p>
-          <div style={{
-            display: 'flex',
-            gap: '1.5rem',
-            fontSize: '0.9rem'
-          }}>
-            <Link to="/privacy" style={{
-              color: '#fff',
-              textDecoration: 'none',
-              opacity: 1,
-              fontWeight: 500
-            }}>
-              Privacy Policy
-            </Link>
-            <Link to="/terms" style={{
-              color: '#fff',
-              textDecoration: 'none',
-              opacity: 1,
-              fontWeight: 500
-            }}>
-              Terms of Service
-            </Link>
-          </div>
+          © 2024 BeniBites. All rights reserved. Made with <span style={{ color: '#ff6b6b', fontWeight: 700 }}>❤️</span> for restaurant workers!
         </div>
       </div>
     </footer>

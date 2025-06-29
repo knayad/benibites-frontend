@@ -5,6 +5,7 @@ import { genzColors, genzGradients, genzFont, PlayfulStroke1 } from '../../genzT
 const ProfileGenZ = () => {
   const { user } = useSelector((state) => state.auth);
   const [isEditing, setIsEditing] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -12,11 +13,14 @@ const ProfileGenZ = () => {
     location: user?.location || ''
   });
 
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
@@ -35,35 +39,37 @@ const ProfileGenZ = () => {
     setIsEditing(false);
   };
 
-  const isMobile = window.innerWidth < 768;
-
   return (
     <div style={{
       minHeight: '100vh',
+      width: '100vw',
       background: genzGradients.hero,
       fontFamily: genzFont,
       position: 'relative',
       overflow: 'hidden',
-      paddingTop: '64px'
+      padding: isMobile ? '1rem' : '2rem',
+      paddingTop: isMobile ? '1rem' : '2rem'
     }}>
       {/* Playful stroke accents */}
-      <div style={{ position: 'absolute', top: '10%', left: '8%', transform: 'rotate(25deg)', zIndex: 1 }}>
-        <PlayfulStroke1 style={{ width: 80, height: 24 }} />
+      <div style={{ position: 'absolute', top: '15%', left: '10%', transform: 'rotate(25deg)', zIndex: 1 }}>
+        <PlayfulStroke1 style={{ width: isMobile ? 60 : 80, height: isMobile ? 18 : 24 }} />
       </div>
-      <div style={{ position: 'absolute', bottom: '20%', right: '10%', transform: 'rotate(-15deg)', zIndex: 1 }}>
-        <PlayfulStroke1 style={{ width: 60, height: 18 }} />
+      <div style={{ position: 'absolute', bottom: '20%', right: '15%', transform: 'rotate(-15deg)', zIndex: 1 }}>
+        <PlayfulStroke1 style={{ width: isMobile ? 40 : 60, height: isMobile ? 12 : 18 }} />
+      </div>
+      <div style={{ position: 'absolute', top: '60%', left: '5%', transform: 'rotate(-10deg)', zIndex: 1 }}>
+        <PlayfulStroke1 style={{ width: isMobile ? 30 : 40, height: isMobile ? 9 : 12 }} />
       </div>
 
-      <div className="container" style={{ padding: isMobile ? '1rem' : '2rem' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
         {/* Header */}
         <div style={{
-          background: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(255,255,255,0.98)',
           borderRadius: isMobile ? 24 : 32,
-          padding: isMobile ? '2rem' : '3rem',
-          marginBottom: isMobile ? '2rem' : '3rem',
-          border: '2px solid rgba(255, 255, 255, 0.2)',
-          boxShadow: '0 20px 40px rgba(102, 126, 234, 0.15)',
+          padding: isMobile ? '1.5rem' : '2.5rem',
+          marginBottom: isMobile ? '1.5rem' : '2rem',
+          border: `2px solid ${genzColors.accent1}`,
+          boxShadow: '0 8px 32px rgba(102,126,234,0.18)',
           position: 'relative',
           zIndex: 2
         }}>
@@ -72,8 +78,7 @@ const ProfileGenZ = () => {
             alignItems: 'center',
             gap: isMobile ? '1rem' : '2rem',
             marginBottom: isMobile ? '1.5rem' : '2rem',
-            flexDirection: isMobile ? 'column' : 'row',
-            textAlign: isMobile ? 'center' : 'left'
+            flexWrap: 'wrap'
           }}>
             <div style={{
               width: isMobile ? 80 : 100,
@@ -88,18 +93,17 @@ const ProfileGenZ = () => {
             }}>
               👤
             </div>
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: 1, minWidth: isMobile ? '200px' : 'auto' }}>
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.5rem',
                 marginBottom: '0.5rem',
-                flexWrap: 'nowrap'
+                flexWrap: 'wrap'
               }}>
                 <h1 style={{
                   fontWeight: 900,
-                  fontSize: isMobile ? '2rem' : '2.5rem',
-                  letterSpacing: '-2px',
+                  fontSize: isMobile ? '1.8rem' : '2.5rem',
                   background: genzGradients.button,
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
@@ -107,13 +111,13 @@ const ProfileGenZ = () => {
                 }}>
                   Profile Settings
                 </h1>
-                <div style={{ fontSize: isMobile ? '2rem' : '2.5rem' }}>⚙️</div>
+                <div style={{ fontSize: isMobile ? '1.8rem' : '2.5rem' }}>⚙️</div>
               </div>
               <p style={{
-                color: '#fff',
+                color: genzColors.primary,
                 fontSize: isMobile ? '1rem' : '1.1rem',
                 fontWeight: 500,
-                opacity: 0.9
+                opacity: 0.8
               }}>
                 Keep your info fresh and up-to-date! 🔄
               </p>
@@ -123,12 +127,12 @@ const ProfileGenZ = () => {
 
         {/* Profile Form */}
         <div style={{
-          background: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(255,255,255,0.98)',
           borderRadius: isMobile ? 24 : 32,
-          padding: isMobile ? '2rem' : '3rem',
-          border: '2px solid rgba(255, 255, 255, 0.2)',
-          boxShadow: '0 20px 40px rgba(102, 126, 234, 0.15)',
+          padding: isMobile ? '1.5rem' : '2.5rem',
+          marginBottom: isMobile ? '1.5rem' : '2rem',
+          border: `2px solid ${genzColors.accent1}`,
+          boxShadow: '0 8px 32px rgba(102,126,234,0.18)',
           position: 'relative',
           zIndex: 2
         }}>
@@ -138,11 +142,11 @@ const ProfileGenZ = () => {
             justifyContent: 'space-between',
             alignItems: 'center',
             marginBottom: isMobile ? '1.5rem' : '2rem',
-            flexDirection: isMobile ? 'column' : 'row',
-            gap: isMobile ? '1rem' : '0'
+            flexWrap: 'wrap',
+            gap: '1rem'
           }}>
             <h2 style={{
-              color: genzColors.accent1,
+              color: genzColors.primary,
               fontWeight: 800,
               fontSize: isMobile ? '1.5rem' : '1.8rem',
               margin: 0
@@ -153,9 +157,9 @@ const ProfileGenZ = () => {
               onClick={() => setIsEditing(!isEditing)}
               style={{
                 background: isEditing ? 'rgba(255, 107, 107, 0.2)' : genzGradients.button,
-                color: isEditing ? '#ff6b6b' : genzColors.black,
-                border: isEditing ? '2px solid #ff6b6b' : 'none',
-                borderRadius: 16,
+                color: isEditing ? genzColors.accent2 : genzColors.black,
+                border: isEditing ? `2px solid ${genzColors.accent2}` : 'none',
+                borderRadius: isMobile ? 12 : 16,
                 padding: isMobile ? '0.8rem 1.5rem' : '1rem 2rem',
                 fontFamily: genzFont,
                 fontWeight: 700,
@@ -171,13 +175,13 @@ const ProfileGenZ = () => {
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '1rem' : '1.5rem' }}>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
+              gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
               gap: isMobile ? '1rem' : '1.5rem'
             }}>
               <div>
                 <label style={{
                   display: 'block',
-                  color: '#fff',
+                  color: genzColors.primary,
                   fontWeight: 700,
                   marginBottom: '0.5rem',
                   fontSize: isMobile ? '0.9rem' : '1rem'
@@ -193,24 +197,23 @@ const ProfileGenZ = () => {
                   style={{
                     width: '100%',
                     padding: isMobile ? '0.8rem 1rem' : '1rem 1.2rem',
-                    borderRadius: 16,
-                    border: '2px solid rgba(255, 255, 255, 0.3)',
-                    background: isEditing ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)',
-                    color: '#fff',
+                    borderRadius: isMobile ? 12 : 16,
+                    border: `2px solid ${genzColors.accent1}`,
+                    background: isEditing ? 'rgba(255,255,255,0.9)' : 'rgba(102, 126, 234, 0.05)',
+                    color: isEditing ? genzColors.black : genzColors.primary,
                     fontFamily: genzFont,
                     fontSize: isMobile ? '0.9rem' : '1rem',
                     outline: 'none',
                     transition: 'all 0.3s ease',
                     opacity: isEditing ? 1 : 0.7
                   }}
-                  placeholder="Your full name"
                 />
               </div>
 
               <div>
                 <label style={{
                   display: 'block',
-                  color: '#fff',
+                  color: genzColors.primary,
                   fontWeight: 700,
                   marginBottom: '0.5rem',
                   fontSize: isMobile ? '0.9rem' : '1rem'
@@ -226,24 +229,29 @@ const ProfileGenZ = () => {
                   style={{
                     width: '100%',
                     padding: isMobile ? '0.8rem 1rem' : '1rem 1.2rem',
-                    borderRadius: 16,
-                    border: '2px solid rgba(255, 255, 255, 0.3)',
-                    background: isEditing ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)',
-                    color: '#fff',
+                    borderRadius: isMobile ? 12 : 16,
+                    border: `2px solid ${genzColors.accent1}`,
+                    background: isEditing ? 'rgba(255,255,255,0.9)' : 'rgba(102, 126, 234, 0.05)',
+                    color: isEditing ? genzColors.black : genzColors.primary,
                     fontFamily: genzFont,
                     fontSize: isMobile ? '0.9rem' : '1rem',
                     outline: 'none',
                     transition: 'all 0.3s ease',
                     opacity: isEditing ? 1 : 0.7
                   }}
-                  placeholder="your.email@example.com"
                 />
               </div>
+            </div>
 
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: isMobile ? '1rem' : '1.5rem'
+            }}>
               <div>
                 <label style={{
                   display: 'block',
-                  color: '#fff',
+                  color: genzColors.primary,
                   fontWeight: 700,
                   marginBottom: '0.5rem',
                   fontSize: isMobile ? '0.9rem' : '1rem'
@@ -259,24 +267,23 @@ const ProfileGenZ = () => {
                   style={{
                     width: '100%',
                     padding: isMobile ? '0.8rem 1rem' : '1rem 1.2rem',
-                    borderRadius: 16,
-                    border: '2px solid rgba(255, 255, 255, 0.3)',
-                    background: isEditing ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)',
-                    color: '#fff',
+                    borderRadius: isMobile ? 12 : 16,
+                    border: `2px solid ${genzColors.accent1}`,
+                    background: isEditing ? 'rgba(255,255,255,0.9)' : 'rgba(102, 126, 234, 0.05)',
+                    color: isEditing ? genzColors.black : genzColors.primary,
                     fontFamily: genzFont,
                     fontSize: isMobile ? '0.9rem' : '1rem',
                     outline: 'none',
                     transition: 'all 0.3s ease',
                     opacity: isEditing ? 1 : 0.7
                   }}
-                  placeholder="(555) 123-4567"
                 />
               </div>
 
               <div>
                 <label style={{
                   display: 'block',
-                  color: '#fff',
+                  color: genzColors.primary,
                   fontWeight: 700,
                   marginBottom: '0.5rem',
                   fontSize: isMobile ? '0.9rem' : '1rem'
@@ -292,17 +299,16 @@ const ProfileGenZ = () => {
                   style={{
                     width: '100%',
                     padding: isMobile ? '0.8rem 1rem' : '1rem 1.2rem',
-                    borderRadius: 16,
-                    border: '2px solid rgba(255, 255, 255, 0.3)',
-                    background: isEditing ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)',
-                    color: '#fff',
+                    borderRadius: isMobile ? 12 : 16,
+                    border: `2px solid ${genzColors.accent1}`,
+                    background: isEditing ? 'rgba(255,255,255,0.9)' : 'rgba(102, 126, 234, 0.05)',
+                    color: isEditing ? genzColors.black : genzColors.primary,
                     fontFamily: genzFont,
                     fontSize: isMobile ? '0.9rem' : '1rem',
                     outline: 'none',
                     transition: 'all 0.3s ease',
                     opacity: isEditing ? 1 : 0.7
                   }}
-                  placeholder="City, State"
                 />
               </div>
             </div>
@@ -310,10 +316,9 @@ const ProfileGenZ = () => {
             {isEditing && (
               <div style={{
                 display: 'flex',
-                gap: '1rem',
-                justifyContent: 'center',
-                flexWrap: 'wrap',
-                marginTop: isMobile ? '1rem' : '1.5rem'
+                gap: isMobile ? '0.8rem' : '1rem',
+                marginTop: '1rem',
+                flexWrap: 'wrap'
               }}>
                 <button
                   type="submit"
@@ -321,7 +326,7 @@ const ProfileGenZ = () => {
                     background: genzGradients.button,
                     color: genzColors.black,
                     border: 'none',
-                    borderRadius: 16,
+                    borderRadius: isMobile ? 12 : 16,
                     padding: isMobile ? '0.8rem 1.5rem' : '1rem 2rem',
                     fontFamily: genzFont,
                     fontWeight: 700,
@@ -336,10 +341,10 @@ const ProfileGenZ = () => {
                   type="button"
                   onClick={handleCancel}
                   style={{
-                    background: 'rgba(255, 255, 255, 0.2)',
-                    color: '#fff',
-                    border: '2px solid rgba(255, 255, 255, 0.3)',
-                    borderRadius: 16,
+                    background: 'rgba(102, 126, 234, 0.1)',
+                    color: genzColors.primary,
+                    border: `2px solid ${genzColors.accent1}`,
+                    borderRadius: isMobile ? 12 : 16,
                     padding: isMobile ? '0.8rem 1.5rem' : '1rem 2rem',
                     fontFamily: genzFont,
                     fontWeight: 700,
@@ -357,18 +362,16 @@ const ProfileGenZ = () => {
 
         {/* Document Upload Section */}
         <div style={{
-          background: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(255,255,255,0.98)',
           borderRadius: isMobile ? 24 : 32,
-          padding: isMobile ? '2rem' : '3rem',
-          marginTop: isMobile ? '2rem' : '3rem',
-          border: '2px solid rgba(255, 255, 255, 0.2)',
-          boxShadow: '0 20px 40px rgba(102, 126, 234, 0.15)',
+          padding: isMobile ? '1.5rem' : '2.5rem',
+          border: `2px solid ${genzColors.accent1}`,
+          boxShadow: '0 8px 32px rgba(102,126,234,0.18)',
           position: 'relative',
           zIndex: 2
         }}>
           <h2 style={{
-            color: genzColors.accent1,
+            color: genzColors.primary,
             fontWeight: 800,
             fontSize: isMobile ? '1.5rem' : '1.8rem',
             marginBottom: isMobile ? '1rem' : '1.5rem'
@@ -377,26 +380,26 @@ const ProfileGenZ = () => {
           </h2>
           
           <div style={{
-            border: '2px dashed rgba(255, 255, 255, 0.3)',
-            borderRadius: 20,
+            border: `2px dashed ${genzColors.accent1}`,
+            borderRadius: isMobile ? 16 : 20,
             padding: isMobile ? '2rem' : '3rem',
             textAlign: 'center',
-            background: 'rgba(255, 255, 255, 0.05)',
+            background: 'rgba(102, 126, 234, 0.05)',
             transition: 'all 0.3s ease',
             cursor: 'pointer'
           }}
           onMouseEnter={(e) => {
-            e.target.style.borderColor = 'rgba(255, 255, 255, 0.6)';
-            e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+            e.target.style.borderColor = genzColors.accent2;
+            e.target.style.background = 'rgba(102, 126, 234, 0.1)';
           }}
           onMouseLeave={(e) => {
-            e.target.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-            e.target.style.background = 'rgba(255, 255, 255, 0.05)';
+            e.target.style.borderColor = genzColors.accent1;
+            e.target.style.background = 'rgba(102, 126, 234, 0.05)';
           }}
           onClick={() => document.getElementById('file-upload').click()}>
             <div style={{ fontSize: isMobile ? '3rem' : '4rem', marginBottom: '1rem' }}>📤</div>
             <h3 style={{
-              color: '#fff',
+              color: genzColors.primary,
               fontWeight: 700,
               fontSize: isMobile ? '1.2rem' : '1.4rem',
               marginBottom: '0.5rem'
@@ -404,7 +407,7 @@ const ProfileGenZ = () => {
               Upload Documents
             </h3>
             <p style={{
-              color: '#fff',
+              color: genzColors.primary,
               opacity: 0.8,
               fontSize: isMobile ? '0.9rem' : '1rem',
               marginBottom: '1rem'
@@ -412,7 +415,7 @@ const ProfileGenZ = () => {
               Drag & drop files here or click to browse
             </p>
             <p style={{
-              color: '#fff',
+              color: genzColors.primary,
               opacity: 0.6,
               fontSize: isMobile ? '0.8rem' : '0.9rem'
             }}>
@@ -434,7 +437,7 @@ const ProfileGenZ = () => {
           {/* Uploaded Files List */}
           <div style={{ marginTop: isMobile ? '1.5rem' : '2rem' }}>
             <h3 style={{
-              color: '#fff',
+              color: genzColors.primary,
               fontWeight: 700,
               fontSize: isMobile ? '1.1rem' : '1.3rem',
               marginBottom: '1rem'
@@ -442,13 +445,13 @@ const ProfileGenZ = () => {
               Uploaded Files 📋
             </h3>
             <div style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              borderRadius: 16,
+              background: 'rgba(102, 126, 234, 0.05)',
+              borderRadius: isMobile ? 12 : 16,
               padding: isMobile ? '1rem' : '1.5rem',
-              border: '2px solid rgba(255, 255, 255, 0.1)'
+              border: `2px solid ${genzColors.accent1}`
             }}>
               <p style={{
-                color: '#fff',
+                color: genzColors.primary,
                 opacity: 0.7,
                 fontSize: isMobile ? '0.9rem' : '1rem',
                 textAlign: 'center',

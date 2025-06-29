@@ -163,6 +163,17 @@ const BusinessDashboardGenZ = () => {
               }}>
                 Manage your restaurant profile, benefits, and reviews! 🍕✨
               </p>
+              {user?.employeeCount && (
+                <p style={{
+                  color: genzColors.primary,
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  opacity: 0.7,
+                  marginTop: '0.5rem'
+                }}>
+                  <span style={{ color: genzColors.accent1 }}>👥</span> Establishment Size: {user.employeeCount}
+                </p>
+              )}
             </div>
           </div>
 

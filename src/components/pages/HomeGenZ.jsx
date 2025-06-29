@@ -2,26 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { genzCardStyle } from '../../genzTheme.jsx';
+import { getAllCuisines, addCuisine, cuisineExists } from '../../utils/cuisineMap.js';
+import { getAllBenefits, addCustomBenefit, benefitExists } from '../../utils/benefitsMap.js';
 
-const CUISINE_OPTIONS = [
-  { value: 'american', label: 'American', emoji: '🍔' },
-  { value: 'italian', label: 'Italian', emoji: '🍝' },
-  { value: 'mexican', label: 'Mexican', emoji: '🌮' },
-  { value: 'chinese', label: 'Chinese', emoji: '🥢' },
-  { value: 'japanese', label: 'Japanese', emoji: '🍣' },
-  { value: 'thai', label: 'Thai', emoji: '🍜' },
-  { value: 'indian', label: 'Indian', emoji: '🍛' },
-  { value: 'french', label: 'French', emoji: '🥖' },
-  { value: 'mediterranean', label: 'Mediterranean', emoji: '🥙' },
-  { value: 'greek', label: 'Greek', emoji: '🥗' },
-  { value: 'spanish', label: 'Spanish', emoji: '🥘' },
-  { value: 'korean', label: 'Korean', emoji: '🍲' },
-  { value: 'vietnamese', label: 'Vietnamese', emoji: '🍜' },
-  { value: 'middle_eastern', label: 'Middle Eastern', emoji: '🍢' },
-  { value: 'caribbean', label: 'Caribbean', emoji: '🍤' },
-  { value: 'african', label: 'African', emoji: '🍲' },
-  { value: 'fusion', label: 'Fusion', emoji: '🍽️' },
-];
+const CUISINE_OPTIONS = getAllCuisines();
 
 // Hero Section Component
 const HeroSection = ({ searchData, setSearchData, selectedCuisines, setSelectedCuisines, showCuisineDropdown, setShowCuisineDropdown, cuisineDropdownRef, handleSearch, isMobile }) => {
@@ -291,23 +275,7 @@ const HeroSection = ({ searchData, setSearchData, selectedCuisines, setSelectedC
 
 // Benefits Section Component
 const BenefitsSection = ({ searchData, toggleBenefit, isMobile }) => {
-  const benefits = [
-    { key: 'health_insurance', label: 'Health Insurance', icon: '🏥', description: 'Medical coverage' },
-    { key: 'dental_insurance', label: 'Dental Insurance', icon: '🦷', description: 'Dental care' },
-    { key: 'vision_insurance', label: 'Vision Insurance', icon: '👁️', description: 'Eye care' },
-    { key: 'life_insurance', label: 'Life Insurance', icon: '🛡️', description: 'Life coverage' },
-    { key: 'retirement_plan', label: 'Retirement Plan', icon: '💰', description: '401(k) & pension options' },
-    { key: 'living_wage_no_tipping', label: 'Living Wage (No Tipping)', icon: '💵', description: 'No tipping—staff earn a living salary' },
-    { key: 'paid_time_off', label: 'Paid Time Off', icon: '🏖️', description: 'Vacation days' },
-    { key: 'sick_leave', label: 'Sick Leave', icon: '🤒', description: 'Health days' },
-    { key: 'parental_leave', label: 'Parental Leave', icon: '👶', description: 'Family time' },
-    { key: 'flexible_schedule', label: 'Flexible Schedule', icon: '⏰', description: 'Work-life balance' },
-    { key: 'employee_discount', label: 'Employee Discount', icon: '🎫', description: 'Staff perks' },
-    { key: 'meal_allowance', label: 'Meal Allowance', icon: '🍽️', description: 'Food benefits' },
-    { key: 'transportation_benefit', label: 'Transportation Benefit', icon: '🚗', description: 'Commute assistance' },
-    { key: 'education_assistance', label: 'Education Assistance', icon: '📚', description: 'Skill development' },
-    { key: 'gym_membership', label: 'Gym Membership', icon: '💪', description: 'Fitness benefits' }
-  ];
+  const allBenefits = getAllBenefits();
 
   // Custom benefit order as specified
   const orderedBenefitKeys = [
@@ -315,10 +283,6 @@ const BenefitsSection = ({ searchData, toggleBenefit, isMobile }) => {
     'education_assistance', 'sick_leave', 'flexible_schedule', 'life_insurance',
     'parental_leave', 'dental_insurance', 'vision_insurance', 'meal_allowance',
     'employee_discount', 'transportation_benefit', 'gym_membership', 'other'
-  ];
-  const allBenefits = [
-    ...benefits,
-    { key: 'other', label: 'Other', icon: '✨', description: 'Something else awesome!' }
   ];
   const orderedBenefits = orderedBenefitKeys.map(key => allBenefits.find(b => b.key === key)).filter(Boolean);
 

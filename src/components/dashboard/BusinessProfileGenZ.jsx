@@ -15,13 +15,24 @@ const BusinessProfileGenZ = () => {
     state: user?.state || '',
     zipCode: user?.zipCode || '',
     cuisine: user?.cuisine || '',
-    website: user?.website || ''
+    website: user?.website || '',
+    employeeCount: user?.employeeCount || ''
   });
 
   const cuisines = [
     'American', 'Italian', 'Mexican', 'Chinese', 'Japanese', 'Thai', 
     'Indian', 'French', 'Mediterranean', 'Greek', 'Spanish', 'Korean',
     'Vietnamese', 'Middle Eastern', 'Caribbean', 'African', 'Fusion'
+  ];
+
+  const employeeCountOptions = [
+    '1-10 employees',
+    '11-25 employees', 
+    '26-50 employees',
+    '51-100 employees',
+    '101-250 employees',
+    '251-500 employees',
+    '500+ employees'
   ];
 
   const handleChange = (e) => {
@@ -48,7 +59,8 @@ const BusinessProfileGenZ = () => {
       state: user?.state || '',
       zipCode: user?.zipCode || '',
       cuisine: user?.cuisine || '',
-      website: user?.website || ''
+      website: user?.website || '',
+      employeeCount: user?.employeeCount || ''
     });
     setIsEditing(false);
   };
@@ -189,6 +201,24 @@ const BusinessProfileGenZ = () => {
               </h5>
               <p style={{ color: '#fff', opacity: 0.9 }}>
                 {formData.cuisine || 'Not set'}
+              </p>
+            </div>
+
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: 20,
+              padding: '1.5rem',
+              border: '2px solid rgba(255, 255, 255, 0.2)'
+            }}>
+              <h5 style={{
+                color: genzColors.accent1,
+                fontWeight: 700,
+                marginBottom: '0.5rem'
+              }}>
+                Employee Count 👥
+              </h5>
+              <p style={{ color: '#fff', opacity: 0.9 }}>
+                {formData.employeeCount || 'Not set'}
               </p>
             </div>
 
@@ -422,6 +452,40 @@ const BusinessProfileGenZ = () => {
                 <option value="">Select cuisine type</option>
                 {cuisines.map(cuisine => (
                   <option key={cuisine} value={cuisine}>{cuisine}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label style={{
+                display: 'block',
+                color: '#fff',
+                fontWeight: 700,
+                marginBottom: '0.5rem',
+                fontSize: '1rem'
+              }}>
+                Employee Count 👥
+              </label>
+              <select
+                name="employeeCount"
+                value={formData.employeeCount}
+                onChange={handleChange}
+                style={{
+                  width: '100%',
+                  padding: '1rem 1.2rem',
+                  borderRadius: 16,
+                  border: '2px solid rgba(255, 255, 255, 0.3)',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  color: '#fff',
+                  fontFamily: genzFont,
+                  fontSize: '1rem',
+                  outline: 'none',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                <option value="">Select employee count</option>
+                {employeeCountOptions.map(option => (
+                  <option key={option} value={option}>{option}</option>
                 ))}
               </select>
             </div>

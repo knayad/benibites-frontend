@@ -16,21 +16,62 @@ const BusinessRegisterGenZ = () => {
     confirmPassword: '',
     phone: '',
     address: '',
-    cuisine: ''
+    city: '',
+    state: '',
+    zipCode: '',
+    cuisine: '',
+    website: '',
+    employeeCount: ''
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Clear validation error when user starts typing
+    if (validationErrors[e.target.name]) {
+      setValidationErrors(prev => ({ ...prev, [e.target.name]: '' }));
+    }
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    
+    if (!formData.businessName.trim()) errors.businessName = 'Restaurant name is required! 🏪';
+    if (!formData.ownerName.trim()) errors.ownerName = 'Owner name is required! 👤';
+    if (!formData.email.trim()) errors.email = 'Email is required! 📧';
+    if (!formData.phone.trim()) errors.phone = 'Phone number is required! 📞';
+    if (!formData.address.trim()) errors.address = 'Address is required! 🏠';
+    if (!formData.city.trim()) errors.city = 'City is required! 🏙️';
+    if (!formData.state.trim()) errors.state = 'State is required! 🗺️';
+    if (!formData.zipCode.trim()) errors.zipCode = 'ZIP code is required! 📮';
+    if (!formData.cuisine.trim()) errors.cuisine = 'Cuisine type is required! 🍽️';
+    if (!formData.employeeCount.trim()) errors.employeeCount = 'Employee count is required! 👥';
+    
+    if (formData.password.length < 8) {
+      errors.password = 'Password must be at least 8 characters! 🔒';
+    }
+    
+    if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = 'Passwords do not match! 🔐';
+    }
+    
+    if (formData.website && !formData.website.startsWith('http')) {
+      errors.website = 'Website must start with http:// or https://! 🌐';
+    }
+    
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
+    
+    if (!validateForm()) {
       return;
     }
+    
     const result = await dispatch(registerBusiness(formData));
     if (registerBusiness.fulfilled.match(result)) {
       navigate('/business-dashboard');
@@ -108,46 +149,70 @@ const BusinessRegisterGenZ = () => {
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
-            <input
-              type="text"
-              name="businessName"
-              value={formData.businessName}
-              onChange={handleChange}
-              required
-              placeholder="Restaurant name"
-              style={{
-                width: '100%',
-                padding: '1rem 1.2rem',
-                borderRadius: 20,
-                border: `2px solid ${genzColors.accent1}`,
-                background: 'rgba(255,255,255,0.9)',
-                color: genzColors.black,
-                fontFamily: genzFont,
-                fontSize: '1rem',
-                outline: 'none',
-                transition: 'all 0.3s ease'
-              }}
-            />
-            <input
-              type="text"
-              name="ownerName"
-              value={formData.ownerName}
-              onChange={handleChange}
-              required
-              placeholder="Owner's full name"
-              style={{
-                width: '100%',
-                padding: '1rem 1.2rem',
-                borderRadius: 20,
-                border: `2px solid ${genzColors.accent1}`,
-                background: 'rgba(255,255,255,0.9)',
-                color: genzColors.black,
-                fontFamily: genzFont,
-                fontSize: '1rem',
-                outline: 'none',
-                transition: 'all 0.3s ease'
-              }}
-            />
+            <div>
+              <input
+                type="text"
+                name="businessName"
+                value={formData.businessName}
+                onChange={handleChange}
+                required
+                placeholder="Restaurant name"
+                style={{
+                  width: '100%',
+                  padding: '1rem 1.2rem',
+                  borderRadius: 20,
+                  border: `2px solid ${validationErrors.businessName ? genzColors.accent2 : genzColors.accent1}`,
+                  background: 'rgba(255,255,255,0.9)',
+                  color: genzColors.black,
+                  fontFamily: genzFont,
+                  fontSize: '1rem',
+                  outline: 'none',
+                  transition: 'all 0.3s ease'
+                }}
+              />
+              {validationErrors.businessName && (
+                <div style={{
+                  color: genzColors.accent2,
+                  fontSize: '0.9rem',
+                  marginTop: '0.5rem',
+                  fontWeight: 600
+                }}>
+                  {validationErrors.businessName}
+                </div>
+              )}
+            </div>
+            <div>
+              <input
+                type="text"
+                name="ownerName"
+                value={formData.ownerName}
+                onChange={handleChange}
+                required
+                placeholder="Owner's full name"
+                style={{
+                  width: '100%',
+                  padding: '1rem 1.2rem',
+                  borderRadius: 20,
+                  border: `2px solid ${validationErrors.ownerName ? genzColors.accent2 : genzColors.accent1}`,
+                  background: 'rgba(255,255,255,0.9)',
+                  color: genzColors.black,
+                  fontFamily: genzFont,
+                  fontSize: '1rem',
+                  outline: 'none',
+                  transition: 'all 0.3s ease'
+                }}
+              />
+              {validationErrors.ownerName && (
+                <div style={{
+                  color: genzColors.accent2,
+                  fontSize: '0.9rem',
+                  marginTop: '0.5rem',
+                  fontWeight: 600
+                }}>
+                  {validationErrors.ownerName}
+                </div>
+              )}
+            </div>
           </div>
 
           <input
@@ -236,6 +301,120 @@ const BusinessRegisterGenZ = () => {
           />
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+            <input
+              type="text"
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              required
+              placeholder="City"
+              style={{
+                width: '100%',
+                padding: '1rem 1.2rem',
+                borderRadius: 20,
+                border: `2px solid ${genzColors.accent1}`,
+                background: 'rgba(255,255,255,0.9)',
+                color: genzColors.black,
+                fontFamily: genzFont,
+                fontSize: '1rem',
+                outline: 'none',
+                transition: 'all 0.3s ease'
+              }}
+            />
+            <input
+              type="text"
+              name="state"
+              value={formData.state}
+              onChange={handleChange}
+              required
+              placeholder="State"
+              style={{
+                width: '100%',
+                padding: '1rem 1.2rem',
+                borderRadius: 20,
+                border: `2px solid ${genzColors.accent1}`,
+                background: 'rgba(255,255,255,0.9)',
+                color: genzColors.black,
+                fontFamily: genzFont,
+                fontSize: '1rem',
+                outline: 'none',
+                transition: 'all 0.3s ease'
+              }}
+            />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+            <input
+              type="text"
+              name="zipCode"
+              value={formData.zipCode}
+              onChange={handleChange}
+              required
+              placeholder="ZIP Code"
+              style={{
+                width: '100%',
+                padding: '1rem 1.2rem',
+                borderRadius: 20,
+                border: `2px solid ${genzColors.accent1}`,
+                background: 'rgba(255,255,255,0.9)',
+                color: genzColors.black,
+                fontFamily: genzFont,
+                fontSize: '1rem',
+                outline: 'none',
+                transition: 'all 0.3s ease'
+              }}
+            />
+            <input
+              type="url"
+              name="website"
+              value={formData.website}
+              onChange={handleChange}
+              placeholder="Website (optional) 🌐"
+              style={{
+                width: '100%',
+                padding: '1rem 1.2rem',
+                borderRadius: 20,
+                border: `2px solid ${genzColors.accent1}`,
+                background: 'rgba(255,255,255,0.9)',
+                color: genzColors.black,
+                fontFamily: genzFont,
+                fontSize: '1rem',
+                outline: 'none',
+                transition: 'all 0.3s ease'
+              }}
+            />
+          </div>
+
+          <select
+            name="employeeCount"
+            value={formData.employeeCount}
+            onChange={handleChange}
+            required
+            style={{
+              width: '100%',
+              padding: '1rem 1.2rem',
+              borderRadius: 20,
+              border: `2px solid ${genzColors.accent1}`,
+              background: 'rgba(255,255,255,0.9)',
+              color: genzColors.black,
+              fontFamily: genzFont,
+              fontSize: '1rem',
+              outline: 'none',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}
+          >
+            <option value="">Select employee count 👥</option>
+            <option value="1-10">1-10 employees</option>
+            <option value="11-25">11-25 employees</option>
+            <option value="26-50">26-50 employees</option>
+            <option value="51-100">51-100 employees</option>
+            <option value="101-250">101-250 employees</option>
+            <option value="251-500">251-500 employees</option>
+            <option value="500+">500+ employees</option>
+          </select>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
             <div style={{ position: 'relative' }}>
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -249,7 +428,7 @@ const BusinessRegisterGenZ = () => {
                   padding: '1rem 1.2rem',
                   paddingRight: '3rem',
                   borderRadius: 20,
-                  border: `2px solid ${genzColors.accent1}`,
+                  border: `2px solid ${validationErrors.password ? genzColors.accent2 : genzColors.accent1}`,
                   background: 'rgba(255,255,255,0.9)',
                   color: genzColors.black,
                   fontFamily: genzFont,
@@ -275,6 +454,16 @@ const BusinessRegisterGenZ = () => {
               >
                 {showPassword ? '🙈' : '👁️'}
               </button>
+              {validationErrors.password && (
+                <div style={{
+                  color: genzColors.accent2,
+                  fontSize: '0.9rem',
+                  marginTop: '0.5rem',
+                  fontWeight: 600
+                }}>
+                  {validationErrors.password}
+                </div>
+              )}
             </div>
 
             <div style={{ position: 'relative' }}>
@@ -290,7 +479,7 @@ const BusinessRegisterGenZ = () => {
                   padding: '1rem 1.2rem',
                   paddingRight: '3rem',
                   borderRadius: 20,
-                  border: `2px solid ${genzColors.accent1}`,
+                  border: `2px solid ${validationErrors.confirmPassword ? genzColors.accent2 : genzColors.accent1}`,
                   background: 'rgba(255,255,255,0.9)',
                   color: genzColors.black,
                   fontFamily: genzFont,
@@ -316,6 +505,16 @@ const BusinessRegisterGenZ = () => {
               >
                 {showConfirmPassword ? '🙈' : '👁️'}
               </button>
+              {validationErrors.confirmPassword && (
+                <div style={{
+                  color: genzColors.accent2,
+                  fontSize: '0.9rem',
+                  marginTop: '0.5rem',
+                  fontWeight: 600
+                }}>
+                  {validationErrors.confirmPassword}
+                </div>
+              )}
             </div>
           </div>
 

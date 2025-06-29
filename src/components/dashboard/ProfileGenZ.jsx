@@ -10,7 +10,8 @@ const ProfileGenZ = () => {
     name: user?.name || '',
     email: user?.email || '',
     phone: user?.phone || '',
-    location: user?.location || ''
+    location: user?.location || '',
+    workplaceSize: user?.workplaceSize || ''
   });
 
   React.useEffect(() => {
@@ -34,7 +35,8 @@ const ProfileGenZ = () => {
       name: user?.name || '',
       email: user?.email || '',
       phone: user?.phone || '',
-      location: user?.location || ''
+      location: user?.location || '',
+      workplaceSize: user?.workplaceSize || ''
     });
     setIsEditing(false);
   };
@@ -310,6 +312,53 @@ const ProfileGenZ = () => {
                     opacity: isEditing ? 1 : 0.7
                   }}
                 />
+              </div>
+            </div>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: isMobile ? '1rem' : '1.5rem'
+            }}>
+              <div>
+                <label style={{
+                  display: 'block',
+                  color: genzColors.primary,
+                  fontWeight: 700,
+                  marginBottom: '0.5rem',
+                  fontSize: isMobile ? '0.9rem' : '1rem'
+                }}>
+                  Workplace Size 👥
+                </label>
+                <select
+                  name="workplaceSize"
+                  value={formData.workplaceSize}
+                  onChange={handleChange}
+                  disabled={!isEditing}
+                  style={{
+                    width: '100%',
+                    padding: isMobile ? '0.8rem 1rem' : '1rem 1.2rem',
+                    borderRadius: isMobile ? 12 : 16,
+                    border: `2px solid ${genzColors.accent1}`,
+                    background: isEditing ? 'rgba(255,255,255,0.9)' : 'rgba(102, 126, 234, 0.05)',
+                    color: isEditing ? genzColors.black : genzColors.primary,
+                    fontFamily: genzFont,
+                    fontSize: isMobile ? '0.9rem' : '1rem',
+                    outline: 'none',
+                    transition: 'all 0.3s ease',
+                    opacity: isEditing ? 1 : 0.7,
+                    cursor: isEditing ? 'pointer' : 'default'
+                  }}
+                >
+                  <option value="">Select workplace size</option>
+                  <option value="1-10 employees">1-10 employees</option>
+                  <option value="11-25 employees">11-25 employees</option>
+                  <option value="26-50 employees">26-50 employees</option>
+                  <option value="51-100 employees">51-100 employees</option>
+                  <option value="101-250 employees">101-250 employees</option>
+                  <option value="251-500 employees">251-500 employees</option>
+                  <option value="500+ employees">500+ employees</option>
+                </select>
               </div>
             </div>
 

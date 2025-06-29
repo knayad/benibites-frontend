@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { genzColors, genzGradients, genzFont } from '../../genzTheme.jsx';
+import { getAllBenefits, addCustomBenefit, getBenefitInfo } from '../../utils/benefitsMap.js';
 
 const BusinessBenefitsGenZ = () => {
   const [activeBenefits, setActiveBenefits] = useState([
@@ -11,24 +12,10 @@ const BusinessBenefitsGenZ = () => {
 
   const [showAddBenefit, setShowAddBenefit] = useState(false);
   const [newBenefit, setNewBenefit] = useState('');
+  const [newBenefitEmoji, setNewBenefitEmoji] = useState('✨');
+  const [newBenefitDescription, setNewBenefitDescription] = useState('');
 
-  const allBenefits = [
-    { key: 'health_insurance', label: 'Health Insurance', icon: '🏥', description: 'Medical coverage for employees' },
-    { key: 'dental_insurance', label: 'Dental Insurance', icon: '🦷', description: 'Dental care coverage' },
-    { key: 'vision_insurance', label: 'Vision Insurance', icon: '👁️', description: 'Eye care coverage' },
-    { key: 'life_insurance', label: 'Life Insurance', icon: '🛡️', description: 'Life coverage protection' },
-    { key: 'retirement_plan', label: 'Retirement Plan', icon: '💰', description: '401(k) & pension options' },
-    { key: 'living_wage_no_tipping', label: 'Living Wage (No Tipping)', icon: '💵', description: 'No tipping—staff earn a living salary' },
-    { key: 'paid_time_off', label: 'Paid Time Off', icon: '🏖️', description: 'Vacation days and holidays' },
-    { key: 'sick_leave', label: 'Sick Leave', icon: '🤒', description: 'Health days and sick pay' },
-    { key: 'parental_leave', label: 'Parental Leave', icon: '👶', description: 'Family time for new parents' },
-    { key: 'flexible_schedule', label: 'Flexible Schedule', icon: '⏰', description: 'Work-life balance options' },
-    { key: 'employee_discount', label: 'Employee Discount', icon: '🎫', description: 'Staff perks and discounts' },
-    { key: 'meal_allowance', label: 'Meal Allowance', icon: '🍽️', description: 'Food benefits and meal credits' },
-    { key: 'transportation_benefit', label: 'Transportation Benefit', icon: '🚗', description: 'Commute assistance' },
-    { key: 'education_assistance', label: 'Education Assistance', icon: '📚', description: 'Skill development support' },
-    { key: 'gym_membership', label: 'Gym Membership', icon: '💪', description: 'Fitness benefits' }
-  ];
+  const allBenefits = getAllBenefits();
 
   const toggleBenefit = (benefitKey) => {
     setActiveBenefits(prev => 
@@ -40,27 +27,31 @@ const BusinessBenefitsGenZ = () => {
 
   const handleAddCustomBenefit = () => {
     if (newBenefit.trim()) {
-      // TODO: Implement custom benefit addition
-      console.log('Adding custom benefit:', newBenefit);
+      const benefitKey = addCustomBenefit(newBenefit, newBenefitEmoji, newBenefitDescription || 'Custom benefit');
+      setActiveBenefits(prev => [...prev, benefitKey]);
       setNewBenefit('');
+      setNewBenefitEmoji('✨');
+      setNewBenefitDescription('');
       setShowAddBenefit(false);
     }
   };
 
   const getBenefitIcon = (benefitKey) => {
-    const benefit = allBenefits.find(b => b.key === benefitKey);
-    return benefit ? benefit.icon : '✨';
+    const info = getBenefitInfo(benefitKey);
+    return info.icon;
   };
 
   const getBenefitLabel = (benefitKey) => {
-    const benefit = allBenefits.find(b => b.key === benefitKey);
-    return benefit ? benefit.label : benefitKey;
+    const info = getBenefitInfo(benefitKey);
+    return info.label;
   };
 
   const getBenefitDescription = (benefitKey) => {
-    const benefit = allBenefits.find(b => b.key === benefitKey);
-    return benefit ? benefit.description : 'Custom benefit';
+    const info = getBenefitInfo(benefitKey);
+    return info.description;
   };
+
+  const commonEmojis = ['✨', '🎁', '💎', '🌟', '💫', '🎯', '🏆', '💪', '🎉', '🔥', '💯', '⭐', '🎊', '💖', '🎪', '🎨'];
 
   return (
     <div>
@@ -102,7 +93,7 @@ const BusinessBenefitsGenZ = () => {
         }}>
           <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>👥</div>
           <h4 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem' }}>
-            15
+            {allBenefits.length}
           </h4>
           <p style={{ color: '#fff', opacity: 0.8 }}>Available Benefits</p>
         </div>
@@ -163,10 +154,78 @@ const BusinessBenefitsGenZ = () => {
         {showAddBenefit && (
           <div style={{
             display: 'flex',
-            gap: '1rem',
-            alignItems: 'flex-end'
+            flexDirection: 'column',
+            gap: '1rem'
           }}>
-            <div style={{ flex: 1 }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr auto',
+              gap: '1rem',
+              alignItems: 'end'
+            }}>
+              <div>
+                <label style={{
+                  display: 'block',
+                  color: '#fff',
+                  fontWeight: 700,
+                  marginBottom: '0.5rem',
+                  fontSize: '1rem'
+                }}>
+                  Custom Benefit Name
+                </label>
+                <input
+                  type="text"
+                  value={newBenefit}
+                  onChange={(e) => setNewBenefit(e.target.value)}
+                  placeholder="e.g., Pet Insurance, Wellness Program"
+                  style={{
+                    width: '100%',
+                    padding: '1rem 1.2rem',
+                    borderRadius: 16,
+                    border: '2px solid rgba(255, 255, 255, 0.3)',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    color: '#fff',
+                    fontFamily: genzFont,
+                    fontSize: '1rem',
+                    outline: 'none'
+                  }}
+                />
+              </div>
+              <div>
+                <label style={{
+                  display: 'block',
+                  color: '#fff',
+                  fontWeight: 700,
+                  marginBottom: '0.5rem',
+                  fontSize: '1rem'
+                }}>
+                  Emoji
+                </label>
+                <select
+                  value={newBenefitEmoji}
+                  onChange={(e) => setNewBenefitEmoji(e.target.value)}
+                  style={{
+                    padding: '1rem 1.2rem',
+                    borderRadius: 16,
+                    border: '2px solid rgba(255, 255, 255, 0.3)',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    color: '#fff',
+                    fontFamily: genzFont,
+                    fontSize: '1rem',
+                    outline: 'none',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {commonEmojis.map(emoji => (
+                    <option key={emoji} value={emoji} style={{ background: '#333', color: '#fff' }}>
+                      {emoji}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            
+            <div>
               <label style={{
                 display: 'block',
                 color: '#fff',
@@ -174,13 +233,13 @@ const BusinessBenefitsGenZ = () => {
                 marginBottom: '0.5rem',
                 fontSize: '1rem'
               }}>
-                Custom Benefit Name
+                Description (Optional)
               </label>
               <input
                 type="text"
-                value={newBenefit}
-                onChange={(e) => setNewBenefit(e.target.value)}
-                placeholder="e.g., Pet Insurance, Wellness Program"
+                value={newBenefitDescription}
+                onChange={(e) => setNewBenefitDescription(e.target.value)}
+                placeholder="Brief description of the benefit"
                 style={{
                   width: '100%',
                   padding: '1rem 1.2rem',
@@ -194,6 +253,7 @@ const BusinessBenefitsGenZ = () => {
                 }}
               />
             </div>
+            
             <button
               onClick={handleAddCustomBenefit}
               disabled={!newBenefit.trim()}
@@ -207,7 +267,8 @@ const BusinessBenefitsGenZ = () => {
                 fontWeight: 700,
                 fontSize: '1rem',
                 cursor: newBenefit.trim() ? 'pointer' : 'not-allowed',
-                opacity: newBenefit.trim() ? 1 : 0.6
+                opacity: newBenefit.trim() ? 1 : 0.6,
+                alignSelf: 'flex-end'
               }}
             >
               Add Benefit

@@ -103,34 +103,25 @@ const NavbarGenZ = () => {
               🔍 Find Restaurants
             </Link>
             
-            <Dropdown as="span" className="d-inline-block">
-              <Dropdown.Toggle 
-                as={Button} 
-                variant="outline-primary" 
-                style={{ 
-                  fontWeight: 700, 
-                  fontFamily: genzFont, 
-                  fontSize: '1.1rem', 
-                  borderRadius: 18, 
-                  padding: '0.8rem 1.5rem', 
-                  border: `2px solid ${genzColors.accent1}`, 
-                  color: genzColors.primary, 
-                  background: 'rgba(102, 126, 234, 0.1)',
-                  marginLeft: 8 
-                }}
-              >
-                🔑 Login
-              </Dropdown.Toggle>
-              <Dropdown.Menu align="end" style={{
-                background: 'rgba(255,255,255,0.98)',
+            <Link 
+              to="/login" 
+              className="nav-link" 
+              style={{
+                color: genzColors.primary,
+                fontWeight: 700,
+                fontFamily: genzFont,
+                fontSize: '1.1rem',
+                background: 'rgba(102, 126, 234, 0.1)',
+                borderRadius: 18,
+                padding: '0.8rem 1.5rem',
                 border: `2px solid ${genzColors.accent1}`,
-                borderRadius: 16,
-                boxShadow: '0 8px 32px rgba(102,126,234,0.18)'
-              }}>
-                <Dropdown.Item as={Link} to="/login" style={{ color: genzColors.primary }}>👤 User Login</Dropdown.Item>
-                <Dropdown.Item as={Link} to="/business-login" style={{ color: genzColors.primary }}>🏪 Business Login</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+                textDecoration: 'none',
+                transition: 'all 0.3s ease',
+                display: 'inline-block'
+              }}
+            >
+              🔑 Login
+            </Link>
             
             <Dropdown as="span" className="d-inline-block">
               <Dropdown.Toggle 

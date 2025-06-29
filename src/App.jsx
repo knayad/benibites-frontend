@@ -12,7 +12,6 @@ import RegisterGenZ from './components/auth/RegisterGenZ';
 import BusinessRegisterGenZ from './components/auth/BusinessRegisterGenZ';
 import DashboardGenZ from './components/dashboard/DashboardGenZ';
 import BusinessDashboardGenZ from './components/dashboard/BusinessDashboardGenZ';
-import BusinessLoginGenZ from './components/auth/BusinessLoginGenZ';
 import WriteReviewGenZ from './components/pages/WriteReviewGenZ';
 import WriteEmployeeReviewGenZ from './components/pages/WriteEmployeeReviewGenZ';
 import ProfileGenZ from './components/dashboard/ProfileGenZ';
@@ -38,7 +37,6 @@ function App() {
               <Route path="/register-business" element={<BusinessRegisterGenZ />} />
               <Route path="/dashboard" element={<DashboardGenZ />} />
               <Route path="/business-dashboard" element={<BusinessDashboardGenZ />} />
-              <Route path="/business-login" element={<BusinessLoginGenZ />} />
               <Route path="/write-review/:id" element={<WriteReviewGenZ />} />
               <Route path="/write-employee-review/:id" element={<WriteEmployeeReviewGenZ />} />
               <Route path="/profile" element={<ProfileGenZ />} />

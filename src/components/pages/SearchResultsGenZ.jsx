@@ -4,47 +4,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { searchRestaurants } from '../../store/slices/restaurantsSlice';
 import { genzColors, genzGradients, genzFont, PlayfulStroke1 } from '../../genzTheme.jsx';
 import { getSearchEmoji } from '../../utils/emojiMap.js';
-import burgerSize from '../../assets/burgerSize.jpg';
+import { getCuisineEmoji, getAllCuisines } from '../../utils/cuisineMap.js';
+import { getAllBenefits } from '../../utils/benefitsMap.js';
+import BurgerMeme from '../layout/BurgerMeme.jsx';
 import { createPortal } from 'react-dom';
 
-const CUISINE_OPTIONS = [
-  { value: 'american', label: 'American', emoji: '🍔' },
-  { value: 'italian', label: 'Italian', emoji: '🍝' },
-  { value: 'mexican', label: 'Mexican', emoji: '🌮' },
-  { value: 'chinese', label: 'Chinese', emoji: '🥢' },
-  { value: 'japanese', label: 'Japanese', emoji: '🍣' },
-  { value: 'thai', label: 'Thai', emoji: '🍜' },
-  { value: 'indian', label: 'Indian', emoji: '🍛' },
-  { value: 'french', label: 'French', emoji: '🥖' },
-  { value: 'mediterranean', label: 'Mediterranean', emoji: '🥙' },
-  { value: 'greek', label: 'Greek', emoji: '🥗' },
-  { value: 'spanish', label: 'Spanish', emoji: '🥘' },
-  { value: 'korean', label: 'Korean', emoji: '🍲' },
-  { value: 'vietnamese', label: 'Vietnamese', emoji: '🍜' },
-  { value: 'middle_eastern', label: 'Middle Eastern', emoji: '🍢' },
-  { value: 'caribbean', label: 'Caribbean', emoji: '🍤' },
-  { value: 'african', label: 'African', emoji: '🍲' },
-  { value: 'fusion', label: 'Fusion', emoji: '🍽️' },
-];
+const CUISINE_OPTIONS = getAllCuisines();
 
-const BENEFIT_OPTIONS = [
-  { value: 'health_insurance', label: 'Health Insurance 🏥' },
-  { value: 'dental_insurance', label: 'Dental Insurance 🦷' },
-  { value: 'vision_insurance', label: 'Vision Insurance 👁️' },
-  { value: 'life_insurance', label: 'Life Insurance 🛡️' },
-  { value: 'retirement_plan', label: 'Retirement Plan 💰' },
-  { value: 'living_wage_no_tipping', label: 'Living Wage (No Tipping) 💵' },
-  { value: 'paid_time_off', label: 'Paid Time Off 🏖️' },
-  { value: 'sick_leave', label: 'Sick Leave 🤒' },
-  { value: 'parental_leave', label: 'Parental Leave 👶' },
-  { value: 'flexible_schedule', label: 'Flexible Schedule ⏰' },
-  { value: 'employee_discount', label: 'Employee Discount 🎫' },
-  { value: 'meal_allowance', label: 'Meal Allowance 🍽️' },
-  { value: 'transportation_benefit', label: 'Transportation Benefit 🚗' },
-  { value: 'education_assistance', label: 'Education Assistance 📚' },
-  { value: 'gym_membership', label: 'Gym Membership 💪' },
-  { value: 'other', label: 'Other awesome perks 🅿️' },
-];
+const BENEFIT_OPTIONS = getAllBenefits();
 
 const DISTANCE_OPTIONS = [
   { value: 5, label: '5 miles' },
@@ -62,6 +29,7 @@ const SearchResultsGenZ = () => {
   const initialQuery = searchParams.get('q') || '';
   const cuisinesParam = searchParams.get('cuisines') || '';
   const benefitsParam = searchParams.get('benefits') || '';
+  const locationParam = searchParams.get('location') || '';
 
   const [query, setQuery] = useState(initialQuery);
   const [showCuisineDropdown, setShowCuisineDropdown] = useState(false);
@@ -72,20 +40,20 @@ const SearchResultsGenZ = () => {
   const distanceDropdownRef = useRef(null);
   const [selectedCuisines, setSelectedCuisines] = useState(cuisinesParam ? cuisinesParam.split(',') : []);
   const [selectedBenefits, setSelectedBenefits] = useState(benefitsParam ? benefitsParam.split(',') : []);
-  const [location, setLocation] = useState('');
+  const [location, setLocation] = useState(locationParam);
   const [distance, setDistance] = useState(10);
-  const [showBurgerMeme, setShowBurgerMeme] = useState(false);
 
   useEffect(() => {
     const searchParams = {
       query,
+      location,
       filters: {
         cuisine: selectedCuisines.join(','),
         benefits: selectedBenefits.join(',')
       }
     };
     dispatch(searchRestaurants(searchParams));
-  }, [dispatch, query, selectedCuisines, selectedBenefits]);
+  }, [dispatch, query, location, selectedCuisines, selectedBenefits]);
 
   // Handle outside click for dropdowns
   useEffect(() => {
@@ -116,29 +84,6 @@ const SearchResultsGenZ = () => {
     );
   };
 
-  const getCuisineEmoji = (cuisine) => {
-    const emojiMap = {
-      american: '🍔',
-      italian: '🍝',
-      mexican: '🌮',
-      chinese: '🥢',
-      japanese: '🍣',
-      thai: '🍜',
-      indian: '🍛',
-      french: '🥖',
-      mediterranean: '🥙',
-      greek: '🥗',
-      spanish: '🥘',
-      korean: '🍲',
-      vietnamese: '🍜',
-      middle_eastern: '🍢',
-      caribbean: '🍤',
-      african: '🍲',
-      fusion: '🍽️'
-    };
-    return emojiMap[cuisine] || '🍽️';
-  };
-
   const getRatingStars = (rating) => {
     return '⭐'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
   };
@@ -163,26 +108,6 @@ const SearchResultsGenZ = () => {
       </div>
       <div style={{ position: 'absolute', top: '60%', left: '5%', transform: 'rotate(-10deg)', zIndex: 1 }}>
         <PlayfulStroke1 style={{ width: 40, height: 12 }} />
-      </div>
-
-      {/* Hamburger Image */}
-      <div style={{
-        position: 'absolute',
-        top: '10%',
-        right: '5%',
-        zIndex: 1,
-        opacity: 0.1,
-        transform: 'rotate(15deg)'
-      }}>
-        <img 
-          src={burgerSize} 
-          alt="Decorative burger" 
-          style={{ 
-            width: '200px', 
-            height: 'auto',
-            filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))'
-          }} 
-        />
       </div>
 
       <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', position: 'relative', zIndex: 100, overflow: 'visible' }}>
@@ -218,7 +143,7 @@ const SearchResultsGenZ = () => {
             opacity: 0.8,
             margin: 0
           }}>
-            Found {searchResults.length} restaurants for "{query}" {getSearchEmoji(query)}
+            Found {searchResults.length} restaurants for "{query}" {location && `in ${location}`} {getSearchEmoji(query)}
           </p>
         </div>
 
@@ -262,6 +187,35 @@ const SearchResultsGenZ = () => {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="What are you craving?"
+                style={{
+                  width: '100%',
+                  padding: '1rem 1.2rem',
+                  borderRadius: 16,
+                  border: `2px solid ${genzColors.accent1}`,
+                  background: 'rgba(255,255,255,0.9)',
+                  color: genzColors.black,
+                  fontFamily: genzFont,
+                  fontSize: '1rem',
+                  outline: 'none'
+                }}
+              />
+            </div>
+
+            {/* Location */}
+            <div>
+              <label style={{
+                display: 'block',
+                color: genzColors.primary,
+                fontWeight: 700,
+                marginBottom: '0.5rem'
+              }}>
+                Location
+              </label>
+              <input
+                type="text"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="City, State"
                 style={{
                   width: '100%',
                   padding: '1rem 1.2rem',
@@ -369,7 +323,7 @@ const SearchResultsGenZ = () => {
                 {selectedBenefits.length === 0 ? 'All benefits' :
                   selectedBenefits.length > 2 ? `${selectedBenefits.length} benefits selected` :
                   selectedBenefits.map(benefit => 
-                    BENEFIT_OPTIONS.find(opt => opt.value === benefit)?.label
+                    BENEFIT_OPTIONS.find(opt => opt.key === benefit)?.label
                   ).join(', ')
                 }
               </div>
@@ -389,14 +343,14 @@ const SearchResultsGenZ = () => {
                   overflowY: 'auto',
                 }}>
                   {BENEFIT_OPTIONS.map(opt => (
-                    <label key={opt.value} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, cursor: 'pointer', color: genzColors.black }}>
+                    <label key={opt.key} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, cursor: 'pointer', color: genzColors.black }}>
                       <input
                         type="checkbox"
-                        checked={selectedBenefits.includes(opt.value)}
-                        onChange={() => handleBenefitsChange(opt.value)}
+                        checked={selectedBenefits.includes(opt.key)}
+                        onChange={() => handleBenefitsChange(opt.key)}
                         style={{ accentColor: genzColors.accent1, marginRight: 6 }}
                       />
-                      <span>{opt.label}</span>
+                      <span>{opt.label} {opt.icon}</span>
                     </label>
                   ))}
                 </div>, document.body
@@ -569,64 +523,9 @@ const SearchResultsGenZ = () => {
             </div>
           )}
         </div>
-        {/* Large Hamburger Icon and Meme at the bottom */}
-        <div
-          style={{
-            textAlign: 'center',
-            marginTop: '3rem',
-            padding: '2rem',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            cursor: 'pointer',
-            userSelect: 'none',
-            position: 'relative',
-            zIndex: 1,
-            minHeight: window.innerWidth < 600 ? 220 : 300 // Reserve space for meme
-          }}
-          onClick={() => setShowBurgerMeme(v => !v)}
-          title={showBurgerMeme ? 'Hide burger meme' : 'Show burger meme'}
-        >
-          <span style={{
-            fontSize: window.innerWidth < 600 ? '3.2rem' : '4.2rem',
-            filter: showBurgerMeme ? 'drop-shadow(0 2px 12px #feca57)' : 'drop-shadow(0 2px 8px #764ba2)',
-            transition: 'filter 0.2s',
-            animation: showBurgerMeme ? 'bounceBurger 0.7s' : 'none',
-          }} role="img" aria-label="burger">🍔</span>
-          <div style={{ minHeight: 0, width: '100%' }}>
-            {showBurgerMeme && (
-              <img
-                src={burgerSize}
-                alt="big burgers should be wider not taller meme"
-                title="big burgers should be wider not taller meme"
-                style={{
-                  marginTop: 16,
-                  maxWidth: window.innerWidth < 600 ? 180 : 260,
-                  width: '100%',
-                  borderRadius: 18,
-                  boxShadow: '0 8px 32px rgba(254,202,87,0.18)',
-                  userSelect: 'none',
-                  pointerEvents: 'none',
-                  filter: 'saturate(1.2) drop-shadow(0 2px 8px #feca57)',
-                  animation: 'popBurger 0.5s',
-                }}
-              />
-            )}
-          </div>
-        </div>
-        <style>{`
-          @keyframes popBurger {
-            0% { transform: scale(0.7) translateY(40px); opacity: 0; }
-            60% { transform: scale(1.1) translateY(-10px); opacity: 1; }
-            100% { transform: scale(1) translateY(0); opacity: 1; }
-          }
-          @keyframes bounceBurger {
-            0% { transform: scale(1) translateY(0); }
-            30% { transform: scale(1.2) translateY(-10px); }
-            60% { transform: scale(0.95) translateY(4px); }
-            100% { transform: scale(1) translateY(0); }
-          }
-        `}</style>
+        
+        {/* Burger Meme Component */}
+        <BurgerMeme isMobile={window.innerWidth < 600} />
       </div>
     </div>
   );

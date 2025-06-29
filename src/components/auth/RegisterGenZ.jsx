@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { register } from '../../store/slices/authSlice';
+import { Form, Button, Card, Alert, Row, Col } from 'react-bootstrap';
+import { register, clearError } from '../../store/slices/authSlice';
 import { genzColors, genzGradients, genzFont, PlayfulStroke1 } from '../../genzTheme.jsx';
 
 const RegisterGenZ = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((state) => state.auth);
+  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,41 +20,38 @@ const RegisterGenZ = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [validationErrors, setValidationErrors] = useState({});
+  const [validated, setValidated] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearError());
+    };
+  }, [dispatch]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    // Clear validation error when user starts typing
-    if (validationErrors[e.target.name]) {
-      setValidationErrors(prev => ({ ...prev, [e.target.name]: '' }));
-    }
-  };
-
-  const validateForm = () => {
-    const errors = {};
-    
-    if (!formData.name.trim()) errors.name = 'Name is required! 👤';
-    if (!formData.email.trim()) errors.email = 'Email is required! 📧';
-    
-    if (formData.password.length < 6) {
-      errors.password = 'Password must be at least 6 characters! 🔒';
-    }
-    
-    if (formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match! 🔐';
-    }
-    
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const form = e.currentTarget;
     
-    if (!validateForm()) {
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      setValidated(true);
       return;
     }
-    
+
+    setValidated(true);
     const result = await dispatch(register(formData));
     if (register.fulfilled.match(result)) {
       navigate('/dashboard');
@@ -83,366 +82,393 @@ const RegisterGenZ = () => {
         <PlayfulStroke1 style={{ width: 40, height: 12 }} />
       </div>
       
-      <div style={{
-        background: 'rgba(255,255,255,0.98)',
-        borderRadius: 32,
-        boxShadow: '0 8px 32px rgba(102,126,234,0.18)',
-        padding: '2.5rem 2rem',
-        maxWidth: 520,
-        width: '100%',
-        border: `2px solid ${genzColors.accent1}`,
-        position: 'relative',
-        zIndex: 2
-      }}>
-        <h2 style={{
-          fontWeight: 900,
-          fontSize: '2rem',
-          background: genzGradients.button,
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          marginBottom: '1.2rem',
-          textAlign: 'center'
+      <div style={{ maxWidth: '600px', width: '100%', position: 'relative', zIndex: 2 }}>
+        <Card style={{
+          background: 'rgba(255,255,255,0.98)',
+          borderRadius: 32,
+          boxShadow: '0 8px 32px rgba(102,126,234,0.18)',
+          border: `2px solid ${genzColors.accent1}`,
+          overflow: 'hidden'
         }}>
-          Join the Party!
-        </h2>
-        <p style={{
-          color: genzColors.primary,
-          fontSize: '1rem',
-          textAlign: 'center',
-          marginBottom: '2rem',
-          opacity: 0.8
-        }}>
-          Ready to discover amazing restaurant perks? Let's get you started! 🍕✨
-        </p>
-
-        {error && (
-          <div style={{
-            background: 'rgba(255, 107, 107, 0.2)',
-            border: `2px solid ${genzColors.accent2}`,
-            borderRadius: 16,
-            padding: '0.8rem',
-            color: genzColors.accent2,
-            fontWeight: 600,
-            textAlign: 'center',
-            marginBottom: '1.5rem'
-          }}>{error}</div>
-        )}
-
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-          <div>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              placeholder="Your full name"
-              style={{
-                width: '100%',
-                padding: '1rem 1.2rem',
-                borderRadius: 20,
-                border: `2px solid ${validationErrors.name ? genzColors.accent2 : genzColors.accent1}`,
-                background: 'rgba(255,255,255,0.9)',
-                color: genzColors.black,
-                fontFamily: genzFont,
-                fontSize: '1rem',
-                outline: 'none',
-                transition: 'all 0.3s ease'
-              }}
-            />
-            {validationErrors.name && (
-              <div style={{
-                color: genzColors.accent2,
-                fontSize: '0.9rem',
-                marginTop: '0.5rem',
-                fontWeight: 600
+          <Card.Body style={{ padding: '2.5rem 2rem' }}>
+            <div className="text-center mb-4">
+              <h2 style={{
+                fontWeight: 900,
+                fontSize: '2rem',
+                background: genzGradients.button,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                marginBottom: '1.2rem'
               }}>
-                {validationErrors.name}
-              </div>
-            )}
-          </div>
-
-          <div>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              placeholder="Your email address"
-              style={{
-                width: '100%',
-                padding: '1rem 1.2rem',
-                borderRadius: 20,
-                border: `2px solid ${validationErrors.email ? genzColors.accent2 : genzColors.accent1}`,
-                background: 'rgba(255,255,255,0.9)',
-                color: genzColors.black,
-                fontFamily: genzFont,
+                Join the Party!
+              </h2>
+              <p style={{
+                color: genzColors.primary,
                 fontSize: '1rem',
-                outline: 'none',
-                transition: 'all 0.3s ease'
-              }}
-            />
-            {validationErrors.email && (
-              <div style={{
-                color: genzColors.accent2,
-                fontSize: '0.9rem',
-                marginTop: '0.5rem',
-                fontWeight: 600
+                opacity: 0.8,
+                margin: 0
               }}>
-                {validationErrors.email}
-              </div>
+                Ready to discover amazing restaurant perks? Let's get you started! 🍕✨
+              </p>
+            </div>
+
+            {error && (
+              <Alert 
+                variant="danger" 
+                dismissible 
+                onClose={() => dispatch(clearError())}
+                style={{
+                  background: 'rgba(255, 107, 107, 0.2)',
+                  border: `2px solid ${genzColors.accent2}`,
+                  borderRadius: 16,
+                  color: genzColors.accent2,
+                  fontWeight: 600,
+                  borderColor: genzColors.accent2
+                }}
+              >
+                {error}
+              </Alert>
             )}
-          </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
-            <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder="Phone number (optional) 📞"
-              style={{
-                width: '100%',
-                padding: '1rem 1.2rem',
-                borderRadius: 20,
-                border: `2px solid ${genzColors.accent1}`,
-                background: 'rgba(255,255,255,0.9)',
-                color: genzColors.black,
-                fontFamily: genzFont,
-                fontSize: '1rem',
-                outline: 'none',
-                transition: 'all 0.3s ease'
-              }}
-            />
-            <input
-              type="text"
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
-              placeholder="City, State (optional) 🗺️"
-              style={{
-                width: '100%',
-                padding: '1rem 1.2rem',
-                borderRadius: 20,
-                border: `2px solid ${genzColors.accent1}`,
-                background: 'rgba(255,255,255,0.9)',
-                color: genzColors.black,
-                fontFamily: genzFont,
-                fontSize: '1rem',
-                outline: 'none',
-                transition: 'all 0.3s ease'
-              }}
-            />
-          </div>
+            <Form noValidate validated={validated} onSubmit={handleSubmit}>
+              <Form.Group className="mb-3">
+                <Form.Label style={{
+                  color: genzColors.primary,
+                  fontWeight: 700,
+                  fontSize: '1rem'
+                }}>
+                  Full Name
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  placeholder="Your full name"
+                  style={{
+                    padding: '1rem 1.2rem',
+                    borderRadius: 20,
+                    border: `2px solid ${genzColors.accent1}`,
+                    background: 'rgba(255,255,255,0.9)',
+                    color: genzColors.black,
+                    fontFamily: genzFont,
+                    fontSize: '1rem',
+                    outline: 'none',
+                    transition: 'all 0.3s ease'
+                  }}
+                />
+                <Form.Control.Feedback type="invalid" style={{ color: genzColors.accent2, fontWeight: 600 }}>
+                  Please provide your full name.
+                </Form.Control.Feedback>
+              </Form.Group>
 
-          <div style={{ position: 'relative' }}>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              placeholder="Create password"
-              style={{
-                width: '100%',
-                padding: '1rem 1.2rem',
-                paddingRight: '3rem',
-                borderRadius: 20,
-                border: `2px solid ${validationErrors.password ? genzColors.accent2 : genzColors.accent1}`,
-                background: 'rgba(255,255,255,0.9)',
-                color: genzColors.black,
-                fontFamily: genzFont,
-                fontSize: '1rem',
-                outline: 'none',
-                transition: 'all 0.3s ease'
-              }}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              style={{
-                position: 'absolute',
-                right: '1rem',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                background: 'none',
-                border: 'none',
-                color: genzColors.accent1,
-                cursor: 'pointer',
-                fontSize: '1.2rem'
-              }}
-            >
-              {showPassword ? '🙈' : '👁️'}
-            </button>
-            {validationErrors.password && (
-              <div style={{
-                color: genzColors.accent2,
-                fontSize: '0.9rem',
-                marginTop: '0.5rem',
-                fontWeight: 600
-              }}>
-                {validationErrors.password}
+              <Form.Group className="mb-3">
+                <Form.Label style={{
+                  color: genzColors.primary,
+                  fontWeight: 700,
+                  fontSize: '1rem'
+                }}>
+                  Email Address
+                </Form.Label>
+                <Form.Control
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="Your email address"
+                  style={{
+                    padding: '1rem 1.2rem',
+                    borderRadius: 20,
+                    border: `2px solid ${genzColors.accent1}`,
+                    background: 'rgba(255,255,255,0.9)',
+                    color: genzColors.black,
+                    fontFamily: genzFont,
+                    fontSize: '1rem',
+                    outline: 'none',
+                    transition: 'all 0.3s ease'
+                  }}
+                />
+                <Form.Control.Feedback type="invalid" style={{ color: genzColors.accent2, fontWeight: 600 }}>
+                  Please provide a valid email address.
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              <Row className="mb-3">
+                <Col md={6}>
+                  <Form.Group>
+                    <Form.Label style={{
+                      color: genzColors.primary,
+                      fontWeight: 700,
+                      fontSize: '1rem'
+                    }}>
+                      Phone Number (Optional)
+                    </Form.Label>
+                    <Form.Control
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="📞 Phone number"
+                      style={{
+                        padding: '1rem 1.2rem',
+                        borderRadius: 20,
+                        border: `2px solid ${genzColors.accent1}`,
+                        background: 'rgba(255,255,255,0.9)',
+                        color: genzColors.black,
+                        fontFamily: genzFont,
+                        fontSize: '1rem',
+                        outline: 'none',
+                        transition: 'all 0.3s ease'
+                      }}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group>
+                    <Form.Label style={{
+                      color: genzColors.primary,
+                      fontWeight: 700,
+                      fontSize: '1rem'
+                    }}>
+                      Location (Optional)
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="location"
+                      value={formData.location}
+                      onChange={handleChange}
+                      placeholder="🗺️ City, State"
+                      style={{
+                        padding: '1rem 1.2rem',
+                        borderRadius: 20,
+                        border: `2px solid ${genzColors.accent1}`,
+                        background: 'rgba(255,255,255,0.9)',
+                        color: genzColors.black,
+                        fontFamily: genzFont,
+                        fontSize: '1rem',
+                        outline: 'none',
+                        transition: 'all 0.3s ease'
+                      }}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <Form.Group className="mb-3">
+                <Form.Label style={{
+                  color: genzColors.primary,
+                  fontWeight: 700,
+                  fontSize: '1rem'
+                }}>
+                  Password
+                </Form.Label>
+                <div style={{ position: 'relative' }}>
+                  <Form.Control
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    minLength={6}
+                    placeholder="Create password"
+                    style={{
+                      padding: '1rem 1.2rem',
+                      paddingRight: '3rem',
+                      borderRadius: 20,
+                      border: `2px solid ${genzColors.accent1}`,
+                      background: 'rgba(255,255,255,0.9)',
+                      color: genzColors.black,
+                      fontFamily: genzFont,
+                      fontSize: '1rem',
+                      outline: 'none',
+                      transition: 'all 0.3s ease'
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      position: 'absolute',
+                      right: '1rem',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'none',
+                      border: 'none',
+                      color: genzColors.accent1,
+                      cursor: 'pointer',
+                      fontSize: '1.2rem'
+                    }}
+                  >
+                    {showPassword ? '🙈' : '👁️'}
+                  </button>
+                </div>
+                <Form.Control.Feedback type="invalid" style={{ color: genzColors.accent2, fontWeight: 600 }}>
+                  Password must be at least 6 characters.
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group className="mb-4">
+                <Form.Label style={{
+                  color: genzColors.primary,
+                  fontWeight: 700,
+                  fontSize: '1rem'
+                }}>
+                  Confirm Password
+                </Form.Label>
+                <div style={{ position: 'relative' }}>
+                  <Form.Control
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    required
+                    placeholder="Confirm password"
+                    style={{
+                      padding: '1rem 1.2rem',
+                      paddingRight: '3rem',
+                      borderRadius: 20,
+                      border: `2px solid ${genzColors.accent1}`,
+                      background: 'rgba(255,255,255,0.9)',
+                      color: genzColors.black,
+                      fontFamily: genzFont,
+                      fontSize: '1rem',
+                      outline: 'none',
+                      transition: 'all 0.3s ease'
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    style={{
+                      position: 'absolute',
+                      right: '1rem',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'none',
+                      border: 'none',
+                      color: genzColors.accent1,
+                      cursor: 'pointer',
+                      fontSize: '1.2rem'
+                    }}
+                  >
+                    {showConfirmPassword ? '🙈' : '👁️'}
+                  </button>
+                </div>
+                <Form.Control.Feedback type="invalid" style={{ color: genzColors.accent2, fontWeight: 600 }}>
+                  Please confirm your password.
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              <div className="d-grid mb-3">
+                <Button 
+                  type="submit" 
+                  disabled={loading}
+                  style={{
+                    background: genzGradients.button,
+                    color: genzColors.black,
+                    border: 'none',
+                    borderRadius: 20,
+                    padding: '1rem 2rem',
+                    fontFamily: genzFont,
+                    fontWeight: 800,
+                    fontSize: '1.1rem',
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.3s ease',
+                    opacity: loading ? 0.7 : 1
+                  }}
+                >
+                  {loading ? 'Creating Account... 🔄' : 'Create Account ✨'}
+                </Button>
               </div>
-            )}
-          </div>
+            </Form>
 
-          <div style={{ position: 'relative' }}>
-            <input
-              type={showConfirmPassword ? 'text' : 'password'}
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-              placeholder="Confirm password"
-              style={{
-                width: '100%',
-                padding: '1rem 1.2rem',
-                paddingRight: '3rem',
-                borderRadius: 20,
-                border: `2px solid ${validationErrors.confirmPassword ? genzColors.accent2 : genzColors.accent1}`,
-                background: 'rgba(255,255,255,0.9)',
-                color: genzColors.black,
-                fontFamily: genzFont,
-                fontSize: '1rem',
-                outline: 'none',
-                transition: 'all 0.3s ease'
-              }}
-            />
-            <button
-              type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              style={{
-                position: 'absolute',
-                right: '1rem',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                background: 'none',
-                border: 'none',
-                color: genzColors.accent1,
-                cursor: 'pointer',
-                fontSize: '1.2rem'
-              }}
-            >
-              {showConfirmPassword ? '🙈' : '👁️'}
-            </button>
-            {validationErrors.confirmPassword && (
-              <div style={{
-                color: genzColors.accent2,
-                fontSize: '0.9rem',
-                marginTop: '0.5rem',
-                fontWeight: 600
-              }}>
-                {validationErrors.confirmPassword}
-              </div>
-            )}
-          </div>
+            <div className="text-center">
+              <p className="mb-2" style={{ color: genzColors.primary }}>
+                Already have an account?{' '}
+                <Link to="/login" style={{ color: genzColors.accent1, fontWeight: 700, textDecoration: 'none' }}>
+                  Sign in here! 🔑
+                </Link>
+              </p>
+              <p className="mb-0" style={{ color: genzColors.primary }}>
+                Are you a business owner?{' '}
+                <Link to="/register-business" style={{ color: genzColors.accent2, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                  Register your business! 🏪
+                </Link>
+              </p>
+            </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              background: genzGradients.button,
-              color: genzColors.black,
-              border: 'none',
+            {/* Perks Preview */}
+            <div style={{
+              marginTop: '2rem',
+              padding: '1.5rem',
+              background: 'rgba(102, 126, 234, 0.05)',
               borderRadius: 20,
-              padding: '1rem 2rem',
-              fontFamily: genzFont,
-              fontWeight: 800,
-              fontSize: '1.1rem',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              transition: 'all 0.3s ease',
-              marginTop: '0.5rem',
-              opacity: loading ? 0.7 : 1
-            }}
-          >
-            {loading ? 'Creating Account... 🔄' : 'Create Account ✨'}
-          </button>
-        </form>
-
-        <div style={{ textAlign: 'center', marginTop: '2rem', fontSize: '1rem' }}>
-          <p style={{ color: genzColors.primary, marginBottom: '0.7rem' }}>
-            Already have an account?{' '}
-            <Link to="/login" style={{ color: genzColors.accent1, fontWeight: 700, textDecoration: 'none' }}>
-              Sign in here! 🔑
-            </Link>
-          </p>
-          <p style={{ color: genzColors.primary }}>
-            Are you a business owner?{' '}
-            <Link to="/register-business" style={{ color: genzColors.accent2, fontWeight: 700, textDecoration: 'none' }}>
-              Register your business! 🏪
-            </Link>
-          </p>
-        </div>
-
-        {/* Perks Preview */}
-        <div style={{
-          marginTop: '2rem',
-          padding: '1.5rem',
-          background: 'rgba(102, 126, 234, 0.05)',
-          borderRadius: 20,
-          border: `2px solid ${genzColors.accent1}`
-        }}>
-          <h4 style={{
-            color: genzColors.primary,
-            fontWeight: 800,
-            fontSize: '1.1rem',
-            marginBottom: '1rem',
-            textAlign: 'center'
-          }}>
-            What you'll get! 🎁
-          </h4>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '1rem'
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              color: genzColors.primary,
-              fontSize: '0.9rem',
-              fontWeight: 600
+              border: `2px solid ${genzColors.accent1}`
             }}>
-              <span style={{ fontSize: '1.2rem' }}>🍕</span>
-              Free meals & discounts
+              <h4 style={{
+                color: genzColors.primary,
+                fontWeight: 800,
+                fontSize: '1.1rem',
+                marginBottom: '1rem',
+                textAlign: 'center'
+              }}>
+                What you'll get! 🎁
+              </h4>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                gap: '1rem'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  color: genzColors.primary,
+                  fontSize: '0.9rem',
+                  fontWeight: 600
+                }}>
+                  <span style={{ fontSize: '1.2rem' }}>🍕</span>
+                  Free meals & discounts
+                </div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  color: genzColors.primary,
+                  fontSize: '0.9rem',
+                  fontWeight: 600
+                }}>
+                  <span style={{ fontSize: '1.2rem' }}>💰</span>
+                  Exclusive deals
+                </div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  color: genzColors.primary,
+                  fontSize: '0.9rem',
+                  fontWeight: 600
+                }}>
+                  <span style={{ fontSize: '1.2rem' }}>⭐</span>
+                  Review restaurants
+                </div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  color: genzColors.primary,
+                  fontSize: '0.9rem',
+                  fontWeight: 600
+                }}>
+                  <span style={{ fontSize: '1.2rem' }}>🎯</span>
+                  Find your next job
+                </div>
+              </div>
             </div>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              color: genzColors.primary,
-              fontSize: '0.9rem',
-              fontWeight: 600
-            }}>
-              <span style={{ fontSize: '1.2rem' }}>💰</span>
-              Exclusive deals
-            </div>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              color: genzColors.primary,
-              fontSize: '0.9rem',
-              fontWeight: 600
-            }}>
-              <span style={{ fontSize: '1.2rem' }}>⭐</span>
-              Review restaurants
-            </div>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              color: genzColors.primary,
-              fontSize: '0.9rem',
-              fontWeight: 600
-            }}>
-              <span style={{ fontSize: '1.2rem' }}>🎯</span>
-              Find your next job
-            </div>
-          </div>
-        </div>
+          </Card.Body>
+        </Card>
       </div>
     </div>
   );

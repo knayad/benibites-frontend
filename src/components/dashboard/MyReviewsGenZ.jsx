@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchUserReviews } from '../../store/slices/reviewsSlice';
 import { genzColors, genzGradients, genzFont, PlayfulStroke1 } from '../../genzTheme.jsx';
+import { Badge } from 'react-bootstrap';
+import { getCuisineEmoji } from '../../utils/cuisineMap.js';
 
 const MyReviewsGenZ = () => {
   const dispatch = useDispatch();
@@ -17,19 +19,15 @@ const MyReviewsGenZ = () => {
     return '⭐'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
   };
 
-  const getCuisineEmoji = (cuisine) => {
-    const emojiMap = {
-      italian: '🍝',
-      mexican: '🌮',
-      chinese: '🥢',
-      japanese: '🍣',
-      indian: '🍛',
-      american: '🍔',
-      mediterranean: '🥙',
-      thai: '🍜',
-      other: '🍽️'
-    };
-    return emojiMap[cuisine] || '🍽️';
+  const getVerificationBadge = (verificationStatus) => {
+    if (verificationStatus === 'verified_employee') {
+      return <Badge bg="success" style={{ fontSize: '0.8rem', marginLeft: '0.5rem' }}>✅ Verified Employee</Badge>;
+    } else if (verificationStatus === 'verified_business') {
+      return <Badge bg="success" style={{ fontSize: '0.8rem', marginLeft: '0.5rem' }}>✅ Verified Business</Badge>;
+    } else if (verificationStatus === 'pending') {
+      return <Badge bg="warning" style={{ fontSize: '0.8rem', marginLeft: '0.5rem' }}>⏳ Verification Pending</Badge>;
+    }
+    return null;
   };
 
   const filteredReviews = userReviews.filter(review => {
@@ -126,7 +124,7 @@ const MyReviewsGenZ = () => {
                 fontWeight: 500,
                 opacity: 0.8
               }}>
-                Your restaurant adventures and honest feedback! 📝✨
+                Your restaurant adventures and honest feedback! ✨
               </p>
             </div>
           </div>
@@ -250,6 +248,7 @@ const MyReviewsGenZ = () => {
                       margin: 0
                     }}>
                       {review.restaurantName}
+                      {getVerificationBadge(review.verificationStatus)}
                     </h3>
                     <span style={{ color: genzColors.accent1, fontWeight: 600 }}>
                       {getRatingStars(review.rating)}

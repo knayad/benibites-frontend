@@ -15,7 +15,8 @@ const ForgotPasswordGenZ = () => {
     setError('');
 
     try {
-      // Simulate API call
+      // TODO: Replace with actual API call
+      // Backend will determine user type from email and send appropriate reset link
       await new Promise(resolve => setTimeout(resolve, 1500));
       setIsSubmitted(true);
     } catch (err) {

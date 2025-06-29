@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchBusinessReviews } from '../../store/slices/reviewsSlice';
 import { genzColors, genzGradients, genzFont } from '../../genzTheme.jsx';
+import { Badge } from 'react-bootstrap';
 
 const BusinessReviewsGenZ = () => {
   // TODO: Fetch business reviews from Redux store
@@ -37,7 +40,18 @@ const BusinessReviewsGenZ = () => {
   const [responseText, setResponseText] = useState('');
 
   const renderStars = (rating) => {
-    return '⭐'.repeat(rating) + '☆'.repeat(5 - rating);
+    return '⭐'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
+  };
+
+  const getVerificationBadge = (verificationStatus) => {
+    if (verificationStatus === 'verified_employee') {
+      return <Badge bg="success" style={{ fontSize: '0.8rem', marginLeft: '0.5rem' }}>✅ Verified Employee</Badge>;
+    } else if (verificationStatus === 'verified_business') {
+      return <Badge bg="success" style={{ fontSize: '0.8rem', marginLeft: '0.5rem' }}>✅ Verified Business</Badge>;
+    } else if (verificationStatus === 'pending') {
+      return <Badge bg="warning" style={{ fontSize: '0.8rem', marginLeft: '0.5rem' }}>⏳ Verification Pending</Badge>;
+    }
+    return null;
   };
 
   const handleRespond = (reviewId) => {
@@ -175,6 +189,7 @@ const BusinessReviewsGenZ = () => {
                     margin: 0
                   }}>
                     by {review.userName}
+                    {getVerificationBadge(review.verificationStatus)}
                   </p>
                 </div>
                 <span style={{

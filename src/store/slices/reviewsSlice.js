@@ -16,6 +16,24 @@ export const fetchReviews = createAsyncThunk(
     }
 );
 
+export const fetchBusinessReviews = createAsyncThunk(
+    'reviews/fetchBusinessReviews',
+    async (businessId, { rejectWithValue, getState }) => {
+        try {
+            const { auth } = getState();
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${auth.token}`
+                }
+            };
+            const response = await axios.get(`${API_BASE_URL}/reviews/business/${businessId}/manage`, config);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.error || 'Failed to fetch business reviews');
+        }
+    }
+);
+
 export const fetchUserReviews = createAsyncThunk(
     'reviews/fetchUserReviews',
     async (_, { rejectWithValue, getState }) => {
@@ -174,6 +192,20 @@ const reviewsSlice = createSlice({
                 state.reviews = action.payload;
             })
             .addCase(fetchReviews.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+            
+            // Fetch business reviews
+            .addCase(fetchBusinessReviews.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchBusinessReviews.fulfilled, (state, action) => {
+                state.loading = false;
+                state.reviews = action.payload;
+            })
+            .addCase(fetchBusinessReviews.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })

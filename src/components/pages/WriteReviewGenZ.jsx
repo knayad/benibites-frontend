@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { Form, Button, Card, Alert, Row, Col } from 'react-bootstrap';
 import { fetchRestaurantById } from '../../store/slices/restaurantsSlice';
 import { genzColors, genzGradients, genzFont, PlayfulStroke1 } from '../../genzTheme.jsx';
 
@@ -20,6 +21,7 @@ const WriteReviewGenZ = () => {
     atmosphere: 5,
     valueForMoney: 5
   });
+  const [validated, setValidated] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -39,7 +41,16 @@ const WriteReviewGenZ = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Implement review submission
+    const form = e.currentTarget;
+    
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      setValidated(true);
+      return;
+    }
+
+    setValidated(true);
+    // TODO: Implement review submission with backend
     console.log('Review data:', formData);
     navigate(`/restaurant/${id}`);
   };
@@ -116,284 +127,362 @@ const WriteReviewGenZ = () => {
 
       <div className="container" style={{ padding: isMobile ? '1rem' : '2rem' }}>
         {/* Header */}
-        <div style={{
+        <Card style={{
           background: 'rgba(255, 255, 255, 0.1)',
           backdropFilter: 'blur(20px)',
           borderRadius: isMobile ? 24 : 32,
-          padding: isMobile ? '2rem' : '3rem',
-          marginBottom: isMobile ? '2rem' : '3rem',
           border: '2px solid rgba(255, 255, 255, 0.2)',
           boxShadow: '0 20px 40px rgba(102, 126, 234, 0.15)',
           position: 'relative',
-          zIndex: 2
+          zIndex: 2,
+          marginBottom: isMobile ? '2rem' : '3rem'
         }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: isMobile ? '1rem' : '2rem',
-            marginBottom: isMobile ? '1.5rem' : '2rem',
-            flexDirection: isMobile ? 'column' : 'row',
-            textAlign: isMobile ? 'center' : 'left'
-          }}>
+          <Card.Body style={{ padding: isMobile ? '2rem' : '3rem' }}>
             <div style={{
-              width: isMobile ? 80 : 100,
-              height: isMobile ? 80 : 100,
-              borderRadius: '50%',
-              background: genzGradients.button,
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: isMobile ? '2.5rem' : '3rem',
-              boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
+              gap: isMobile ? '1rem' : '2rem',
+              marginBottom: isMobile ? '1.5rem' : '2rem',
+              flexDirection: isMobile ? 'column' : 'row',
+              textAlign: isMobile ? 'center' : 'left'
             }}>
-              {getCuisineEmoji(currentRestaurant.cuisine)}
-            </div>
-            <div style={{ flex: 1 }}>
-              <h1 style={{
-                fontWeight: 900,
-                fontSize: isMobile ? '2rem' : '2.5rem',
-                letterSpacing: '-2px',
+              <div style={{
+                width: isMobile ? 80 : 100,
+                height: isMobile ? 80 : 100,
+                borderRadius: '50%',
                 background: genzGradients.button,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                marginBottom: '0.5rem'
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: isMobile ? '2.5rem' : '3rem',
+                boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
               }}>
-                Write a Review ✍️
-              </h1>
-              <p style={{
-                color: '#fff',
-                fontSize: isMobile ? '1rem' : '1.1rem',
-                fontWeight: 500,
-                opacity: 0.9
-              }}>
-                Share your experience at {currentRestaurant.name}! 🍕✨
-              </p>
+                {getCuisineEmoji(currentRestaurant.cuisine)}
+              </div>
+              <div style={{ flex: 1 }}>
+                <h1 style={{
+                  fontWeight: 900,
+                  fontSize: isMobile ? '2rem' : '2.5rem',
+                  letterSpacing: '-2px',
+                  background: genzGradients.button,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  marginBottom: '0.5rem'
+                }}>
+                  Write a Review ✍️
+                </h1>
+                <p style={{
+                  color: '#fff',
+                  fontSize: isMobile ? '1rem' : '1.1rem',
+                  fontWeight: 500,
+                  opacity: 0.9
+                }}>
+                  Share your experience at {currentRestaurant.name}! 🍕✨
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
+          </Card.Body>
+        </Card>
 
         {/* Review Form */}
-        <div style={{
+        <Card style={{
           background: 'rgba(255, 255, 255, 0.1)',
           backdropFilter: 'blur(20px)',
           borderRadius: isMobile ? 24 : 32,
-          padding: isMobile ? '2rem' : '3rem',
           border: '2px solid rgba(255, 255, 255, 0.2)',
           boxShadow: '0 20px 40px rgba(102, 126, 234, 0.15)',
           position: 'relative',
           zIndex: 2
         }}>
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '1.5rem' : '2rem' }}>
-            
-            {/* Overall Rating */}
-            <div>
-              <label style={{
-                display: 'block',
-                color: '#fff',
-                fontWeight: 700,
-                marginBottom: '1rem',
-                fontSize: isMobile ? '1rem' : '1.1rem'
-              }}>
-                Overall Rating ⭐
-              </label>
-              <div style={{
-                display: 'flex',
-                gap: '0.5rem',
-                justifyContent: 'center',
-                flexWrap: 'wrap'
-              }}>
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, rating: star }))}
+          <Card.Body style={{ padding: isMobile ? '2rem' : '3rem' }}>
+            <Form noValidate validated={validated} onSubmit={handleSubmit}>
+              
+              {/* Overall Rating */}
+              <Form.Group className="mb-4">
+                <Form.Label style={{
+                  color: '#fff',
+                  fontWeight: 700,
+                  fontSize: isMobile ? '1rem' : '1.1rem',
+                  marginBottom: '1rem'
+                }}>
+                  Overall Rating ⭐
+                </Form.Label>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1rem',
+                  flexWrap: 'wrap'
+                }}>
+                  <Form.Range
+                    name="rating"
+                    value={formData.rating}
+                    onChange={handleChange}
+                    min="1"
+                    max="5"
+                    step="1"
                     style={{
-                      background: 'none',
-                      border: 'none',
-                      fontSize: isMobile ? '2rem' : '2.5rem',
-                      cursor: 'pointer',
-                      filter: formData.rating >= star ? 'drop-shadow(0 2px 8px #feca57)' : 'grayscale(0.5)',
-                      transition: 'all 0.3s ease'
+                      flex: 1,
+                      minWidth: '200px'
                     }}
-                  >
-                    {formData.rating >= star ? '⭐' : '☆'}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Review Title */}
-            <div>
-              <label style={{
-                display: 'block',
-                color: '#fff',
-                fontWeight: 700,
-                marginBottom: '0.5rem',
-                fontSize: isMobile ? '1rem' : '1.1rem'
-              }}>
-                Review Title 📝
-              </label>
-              <input
-                type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                required
-                style={{
-                  width: '100%',
-                  padding: isMobile ? '0.8rem 1rem' : '1rem 1.2rem',
-                  borderRadius: 16,
-                  border: '2px solid rgba(255, 255, 255, 0.3)',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  color: '#fff',
-                  fontFamily: genzFont,
-                  fontSize: isMobile ? '0.9rem' : '1rem',
-                  outline: 'none',
-                  transition: 'all 0.3s ease'
-                }}
-                placeholder="Summarize your experience..."
-              />
-            </div>
-
-            {/* Review Comment */}
-            <div>
-              <label style={{
-                display: 'block',
-                color: '#fff',
-                fontWeight: 700,
-                marginBottom: '0.5rem',
-                fontSize: isMobile ? '1rem' : '1.1rem'
-              }}>
-                Your Review 💭
-              </label>
-              <textarea
-                name="comment"
-                value={formData.comment}
-                onChange={handleChange}
-                required
-                rows={isMobile ? 4 : 6}
-                style={{
-                  width: '100%',
-                  padding: isMobile ? '0.8rem 1rem' : '1rem 1.2rem',
-                  borderRadius: 16,
-                  border: '2px solid rgba(255, 255, 255, 0.3)',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  color: '#fff',
-                  fontFamily: genzFont,
-                  fontSize: isMobile ? '0.9rem' : '1rem',
-                  outline: 'none',
-                  transition: 'all 0.3s ease',
-                  resize: 'vertical'
-                }}
-                placeholder="Share your detailed experience, what you loved, what could be improved..."
-              />
-            </div>
-
-            {/* Detailed Ratings */}
-            <div>
-              <h3 style={{
-                color: genzColors.accent1,
-                fontWeight: 700,
-                marginBottom: '1rem',
-                fontSize: isMobile ? '1.1rem' : '1.2rem'
-              }}>
-                Rate Different Aspects 📊
-              </h3>
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
-                gap: isMobile ? '1rem' : '1.5rem'
-              }}>
-                {[
-                  { name: 'foodQuality', label: '🍕 Food Quality', emoji: '🍕' },
-                  { name: 'serviceQuality', label: '👨‍🍳 Service Quality', emoji: '👨‍🍳' },
-                  { name: 'atmosphere', label: '🌟 Atmosphere', emoji: '🌟' },
-                  { name: 'valueForMoney', label: '💰 Value for Money', emoji: '💰' }
-                ].map((aspect) => (
-                  <div key={aspect.name}>
-                    <label style={{
-                      display: 'block',
-                      color: '#fff',
-                      fontWeight: 600,
-                      marginBottom: '0.5rem',
-                      fontSize: isMobile ? '0.9rem' : '1rem'
-                    }}>
-                      {aspect.label}
-                    </label>
-                    <div style={{
-                      display: 'flex',
-                      gap: '0.3rem',
-                      justifyContent: 'center'
-                    }}>
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          type="button"
-                          onClick={() => setFormData(prev => ({ ...prev, [aspect.name]: star }))}
-                          style={{
-                            background: 'none',
-                            border: 'none',
-                            fontSize: isMobile ? '1.2rem' : '1.5rem',
-                            cursor: 'pointer',
-                            filter: formData[aspect.name] >= star ? 'drop-shadow(0 1px 4px #feca57)' : 'grayscale(0.5)',
-                            transition: 'all 0.3s ease'
-                          }}
-                        >
-                          {formData[aspect.name] >= star ? '⭐' : '☆'}
-                        </button>
-                      ))}
-                    </div>
+                  />
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.2)',
+                    borderRadius: 12,
+                    padding: '0.5rem 1rem',
+                    color: '#fff',
+                    fontWeight: 700,
+                    fontSize: '1.2rem',
+                    minWidth: '60px',
+                    textAlign: 'center'
+                  }}>
+                    {formData.rating}/5
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
+              </Form.Group>
 
-            {/* Submit Buttons */}
-            <div style={{
-              display: 'flex',
-              gap: '1rem',
-              justifyContent: 'center',
-              flexWrap: 'wrap',
-              marginTop: isMobile ? '1rem' : '1.5rem'
-            }}>
-              <button
-                type="submit"
-                style={{
-                  background: genzGradients.button,
-                  color: genzColors.black,
-                  border: 'none',
-                  borderRadius: 16,
-                  padding: isMobile ? '1rem 2rem' : '1.2rem 2.5rem',
-                  fontFamily: genzFont,
-                  fontWeight: 700,
-                  fontSize: isMobile ? '1rem' : '1.1rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                📤 Submit Review
-              </button>
-              <button
-                type="button"
-                onClick={() => navigate(`/restaurant/${id}`)}
-                style={{
-                  background: 'rgba(255, 255, 255, 0.2)',
+              {/* Review Title */}
+              <Form.Group className="mb-4">
+                <Form.Label style={{
                   color: '#fff',
-                  border: '2px solid rgba(255, 255, 255, 0.3)',
-                  borderRadius: 16,
-                  padding: isMobile ? '1rem 2rem' : '1.2rem 2.5rem',
-                  fontFamily: genzFont,
                   fontWeight: 700,
-                  fontSize: isMobile ? '1rem' : '1.1rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                ❌ Cancel
-              </button>
-            </div>
-          </form>
-        </div>
+                  fontSize: isMobile ? '1rem' : '1.1rem'
+                }}>
+                  Review Title 📝
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  required
+                  placeholder="Give your review a catchy title!"
+                  style={{
+                    padding: '1rem 1.2rem',
+                    borderRadius: 20,
+                    border: '2px solid rgba(255, 255, 255, 0.3)',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    color: '#fff',
+                    fontFamily: genzFont,
+                    fontSize: '1rem',
+                    outline: 'none',
+                    transition: 'all 0.3s ease'
+                  }}
+                />
+                <Form.Control.Feedback type="invalid" style={{ color: genzColors.accent2, fontWeight: 600 }}>
+                  Please provide a review title.
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              {/* Review Comment */}
+              <Form.Group className="mb-4">
+                <Form.Label style={{
+                  color: '#fff',
+                  fontWeight: 700,
+                  fontSize: isMobile ? '1rem' : '1.1rem'
+                }}>
+                  Your Experience 💭
+                </Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={4}
+                  name="comment"
+                  value={formData.comment}
+                  onChange={handleChange}
+                  required
+                  placeholder="Share your dining experience, what you loved, what could be better..."
+                  style={{
+                    padding: '1rem 1.2rem',
+                    borderRadius: 20,
+                    border: '2px solid rgba(255, 255, 255, 0.3)',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    color: '#fff',
+                    fontFamily: genzFont,
+                    fontSize: '1rem',
+                    outline: 'none',
+                    transition: 'all 0.3s ease',
+                    resize: 'vertical'
+                  }}
+                />
+                <Form.Control.Feedback type="invalid" style={{ color: genzColors.accent2, fontWeight: 600 }}>
+                  Please share your experience.
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              {/* Detailed Ratings */}
+              <div style={{ marginBottom: '2rem' }}>
+                <h4 style={{
+                  color: '#fff',
+                  fontWeight: 700,
+                  fontSize: isMobile ? '1.1rem' : '1.3rem',
+                  marginBottom: '1.5rem'
+                }}>
+                  Rate Different Aspects 📊
+                </h4>
+                
+                <Row>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label style={{
+                        color: '#fff',
+                        fontWeight: 600,
+                        fontSize: '1rem'
+                      }}>
+                        Food Quality 🍽️
+                      </Form.Label>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '1rem'
+                      }}>
+                        <Form.Range
+                          name="foodQuality"
+                          value={formData.foodQuality}
+                          onChange={handleChange}
+                          min="1"
+                          max="5"
+                          step="1"
+                          style={{ flex: 1 }}
+                        />
+                        <span style={{
+                          color: '#fff',
+                          fontWeight: 700,
+                          minWidth: '30px'
+                        }}>
+                          {formData.foodQuality}
+                        </span>
+                      </div>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label style={{
+                        color: '#fff',
+                        fontWeight: 600,
+                        fontSize: '1rem'
+                      }}>
+                        Service Quality 👨‍💼
+                      </Form.Label>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '1rem'
+                      }}>
+                        <Form.Range
+                          name="serviceQuality"
+                          value={formData.serviceQuality}
+                          onChange={handleChange}
+                          min="1"
+                          max="5"
+                          step="1"
+                          style={{ flex: 1 }}
+                        />
+                        <span style={{
+                          color: '#fff',
+                          fontWeight: 700,
+                          minWidth: '30px'
+                        }}>
+                          {formData.serviceQuality}
+                        </span>
+                      </div>
+                    </Form.Group>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label style={{
+                        color: '#fff',
+                        fontWeight: 600,
+                        fontSize: '1rem'
+                      }}>
+                        Atmosphere 🌟
+                      </Form.Label>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '1rem'
+                      }}>
+                        <Form.Range
+                          name="atmosphere"
+                          value={formData.atmosphere}
+                          onChange={handleChange}
+                          min="1"
+                          max="5"
+                          step="1"
+                          style={{ flex: 1 }}
+                        />
+                        <span style={{
+                          color: '#fff',
+                          fontWeight: 700,
+                          minWidth: '30px'
+                        }}>
+                          {formData.atmosphere}
+                        </span>
+                      </div>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label style={{
+                        color: '#fff',
+                        fontWeight: 600,
+                        fontSize: '1rem'
+                      }}>
+                        Value for Money 💰
+                      </Form.Label>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '1rem'
+                      }}>
+                        <Form.Range
+                          name="valueForMoney"
+                          value={formData.valueForMoney}
+                          onChange={handleChange}
+                          min="1"
+                          max="5"
+                          step="1"
+                          style={{ flex: 1 }}
+                        />
+                        <span style={{
+                          color: '#fff',
+                          fontWeight: 700,
+                          minWidth: '30px'
+                        }}>
+                          {formData.valueForMoney}
+                        </span>
+                      </div>
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </div>
+
+              {/* Submit Button */}
+              <div className="d-grid">
+                <Button
+                  type="submit"
+                  style={{
+                    background: genzGradients.button,
+                    color: genzColors.black,
+                    border: 'none',
+                    borderRadius: 20,
+                    padding: '1rem 2rem',
+                    fontFamily: genzFont,
+                    fontWeight: 800,
+                    fontSize: '1.1rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  📝 Submit Review
+                </Button>
+              </div>
+            </Form>
+          </Card.Body>
+        </Card>
       </div>
     </div>
   );

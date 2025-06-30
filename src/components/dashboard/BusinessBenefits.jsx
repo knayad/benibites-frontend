@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { genzColors, genzGradients, genzFont } from '../../genzTheme.jsx';
 import { getAllBenefits, addCustomBenefit, getBenefitInfo } from '../../utils/benefitsMap.js';
 
-const BusinessBenefitsGenZ = () => {
+const BusinessBenefits = () => {
   const [activeBenefits, setActiveBenefits] = useState([
     'health_insurance',
     'paid_time_off',
@@ -441,4 +441,4 @@ const BusinessBenefitsGenZ = () => {
   );
 };
 
-export default BusinessBenefitsGenZ; 
+export default BusinessBenefits; 

@@ -1,366 +1,600 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Container, Row, Col, Card, Badge, Button, Form, Alert, Spinner } from 'react-bootstrap';
-import { 
-    fetchRestaurantById, 
-    selectCurrentRestaurant, 
-    selectRestaurantsLoading, 
-    selectRestaurantsError 
-} from '../../store/slices/restaurantsSlice';
-import { 
-    fetchReviews, 
-    createReview, 
-    selectAllReviews, 
-    selectReviewsLoading 
-} from '../../store/slices/reviewsSlice';
-import { selectIsAuthenticated } from '../../store/slices/authSlice';
+import { Card, Button, Nav, Tab, Badge, Spinner, Alert } from 'react-bootstrap';
+import { fetchRestaurantById } from '../../store/slices/restaurantsSlice';
+import { genzColors, genzGradients, genzFont, PlayfulStroke1 } from '../../genzTheme.jsx';
+import { getCuisineEmoji } from '../../utils/cuisineMap.js';
 
 const RestaurantDetail = () => {
-    const { id } = useParams();
-    const dispatch = useDispatch();
-    
-    const currentRestaurant = useSelector(selectCurrentRestaurant);
-    const loading = useSelector(selectRestaurantsLoading);
-    const error = useSelector(selectRestaurantsError);
-    const reviews = useSelector(selectAllReviews);
-    const reviewsLoading = useSelector(selectReviewsLoading);
-    const isAuthenticated = useSelector(selectIsAuthenticated);
-    
-    const [showReviewForm, setShowReviewForm] = useState(false);
-    const [reviewData, setReviewData] = useState({
-        foodRating: 5,
-        benefitsRating: 5,
-        title: '',
-        content: ''
-    });
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const { currentRestaurant, loading, error } = useSelector((state) => state.restaurants);
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [isHiring, setIsHiring] = useState(false);
 
-    useEffect(() => {
-        if (id) {
-            dispatch(fetchRestaurantById(id));
-            dispatch(fetchReviews(id));
-        }
-    }, [id, dispatch]);
-
-    const handleReviewSubmit = async (e) => {
-        e.preventDefault();
-        const reviewPayload = {
-            restaurant: id,
-            ...reviewData
-        };
-        await dispatch(createReview(reviewPayload));
-        setShowReviewForm(false);
-        setReviewData({
-            foodRating: 5,
-            benefitsRating: 5,
-            title: '',
-            content: ''
-        });
-    };
-
-    const renderStars = (rating) => {
-        const stars = [];
-        for (let i = 1; i <= 5; i++) {
-            stars.push(
-                <span key={i} style={{ color: i <= rating ? '#ffc107' : '#6c757d' }}>
-                    ★
-                </span>
-            );
-        }
-        return stars;
-    };
-
-    const getRestaurantBenefits = (restaurant) => {
-        if (!restaurant.staffBenefits) return [];
-        return Object.entries(restaurant.staffBenefits)
-            .filter(([_, value]) => value === true)
-            .map(([key, _]) => key);
-    };
-
-    const getBenefitLabel = (benefitKey) => {
-        const benefitLabels = {
-            health_insurance: 'Health Insurance',
-            dental_insurance: 'Dental Insurance',
-            vision_insurance: 'Vision Insurance',
-            life_insurance: 'Life Insurance',
-            retirement_plan: 'Retirement Plan',
-            living_wage_no_tipping: 'Living Wage (No Tipping)',
-            paid_time_off: 'Paid Time Off',
-            sick_leave: 'Sick Leave',
-            parental_leave: 'Parental Leave',
-            flexible_schedule: 'Flexible Schedule',
-            employee_discount: 'Employee Discount',
-            meal_allowance: 'Meal Allowance',
-            transportation_benefit: 'Transportation Benefit',
-            education_assistance: 'Education Assistance',
-            gym_membership: 'Gym Membership'
-        };
-        return benefitLabels[benefitKey] || benefitKey;
-    };
-
-    if (loading) {
-        return (
-            <div>
-                <Container className="py-5">
-                    <div className="loading-spinner">
-                        <Spinner animation="border" role="status" variant="warning">
-                            <span className="visually-hidden">Loading...</span>
-                        </Spinner>
-                    </div>
-                </Container>
-            </div>
-        );
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchRestaurantById(id));
     }
+  }, [dispatch, id]);
 
-    if (error) {
-        return (
-            <div>
-                <Container className="py-5">
-                    <Alert variant="danger">
-                        Error: {error}
-                    </Alert>
-                </Container>
-            </div>
-        );
+  useEffect(() => {
+    if (currentRestaurant && typeof currentRestaurant.isHiring === 'boolean') {
+      setIsHiring(currentRestaurant.isHiring);
     }
+  }, [currentRestaurant]);
 
-    if (!currentRestaurant) {
-        return (
-            <div>
-                <Container className="py-5">
-                    <Alert variant="info">
-                        Restaurant not found.
-                    </Alert>
-                </Container>
-            </div>
-        );
+  const getRatingStars = (rating) => {
+    return '⭐'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
+  };
+
+  const getVerificationBadge = (verificationStatus) => {
+    if (verificationStatus === 'verified_employee') {
+      return <Badge bg="success" style={{ fontSize: '0.8rem', marginLeft: '0.5rem' }}>✅ Verified Employee</Badge>;
+    } else if (verificationStatus === 'verified_business') {
+      return <Badge bg="success" style={{ fontSize: '0.8rem', marginLeft: '0.5rem' }}>✅ Verified Business</Badge>;
+    } else if (verificationStatus === 'pending') {
+      return <Badge bg="warning" style={{ fontSize: '0.8rem', marginLeft: '0.5rem' }}>⏳ Verification Pending</Badge>;
     }
+    return null;
+  };
 
-    const benefits = getRestaurantBenefits(currentRestaurant);
+  const getBusinessClaimBadge = () => {
+    if (currentRestaurant?.isClaimed) {
+      return <Badge bg="info" style={{ fontSize: '0.9rem', marginLeft: '0.5rem' }}>🏢 Business Claimed</Badge>;
+    } else {
+      return <Badge bg="secondary" style={{ fontSize: '0.9rem', marginLeft: '0.5rem' }}>🏢 Unclaimed Business</Badge>;
+    }
+  };
 
+  if (loading) {
     return (
-        <div>
-            <Container className="py-5">
-                <Row className="mb-5">
-                    <Col>
-                        <h1 style={{ color: 'var(--text-primary)' }}>{currentRestaurant.name}</h1>
-                        {currentRestaurant.address && (
-                            <p style={{ color: 'var(--text-secondary)' }} className="mb-2">
-                                📍 {currentRestaurant.address.street}, {currentRestaurant.address.city}, {currentRestaurant.address.state}
-                            </p>
-                        )}
-                        <div className="d-flex align-items-center gap-3 mb-3">
-                            <div className="stars">
-                                {renderStars(currentRestaurant.averageBenefitsRating || 0)}
-                            </div>
-                            <span style={{ color: 'var(--text-secondary)' }}>
-                                {currentRestaurant.averageBenefitsRating ? `${currentRestaurant.averageBenefitsRating.toFixed(1)}/5` : 'No ratings yet'} 
-                                ({currentRestaurant.totalReviews || 0} reviews)
-                            </span>
-                        </div>
-                        {currentRestaurant.cuisine && currentRestaurant.cuisine.length > 0 && (
-                            <p style={{ color: 'var(--text-secondary)' }}>
-                                🍽️ {currentRestaurant.cuisine.join(', ')}
-                            </p>
-                        )}
-                    </Col>
-                </Row>
-
-                <Row>
-                    <Col lg={8}>
-                        <Card className="mb-4">
-                            <Card.Header>
-                                <h4 style={{ color: 'var(--text-primary)' }}>Employee Benefits</h4>
-                            </Card.Header>
-                            <Card.Body>
-                                {benefits.length > 0 ? (
-                                    <div className="d-flex flex-wrap gap-2">
-                                        {benefits.map(benefit => (
-                                            <Badge key={benefit} bg="warning" text="dark" className="fs-6 p-2">
-                                                {getBenefitLabel(benefit)}
-                                            </Badge>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <p style={{ color: 'var(--text-secondary)' }}>No benefits information available.</p>
-                                )}
-                            </Card.Body>
-                        </Card>
-
-                        <Card>
-                            <Card.Header className="d-flex justify-content-between align-items-center">
-                                <h4 style={{ color: 'var(--text-primary)' }}>Reviews</h4>
-                                {isAuthenticated && (
-                                    <Button 
-                                        variant="outline-primary" 
-                                        size="sm"
-                                        onClick={() => setShowReviewForm(!showReviewForm)}
-                                    >
-                                        {showReviewForm ? 'Cancel' : 'Write a Review'}
-                                    </Button>
-                                )}
-                            </Card.Header>
-                            <Card.Body>
-                                {showReviewForm && (
-                                    <Card className="mb-4">
-                                        <Card.Body>
-                                            <h5 style={{ color: 'var(--text-primary)' }}>Write Your Review</h5>
-                                            <Form onSubmit={handleReviewSubmit}>
-                                                <Row>
-                                                    <Col md={6}>
-                                                        <Form.Group className="mb-3">
-                                                            <Form.Label>Food Rating</Form.Label>
-                                                            <Form.Select
-                                                                value={reviewData.foodRating}
-                                                                onChange={(e) => setReviewData(prev => ({ ...prev, foodRating: parseInt(e.target.value) }))}
-                                                            >
-                                                                {[5, 4, 3, 2, 1].map(rating => (
-                                                                    <option key={rating} value={rating}>{rating} Stars</option>
-                                                                ))}
-                                                            </Form.Select>
-                                                        </Form.Group>
-                                                    </Col>
-                                                    <Col md={6}>
-                                                        <Form.Group className="mb-3">
-                                                            <Form.Label>Benefits Rating</Form.Label>
-                                                            <Form.Select
-                                                                value={reviewData.benefitsRating}
-                                                                onChange={(e) => setReviewData(prev => ({ ...prev, benefitsRating: parseInt(e.target.value) }))}
-                                                            >
-                                                                {[5, 4, 3, 2, 1].map(rating => (
-                                                                    <option key={rating} value={rating}>{rating} Stars</option>
-                                                                ))}
-                                                            </Form.Select>
-                                                        </Form.Group>
-                                                    </Col>
-                                                </Row>
-                                                
-                                                <Form.Group className="mb-3">
-                                                    <Form.Label>Review Title</Form.Label>
-                                                    <Form.Control
-                                                        type="text"
-                                                        value={reviewData.title}
-                                                        onChange={(e) => setReviewData(prev => ({ ...prev, title: e.target.value }))}
-                                                        placeholder="Brief summary of your experience"
-                                                        required
-                                                    />
-                                                </Form.Group>
-                                                
-                                                <Form.Group className="mb-3">
-                                                    <Form.Label>Review Content</Form.Label>
-                                                    <Form.Control
-                                                        as="textarea"
-                                                        rows={4}
-                                                        value={reviewData.content}
-                                                        onChange={(e) => setReviewData(prev => ({ ...prev, content: e.target.value }))}
-                                                        placeholder="Share your experience..."
-                                                        required
-                                                    />
-                                                </Form.Group>
-                                                
-                                                <div className="d-flex gap-2">
-                                                    <Button type="submit" variant="primary">
-                                                        Submit Review
-                                                    </Button>
-                                                    <Button 
-                                                        variant="outline-secondary" 
-                                                        onClick={() => setShowReviewForm(false)}
-                                                    >
-                                                        Cancel
-                                                    </Button>
-                                                </div>
-                                            </Form>
-                                        </Card.Body>
-                                    </Card>
-                                )}
-
-                                {reviewsLoading ? (
-                                    <div className="loading-spinner">
-                                        <Spinner animation="border" role="status" variant="warning">
-                                            <span className="visually-hidden">Loading...</span>
-                                        </Spinner>
-                                    </div>
-                                ) : reviews.length === 0 ? (
-                                    <p style={{ color: 'var(--text-secondary)' }}>No reviews yet. Be the first to review this restaurant!</p>
-                                ) : (
-                                    <div>
-                                        {reviews.map(review => (
-                                            <Card key={review._id} className="mb-3">
-                                                <Card.Body>
-                                                    <div className="d-flex justify-content-between align-items-start mb-2">
-                                                        <div>
-                                                            <h6 className="mb-1" style={{ color: 'var(--text-primary)' }}>{review.title}</h6>
-                                                            <div className="d-flex gap-3 mb-2">
-                                                                <div className="stars">
-                                                                    Food: {renderStars(review.foodRating)}
-                                                                </div>
-                                                                <div className="stars">
-                                                                    Benefits: {renderStars(review.benefitsRating)}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <small style={{ color: 'var(--text-secondary)' }}>
-                                                            {new Date(review.createdAt).toLocaleDateString()}
-                                                        </small>
-                                                    </div>
-                                                    <p className="mb-0" style={{ color: 'var(--text-secondary)' }}>{review.content}</p>
-                                                </Card.Body>
-                                            </Card>
-                                        ))}
-                                    </div>
-                                )}
-                            </Card.Body>
-                        </Card>
-                    </Col>
-
-                    <Col lg={4}>
-                        <Card className="mb-4">
-                            <Card.Header>
-                                <h5 style={{ color: 'var(--text-primary)' }}>Restaurant Info</h5>
-                            </Card.Header>
-                            <Card.Body>
-                                {currentRestaurant.cuisine && currentRestaurant.cuisine.length > 0 && (
-                                    <div className="mb-3">
-                                        <strong style={{ color: 'var(--text-primary)' }}>Cuisine:</strong> 
-                                        <span style={{ color: 'var(--text-secondary)' }}> {currentRestaurant.cuisine.join(', ')}</span>
-                                    </div>
-                                )}
-                                {currentRestaurant.address && (
-                                    <div className="mb-3">
-                                        <strong style={{ color: 'var(--text-primary)' }}>Address:</strong><br />
-                                        <span style={{ color: 'var(--text-secondary)' }}>
-                                            {currentRestaurant.address.street}<br />
-                                            {currentRestaurant.address.city}, {currentRestaurant.address.state} {currentRestaurant.address.zipCode}
-                                        </span>
-                                    </div>
-                                )}
-                                {currentRestaurant.description && (
-                                    <div className="mb-3">
-                                        <strong style={{ color: 'var(--text-primary)' }}>Description:</strong><br />
-                                        <span style={{ color: 'var(--text-secondary)' }}>{currentRestaurant.description}</span>
-                                    </div>
-                                )}
-                            </Card.Body>
-                        </Card>
-
-                        {!isAuthenticated && (
-                            <Card>
-                                <Card.Body className="text-center">
-                                    <h6 style={{ color: 'var(--text-primary)' }}>Want to review this restaurant?</h6>
-                                    <p style={{ color: 'var(--text-secondary)' }} className="small">
-                                        Sign in to share your experience and help others make informed decisions.
-                                    </p>
-                                    <Button variant="outline-primary" size="sm">
-                                        Sign In to Review
-                                    </Button>
-                                </Card.Body>
-                            </Card>
-                        )}
-                    </Col>
-                </Row>
-            </Container>
-        </div>
+      <div style={{
+        minHeight: '100vh',
+        background: genzGradients.hero,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: genzFont,
+        color: '#fff',
+        fontSize: '1.2rem',
+        fontWeight: 600
+      }}>
+        <Spinner animation="border" style={{ color: genzColors.accent1, marginRight: '1rem' }} />
+        Loading restaurant details...
+      </div>
     );
+  }
+
+  if (error || !currentRestaurant) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: genzGradients.hero,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: genzFont
+      }}>
+        <Alert variant="danger" style={{
+          borderRadius: 16,
+          border: '2px solid #ff6b6b',
+          background: 'rgba(255,107,107,0.1)',
+          color: '#d63031',
+          fontSize: '1.3rem',
+          fontWeight: 600
+        }}>
+          ❌ Restaurant not found or error loading details
+        </Alert>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      background: genzGradients.hero,
+      fontFamily: genzFont,
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      {/* Playful stroke accents */}
+      <div style={{ position: 'absolute', top: '15%', right: '10%', transform: 'rotate(-20deg)', zIndex: 1 }}>
+        <PlayfulStroke1 style={{ width: 80, height: 24 }} />
+      </div>
+      <div style={{ position: 'absolute', bottom: '25%', left: '8%', transform: 'rotate(25deg)', zIndex: 1 }}>
+        <PlayfulStroke1 style={{ width: 60, height: 18 }} />
+      </div>
+
+      <div className="container" style={{ padding: 'calc(2rem + 64px) 0 2rem 0' }}>
+        {/* Restaurant Header */}
+        <Card style={{
+          background: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: 32,
+          border: '2px solid rgba(255, 255, 255, 0.2)',
+          boxShadow: '0 20px 40px rgba(102, 126, 234, 0.15)',
+          marginBottom: '3rem',
+          position: 'relative',
+          zIndex: 2
+        }}>
+          <Card.Body style={{ padding: '3rem' }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '2rem',
+              marginBottom: '2rem'
+            }}>
+              <div style={{
+                width: 120,
+                height: 120,
+                borderRadius: '50%',
+                background: genzGradients.button,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '4rem',
+                boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
+              }}>
+                {getCuisineEmoji(currentRestaurant.cuisine)}
+              </div>
+              <div style={{ flex: 1 }}>
+                <h1 style={{
+                  fontWeight: 900,
+                  fontSize: '3rem',
+                  letterSpacing: '-2px',
+                  background: genzGradients.button,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  marginBottom: '0.5rem'
+                }}>
+                  {currentRestaurant.name}
+                </h1>
+                <p style={{
+                  color: genzColors.accent1,
+                  fontWeight: 700,
+                  fontSize: '1.2rem',
+                  textTransform: 'capitalize',
+                  marginBottom: '1rem'
+                }}>
+                  {currentRestaurant.cuisine} • {currentRestaurant.location}
+                </p>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1rem'
+                }}>
+                  <span style={{ color: '#fff', fontWeight: 600, fontSize: '1.1rem' }}>
+                    {getRatingStars(currentRestaurant.rating)}
+                  </span>
+                  <span style={{
+                    color: '#fff',
+                    fontWeight: 600,
+                    fontSize: '1rem'
+                  }}>
+                    ({currentRestaurant.reviewCount} reviews)
+                  </span>
+                  {getBusinessClaimBadge()}
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div style={{
+              display: 'flex',
+              gap: '1rem',
+              flexWrap: 'wrap'
+            }}>
+              <Button
+                variant="primary"
+                style={{
+                  background: genzGradients.button,
+                  color: genzColors.black,
+                  border: '2px solid #222',
+                  borderRadius: 20,
+                  padding: '1rem 2rem',
+                  fontWeight: 800,
+                  fontSize: '1rem'
+                }}
+              >
+                📞 Contact Restaurant
+              </Button>
+              {!currentRestaurant.isClaimed && (
+                <Button
+                  as={Link}
+                  to={`/business-claim/${currentRestaurant.id}`}
+                  variant="warning"
+                  style={{
+                    background: 'linear-gradient(90deg, #feca57 0%, #ff6b6b 100%)',
+                    color: '#222',
+                    border: '2px solid #222',
+                    borderRadius: 20,
+                    padding: '1rem 2rem',
+                    fontWeight: 800,
+                    fontSize: '1rem'
+                  }}
+                >
+                  🏢 Claim This Business
+                </Button>
+              )}
+              {isAuthenticated && (
+                <div style={{
+                  display: 'flex',
+                  gap: '0.5rem',
+                  flexWrap: 'wrap'
+                }}>
+                  <Button
+                    as={Link}
+                    to={`/write-review/${currentRestaurant.id}`}
+                    variant="outline-light"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.2)',
+                      color: '#fff',
+                      border: '2px solid rgba(255, 255, 255, 0.3)',
+                      borderRadius: 20,
+                      padding: '1rem 2rem',
+                      fontWeight: 700,
+                      fontSize: '1rem'
+                    }}
+                  >
+                    ✍️ Write Review
+                  </Button>
+                  <Button
+                    as={Link}
+                    to={`/write-employee-review/${currentRestaurant.id}`}
+                    variant="outline-warning"
+                    style={{
+                      background: 'rgba(254, 202, 87, 0.2)',
+                      color: genzColors.accent1,
+                      border: `2px solid ${genzColors.accent1}`,
+                      borderRadius: 20,
+                      padding: '1rem 2rem',
+                      fontWeight: 700,
+                      fontSize: '1rem'
+                    }}
+                  >
+                    👨‍🍳 Employee Review
+                  </Button>
+                </div>
+              )}
+              <Button
+                as={Link}
+                to="/search"
+                variant="outline-light"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  color: '#fff',
+                  border: '2px solid rgba(255, 255, 255, 0.3)',
+                  borderRadius: 20,
+                  padding: '1rem 2rem',
+                  fontWeight: 700,
+                  fontSize: '1rem'
+                }}
+              >
+                🔍 Back to Search
+              </Button>
+            </div>
+
+            {isHiring && (
+              <Badge
+                bg="warning"
+                style={{
+                  position: 'absolute',
+                  top: 18,
+                  right: 18,
+                  background: 'linear-gradient(90deg, #feca57 0%, #ff6b6b 100%)',
+                  color: '#222',
+                  fontWeight: 900,
+                  fontSize: '1.15rem',
+                  borderRadius: 18,
+                  padding: '0.7rem 1.5rem',
+                  boxShadow: '0 2px 12px rgba(255,107,107,0.18)',
+                  zIndex: 10,
+                  animation: 'pulse 1.2s infinite alternate',
+                  letterSpacing: '1px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10
+                }}
+              >
+                <span role="img" aria-label="megaphone">📢</span> Now Hiring!
+              </Badge>
+            )}
+          </Card.Body>
+        </Card>
+
+        {/* Tabs */}
+        <Card style={{
+          background: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: 24,
+          border: '2px solid rgba(255, 255, 255, 0.2)',
+          boxShadow: '0 10px 30px rgba(102, 126, 234, 0.1)',
+          position: 'relative',
+          zIndex: 2
+        }}>
+          <Card.Body style={{ padding: '2rem' }}>
+            {/* Tab Navigation */}
+            <Nav variant="tabs" style={{
+              borderBottom: '2px solid rgba(255, 255, 255, 0.2)',
+              marginBottom: '2rem'
+            }}>
+              {['overview', 'benefits', 'reviews', 'location'].map((tab) => (
+                <Nav.Item key={tab}>
+                  <Nav.Link
+                    active={activeTab === tab}
+                    onClick={() => setActiveTab(tab)}
+                    style={{
+                      background: activeTab === tab ? genzGradients.button : 'transparent',
+                      color: activeTab === tab ? genzColors.black : '#fff',
+                      border: 'none',
+                      borderRadius: 16,
+                      padding: '0.8rem 1.5rem',
+                      fontWeight: 700,
+                      fontSize: '1rem',
+                      textTransform: 'capitalize'
+                    }}
+                  >
+                    {tab === 'overview' && '📋 Overview'}
+                    {tab === 'benefits' && '🎁 Benefits'}
+                    {tab === 'reviews' && '⭐ Reviews'}
+                    {tab === 'location' && '📍 Location'}
+                  </Nav.Link>
+                </Nav.Item>
+              ))}
+            </Nav>
+
+            {/* Tab Content */}
+            <Tab.Content>
+              {activeTab === 'overview' && (
+                <Tab.Pane active>
+                  <h3 style={{
+                    color: genzColors.accent1,
+                    fontWeight: 800,
+                    fontSize: '1.5rem',
+                    marginBottom: '1.5rem'
+                  }}>
+                    About {currentRestaurant.name}
+                  </h3>
+                  <p style={{
+                    color: '#fff',
+                    fontSize: '1.1rem',
+                    lineHeight: 1.6,
+                    opacity: 0.9,
+                    marginBottom: '2rem'
+                  }}>
+                    {currentRestaurant.description}
+                  </p>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                    gap: '1.5rem'
+                  }}>
+                    <Card style={{
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      borderRadius: 16,
+                      textAlign: 'center'
+                    }}>
+                      <Card.Body style={{ padding: '1.5rem' }}>
+                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🕒</div>
+                        <h4 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem' }}>Hours</h4>
+                        <p style={{ color: '#fff', opacity: 0.8 }}>Mon-Sun: 11AM-10PM</p>
+                      </Card.Body>
+                    </Card>
+                    <Card style={{
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      borderRadius: 16,
+                      textAlign: 'center'
+                    }}>
+                      <Card.Body style={{ padding: '1.5rem' }}>
+                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📞</div>
+                        <h4 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem' }}>Phone</h4>
+                        <p style={{ color: '#fff', opacity: 0.8 }}>(555) 123-4567</p>
+                      </Card.Body>
+                    </Card>
+                    <Card style={{
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      borderRadius: 16,
+                      textAlign: 'center'
+                    }}>
+                      <Card.Body style={{ padding: '1.5rem' }}>
+                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🌐</div>
+                        <h4 style={{ color: '#fff', fontWeight: 700, marginBottom: '0.5rem' }}>Website</h4>
+                        <p style={{ color: '#fff', opacity: 0.8 }}>www.restaurant.com</p>
+                      </Card.Body>
+                    </Card>
+                  </div>
+                </Tab.Pane>
+              )}
+
+              {activeTab === 'benefits' && (
+                <Tab.Pane active>
+                  <h3 style={{
+                    color: genzColors.accent1,
+                    fontWeight: 800,
+                    fontSize: '1.5rem',
+                    marginBottom: '1.5rem'
+                  }}>
+                    Employee Benefits & Perks 🎁
+                  </h3>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                    gap: '1.5rem'
+                  }}>
+                    {currentRestaurant.benefits?.map((benefit, index) => (
+                      <Card
+                        key={index}
+                        style={{
+                          background: 'rgba(254, 202, 87, 0.1)',
+                          border: '2px solid rgba(254, 202, 87, 0.3)',
+                          borderRadius: 20,
+                          transition: 'all 0.3s ease'
+                        }}
+                      >
+                        <Card.Body style={{ padding: '1.5rem' }}>
+                          <h4 style={{
+                            color: genzColors.accent1,
+                            fontWeight: 700,
+                            fontSize: '1.1rem',
+                            marginBottom: '0.5rem'
+                          }}>
+                            {benefit}
+                          </h4>
+                          <p style={{
+                            color: '#fff',
+                            opacity: 0.8,
+                            fontSize: '0.95rem'
+                          }}>
+                            Amazing perk for restaurant workers!
+                          </p>
+                        </Card.Body>
+                      </Card>
+                    ))}
+                  </div>
+                </Tab.Pane>
+              )}
+
+              {activeTab === 'reviews' && (
+                <Tab.Pane active>
+                  <h3 style={{
+                    color: genzColors.accent1,
+                    fontWeight: 800,
+                    fontSize: '1.5rem',
+                    marginBottom: '1.5rem'
+                  }}>
+                    Customer Reviews ⭐
+                  </h3>
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1.5rem'
+                  }}>
+                    {currentRestaurant.reviews?.map((review, index) => (
+                      <Card
+                        key={index}
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.1)',
+                          borderRadius: 20,
+                          border: '2px solid rgba(255, 255, 255, 0.2)'
+                        }}
+                      >
+                        <Card.Body style={{ padding: '1.5rem' }}>
+                          <div style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginBottom: '1rem'
+                          }}>
+                            <div>
+                              <h4 style={{
+                                color: '#fff',
+                                fontWeight: 700,
+                                fontSize: '1.1rem'
+                              }}>
+                                {review.userName}
+                                {getVerificationBadge(review.verificationStatus)}
+                              </h4>
+                              <div style={{ color: '#fff', fontWeight: 600 }}>
+                                {getRatingStars(review.rating)}
+                              </div>
+                            </div>
+                            <span style={{
+                              color: '#fff',
+                              opacity: 0.7,
+                              fontSize: '0.9rem'
+                            }}>
+                              {new Date(review.date).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <p style={{
+                            color: '#fff',
+                            opacity: 0.9,
+                            lineHeight: 1.5
+                          }}>
+                            {review.comment}
+                          </p>
+                        </Card.Body>
+                      </Card>
+                    ))}
+                  </div>
+                </Tab.Pane>
+              )}
+
+              {activeTab === 'location' && (
+                <Tab.Pane active>
+                  <h3 style={{
+                    color: genzColors.accent1,
+                    fontWeight: 800,
+                    fontSize: '1.5rem',
+                    marginBottom: '1.5rem'
+                  }}>
+                    Location & Directions 📍
+                  </h3>
+                  <Card style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    borderRadius: 20,
+                    marginBottom: '2rem'
+                  }}>
+                    <Card.Body style={{ padding: '2rem' }}>
+                      <h4 style={{
+                        color: '#fff',
+                        fontWeight: 700,
+                        fontSize: '1.2rem',
+                        marginBottom: '1rem'
+                      }}>
+                        Address
+                      </h4>
+                      <p style={{
+                        color: '#fff',
+                        fontSize: '1.1rem',
+                        opacity: 0.9,
+                        marginBottom: '1.5rem'
+                      }}>
+                        {currentRestaurant.address}
+                      </p>
+                      <Button
+                        variant="primary"
+                        style={{
+                          background: genzGradients.button,
+                          color: genzColors.black,
+                          border: '2px solid #222',
+                          borderRadius: 16,
+                          padding: '0.8rem 1.5rem',
+                          fontWeight: 700,
+                          fontSize: '1rem'
+                        }}
+                      >
+                        🗺️ Get Directions
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                  <Card style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    borderRadius: 20,
+                    textAlign: 'center'
+                  }}>
+                    <Card.Body style={{ padding: '2rem' }}>
+                      <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🗺️</div>
+                      <p style={{
+                        color: '#fff',
+                        opacity: 0.8,
+                        fontSize: '1rem'
+                      }}>
+                        Interactive map coming soon!
+                      </p>
+                    </Card.Body>
+                  </Card>
+                </Tab.Pane>
+              )}
+            </Tab.Content>
+          </Card.Body>
+        </Card>
+      </div>
+    </div>
+  );
 };
 
 export default RestaurantDetail; 

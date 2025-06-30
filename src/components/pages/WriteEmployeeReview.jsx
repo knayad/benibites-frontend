@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { Form, Button, Card, Alert, Row, Col } from 'react-bootstrap';
 import { fetchRestaurantById } from '../../store/slices/restaurantsSlice';
 import { genzColors, genzGradients, genzFont, PlayfulStroke1 } from '../../genzTheme.jsx';
 
-const WriteEmployeeReviewGenZ = () => {
+const WriteEmployeeReview = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -433,4 +434,4 @@ const WriteEmployeeReviewGenZ = () => {
   );
 };
 
-export default WriteEmployeeReviewGenZ; 
+export default WriteEmployeeReview; 

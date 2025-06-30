@@ -459,7 +459,7 @@ const FloatingSearchButton = ({ searchData, showFloatingButton, handleSearch, is
   );
 };
 
-const HomeGenZ = () => {
+const Home = () => {
     const navigate = useNavigate();
     const [searchData, setSearchData] = useState({
         query: '',
@@ -574,4 +574,4 @@ const HomeGenZ = () => {
     );
 };
 
-export default HomeGenZ;
+export default Home;

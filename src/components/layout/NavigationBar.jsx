@@ -4,7 +4,7 @@ import { Navbar, Nav, Container, Dropdown, Button } from 'react-bootstrap';
 import forkKnifeLogo from '../../assets/fork-and-knife-cutlery-circle-interface-symbol-for-restaurant-svgrepo-com.svg';
 import { genzColors, genzGradients, genzFont } from '../../genzTheme.jsx';
 
-const NavbarGenZ = () => {
+const NavigationBar = () => {
   const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
 
@@ -159,4 +159,4 @@ const NavbarGenZ = () => {
   );
 };
 
-export default NavbarGenZ; 
+export default NavigationBar; 

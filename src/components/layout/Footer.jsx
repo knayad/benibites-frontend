@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { genzColors, genzGradients, genzFont, PlayfulStroke1 } from '../../genzTheme.jsx';
 
-const FooterGenZ = () => {
+const Footer = () => {
   return (
     <footer style={{
       background: 'linear-gradient(120deg, #764ba2 0%, #f093fb 50%, #f5576c 100%)',
@@ -242,4 +242,4 @@ const FooterGenZ = () => {
   );
 };
 
-export default FooterGenZ; 
+export default Footer; 

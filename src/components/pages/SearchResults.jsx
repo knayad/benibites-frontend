@@ -20,7 +20,7 @@ const DISTANCE_OPTIONS = [
   { value: 100, label: '100 miles' },
 ];
 
-const SearchResultsGenZ = () => {
+const SearchResults = () => {
   const [searchParams] = useSearchParams();
   const dispatch = useDispatch();
   const { searchResults, searchLoading, searchError } = useSelector((state) => state.restaurants);
@@ -154,11 +154,14 @@ const SearchResultsGenZ = () => {
               Refine Your Search 🔍
             </h2>
             
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: isMobile ? '1rem' : '1.5rem'
-            }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(5, 1fr)',
+                gap: isMobile ? '1rem' : '1.5rem',
+                alignItems: 'end',
+              }}
+            >
               {/* Search Query */}
               <Form.Group>
                 <Form.Label style={{
@@ -173,32 +176,6 @@ const SearchResultsGenZ = () => {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="What are you craving?"
-                  style={{
-                    borderRadius: 16,
-                    border: `2px solid ${genzColors.accent1}`,
-                    padding: '1rem 1.2rem',
-                    fontSize: '1rem',
-                    background: 'rgba(255,255,255,0.9)',
-                    color: genzColors.black,
-                    fontFamily: genzFont
-                  }}
-                />
-              </Form.Group>
-
-              {/* Location */}
-              <Form.Group>
-                <Form.Label style={{
-                  color: genzColors.primary,
-                  fontWeight: 700,
-                  marginBottom: '0.5rem'
-                }}>
-                  Location
-                </Form.Label>
-                <FormControl
-                  type="text"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="City, State"
                   style={{
                     borderRadius: 16,
                     border: `2px solid ${genzColors.accent1}`,
@@ -353,6 +330,60 @@ const SearchResultsGenZ = () => {
                     ))}
                   </Dropdown.Menu>
                 </Dropdown>
+              </Form.Group>
+
+              {/* Location */}
+              <Form.Group>
+                <Form.Label style={{
+                  color: genzColors.primary,
+                  fontWeight: 700,
+                  marginBottom: '0.5rem'
+                }}>
+                  Location
+                </Form.Label>
+                <FormControl
+                  type="text"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder="City, State"
+                  style={{
+                    borderRadius: 16,
+                    border: `2px solid ${genzColors.accent1}`,
+                    padding: '1rem 1.2rem',
+                    fontSize: '1rem',
+                    background: 'rgba(255,255,255,0.9)',
+                    color: genzColors.black,
+                    fontFamily: genzFont
+                  }}
+                />
+              </Form.Group>
+
+              {/* Distance Filter */}
+              <Form.Group>
+                <Form.Label style={{
+                  color: genzColors.primary,
+                  fontWeight: 700,
+                  marginBottom: '0.5rem'
+                }}>
+                  Distance
+                </Form.Label>
+                <Form.Select
+                  value={distance}
+                  onChange={e => setDistance(Number(e.target.value))}
+                  style={{
+                    borderRadius: 16,
+                    border: `2px solid ${genzColors.accent1}`,
+                    padding: '1rem 1.2rem',
+                    fontSize: '1rem',
+                    background: 'rgba(255,255,255,0.9)',
+                    color: genzColors.black,
+                    fontFamily: genzFont
+                  }}
+                >
+                  {DISTANCE_OPTIONS.map(opt => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </Form.Select>
               </Form.Group>
             </div>
           </Card.Body>
@@ -553,4 +584,4 @@ const SearchResultsGenZ = () => {
   );
 };
 
-export default SearchResultsGenZ; 
+export default SearchResults; 

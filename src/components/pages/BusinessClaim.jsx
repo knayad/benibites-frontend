@@ -6,7 +6,7 @@ import { fetchRestaurantById } from '../../store/slices/restaurantsSlice';
 import { genzColors, genzGradients, genzFont, PlayfulStroke1 } from '../../genzTheme.jsx';
 import { getCuisineEmoji } from '../../utils/cuisineMap.js';
 
-const BusinessClaimGenZ = () => {
+const BusinessClaim = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -650,4 +650,4 @@ const BusinessClaimGenZ = () => {
   );
 };
 
-export default BusinessClaimGenZ;
+export default BusinessClaim;

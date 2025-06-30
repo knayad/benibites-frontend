@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Card, Button, Nav, Tab, Badge, Spinner, Alert, Table, Modal, Form } from 'react-bootstrap';
 import { genzColors, genzGradients, genzFont, PlayfulStroke1 } from '../../genzTheme.jsx';
 
-const AdminDashboardGenZ = () => {
+const AdminDashboard = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState('overview');
@@ -646,4 +646,4 @@ const AdminDashboardGenZ = () => {
   );
 };
 
-export default AdminDashboardGenZ; 
+export default AdminDashboard; 

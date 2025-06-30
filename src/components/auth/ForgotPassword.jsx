@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { genzColors, genzGradients, genzFont } from '../../genzTheme.jsx';
 
-const ForgotPasswordGenZ = () => {
+const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -232,4 +232,4 @@ const ForgotPasswordGenZ = () => {
   );
 };
 
-export default ForgotPasswordGenZ; 
+export default ForgotPassword; 

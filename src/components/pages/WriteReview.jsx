@@ -5,7 +5,7 @@ import { Form, Button, Card, Alert, Row, Col } from 'react-bootstrap';
 import { fetchRestaurantById } from '../../store/slices/restaurantsSlice';
 import { genzColors, genzGradients, genzFont, PlayfulStroke1 } from '../../genzTheme.jsx';
 
-const WriteReviewGenZ = () => {
+const WriteReview = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -488,4 +488,4 @@ const WriteReviewGenZ = () => {
   );
 };
 
-export default WriteReviewGenZ; 
+export default WriteReview; 

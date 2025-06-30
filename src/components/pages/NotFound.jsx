@@ -4,7 +4,7 @@ import { Button } from 'react-bootstrap';
 import { genzColors, genzGradients, genzFont } from '../../genzTheme.jsx';
 import cookiesMeme from '../../assets/404cookies.jpg';
 
-const NotFoundGenZ = () => {
+const NotFound = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [showCookie, setShowCookie] = useState(false);
 
@@ -270,4 +270,4 @@ const NotFoundGenZ = () => {
   );
 };
 
-export default NotFoundGenZ; 
+export default NotFound; 

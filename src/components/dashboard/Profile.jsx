@@ -3,6 +3,47 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Form, Button, Card, Alert, Row, Col, Badge, Modal } from 'react-bootstrap';
 import { genzColors, genzGradients, genzFont, PlayfulStroke1 } from '../../genzTheme.jsx';
 
+// Add RoleUpgradeOptions component
+function RoleUpgradeOptions({ user }) {
+  const hasBusiness = user.roles?.includes('business');
+  const hasEmployee = user.roles?.includes('employee');
+  if ((hasBusiness && !hasEmployee) || (!hasBusiness && hasEmployee)) {
+    return (
+      <div className="next-level-message" style={{ background: 'linear-gradient(90deg, #43e97b 0%, #38f9d7 100%)', borderRadius: 20, padding: '2rem', boxShadow: '0 4px 16px rgba(67,233,123,0.12)', textAlign: 'center', marginTop: '2rem' }}>
+        <h3 style={{ fontWeight: 900, fontSize: '1.3rem', color: '#222', marginBottom: 8 }}>You’ve unlocked your next level! 🎉</h3>
+        <p style={{ color: '#222', fontWeight: 600 }}>Explore your new features below.</p>
+      </div>
+    );
+  }
+  if (!hasBusiness && !hasEmployee) {
+    return (
+      <div className="role-upgrade-options" style={{ marginTop: '2rem', display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+        <div className="upgrade-card" style={{ background: 'linear-gradient(90deg, #feca57 0%, #ff6b6b 100%)', borderRadius: 20, padding: '2rem', boxShadow: '0 4px 16px rgba(254,202,87,0.12)', flex: 1, minWidth: 260 }}>
+          <h3 style={{ fontWeight: 900, fontSize: '1.3rem', color: '#222', marginBottom: 8 }}>Ready to Flex as a Boss?</h3>
+          <p style={{ color: '#222', fontWeight: 600, marginBottom: 16 }}>Claim your business and take control of your restaurant's vibe! 🍔✨</p>
+          <button onClick={() => window.location.href='/business-claim'} style={{ background: 'linear-gradient(90deg, #43e97b 0%, #38f9d7 100%)', color: '#222', border: 'none', borderRadius: 16, padding: '0.8rem 1.5rem', fontWeight: 800, fontSize: '1rem', cursor: 'pointer', boxShadow: '0 2px 8px rgba(67,233,123,0.12)' }}>
+            Claim Business 🚀
+          </button>
+        </div>
+        <div className="upgrade-card" style={{ background: 'linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%)', borderRadius: 20, padding: '2rem', boxShadow: '0 4px 16px rgba(161,140,209,0.12)', flex: 1, minWidth: 260 }}>
+          <h3 style={{ fontWeight: 900, fontSize: '1.3rem', color: '#222', marginBottom: 8 }}>Work Here? Get Perks!</h3>
+          <p style={{ color: '#222', fontWeight: 600, marginBottom: 16 }}>Register as an employee and unlock exclusive benefits. 💸🍟</p>
+          <button onClick={() => window.location.href='/employee-register'} style={{ background: 'linear-gradient(90deg, #f7971e 0%, #ffd200 100%)', color: '#222', border: 'none', borderRadius: 16, padding: '0.8rem 1.5rem', fontWeight: 800, fontSize: '1rem', cursor: 'pointer', boxShadow: '0 2px 8px rgba(247,151,30,0.12)' }}>
+            Register as Employee 🌈
+          </button>
+        </div>
+      </div>
+    );
+  }
+  // If both roles
+  return (
+    <div className="complete-profile" style={{ background: 'linear-gradient(90deg, #43e97b 0%, #38f9d7 100%)', borderRadius: 20, padding: '2rem', boxShadow: '0 4px 16px rgba(67,233,123,0.12)', flex: 1, minWidth: 260, textAlign: 'center', marginTop: '2rem' }}>
+      <h3 style={{ fontWeight: 900, fontSize: '1.3rem', color: '#222', marginBottom: 8 }}>Profile Complete!</h3>
+      <p style={{ color: '#222', fontWeight: 600 }}>You’re living the best of both worlds. Thanks for being awesome! 🎉</p>
+    </div>
+  );
+}
+
 const Profile = () => {
   const dispatch = useDispatch();
   const { user, loading, error } = useSelector((state) => state.auth);
@@ -755,6 +796,7 @@ const Profile = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      <RoleUpgradeOptions user={user || { roles: [] }} />
     </div>
   );
 };

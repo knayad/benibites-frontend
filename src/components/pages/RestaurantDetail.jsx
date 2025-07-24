@@ -11,6 +11,7 @@ const RestaurantDetail = () => {
   const dispatch = useDispatch();
   const { currentRestaurant, loading, error } = useSelector((state) => state.restaurants);
   const { isAuthenticated } = useSelector((state) => state.auth);
+  const user = useSelector((state) => state.auth.user);
   const [activeTab, setActiveTab] = useState('overview');
   const [isHiring, setIsHiring] = useState(false);
 
@@ -592,6 +593,24 @@ const RestaurantDetail = () => {
             </Tab.Content>
           </Card.Body>
         </Card>
+        {user && !user.roles?.includes('business') && (
+          <div style={{ margin: '2rem 0', background: 'linear-gradient(90deg, #feca57 0%, #ff6b6b 100%)', borderRadius: 20, padding: '1.5rem', textAlign: 'center', boxShadow: '0 2px 8px rgba(254,202,87,0.12)' }}>
+            <h4 style={{ fontWeight: 900, color: '#222', marginBottom: 8 }}>Own this place?</h4>
+            <p style={{ color: '#222', fontWeight: 600, marginBottom: 16 }}>Claim this business and show the world your flavor! 🍔✨</p>
+            <button onClick={() => window.location.href=`/business-claim/${currentRestaurant?.id || ''}`} style={{ background: 'linear-gradient(90deg, #43e97b 0%, #38f9d7 100%)', color: '#222', border: 'none', borderRadius: 16, padding: '0.8rem 1.5rem', fontWeight: 800, fontSize: '1rem', cursor: 'pointer', boxShadow: '0 2px 8px rgba(67,233,123,0.12)' }}>
+              Claim This Business 🚀
+            </button>
+          </div>
+        )}
+        {user && !user.roles?.includes('employee') && currentRestaurant?.isHiring && (
+          <div style={{ margin: '2rem 0', background: 'linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%)', borderRadius: 20, padding: '1.5rem', textAlign: 'center', boxShadow: '0 2px 8px rgba(161,140,209,0.12)' }}>
+            <h4 style={{ fontWeight: 900, color: '#222', marginBottom: 8 }}>Work here?</h4>
+            <p style={{ color: '#222', fontWeight: 600, marginBottom: 16 }}>Register as an employee and unlock exclusive workplace perks! 💸🍟</p>
+            <button onClick={() => window.location.href=`/employee-register/${currentRestaurant?.id || ''}`} style={{ background: 'linear-gradient(90deg, #f7971e 0%, #ffd200 100%)', color: '#222', border: 'none', borderRadius: 16, padding: '0.8rem 1.5rem', fontWeight: 800, fontSize: '1rem', cursor: 'pointer', boxShadow: '0 2px 8px rgba(247,151,30,0.12)' }}>
+              Register as Employee 🌈
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -246,10 +246,7 @@ const Login = () => {
                   </Link>
                 </p>
                 <p className="mb-0" style={{ color: genzColors.primary }}>
-                  Are you a restaurant owner?{' '}
-                  <Link to="/register-business" style={{ color: genzColors.accent1, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-                    Register your business →
-                  </Link>
+                  {/* Removed business registration link */}
                 </p>
               </div>
             </Form>

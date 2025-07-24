@@ -123,35 +123,25 @@ const NavigationBar = () => {
               🔑 Login
             </Link>
             
-            <Dropdown as="span" className="d-inline-block">
-              <Dropdown.Toggle 
-                as={Button} 
-                style={{ 
-                  fontWeight: 700, 
-                  fontFamily: genzFont, 
-                  fontSize: '1.1rem', 
-                  borderRadius: 18, 
-                  padding: '0.8rem 1.5rem', 
-                  background: genzGradients.button, 
-                  color: genzColors.black, 
-                  border: `2px solid ${genzColors.accent1}`, 
-                  marginLeft: 8, 
-                  textTransform: 'uppercase', 
-                  marginBottom: window.innerWidth < 992 ? 24 : 0
-                }}
-              >
-                ✨ Sign Up
-              </Dropdown.Toggle>
-              <Dropdown.Menu align="end" style={{
-                background: 'rgba(255,255,255,0.98)',
+            <Button
+              as={Link}
+              to="/register"
+              style={{
+                fontWeight: 700,
+                fontFamily: genzFont,
+                fontSize: '1.1rem',
+                borderRadius: 18,
+                padding: '0.8rem 1.5rem',
+                background: genzGradients.button,
+                color: genzColors.black,
                 border: `2px solid ${genzColors.accent1}`,
-                borderRadius: 16,
-                boxShadow: '0 8px 32px rgba(102,126,234,0.18)'
-              }}>
-                <Dropdown.Item as={Link} to="/register" style={{ color: genzColors.primary }}>👤 User Sign Up</Dropdown.Item>
-                <Dropdown.Item as={Link} to="/register-business" style={{ color: genzColors.primary }}>🏪 Business Sign Up</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+                marginLeft: 8,
+                textTransform: 'uppercase',
+                marginBottom: window.innerWidth < 992 ? 24 : 0
+              }}
+            >
+              ✨ Sign Up
+            </Button>
           </Nav>
         </Navbar.Collapse>
       </Container>

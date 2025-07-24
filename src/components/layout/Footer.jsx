@@ -136,17 +136,6 @@ const Footer = () => {
             </h5>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
               <li style={{ marginBottom: '0.8rem' }}>
-                <Link to="/register-business" style={{
-                  color: '#fff',
-                  textDecoration: 'none',
-                  fontWeight: 700,
-                  fontSize: '1.08rem',
-                  transition: 'color 0.3s',
-                  display: 'inline-block',
-                  padding: '4px 0',
-                }}>Register Business</Link>
-              </li>
-              <li style={{ marginBottom: '0.8rem' }}>
                 <Link to="/business-dashboard" style={{
                   color: '#fff',
                   textDecoration: 'none',

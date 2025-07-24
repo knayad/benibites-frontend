@@ -391,12 +391,6 @@ const Register = () => {
                   Sign in here! 🔑
                 </Link>
               </p>
-              <p className="mb-0" style={{ color: genzColors.primary }}>
-                Are you a business owner?{' '}
-                <Link to="/register-business" style={{ color: genzColors.accent2, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-                  Register your business! 🏪
-                </Link>
-              </p>
             </div>
 
             {/* Perks Preview */}
